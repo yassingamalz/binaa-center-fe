@@ -1,62 +1,66 @@
 
-<!-- src/app/auth/components/login/login.component.html --> 
-<div class="login-container">
+<!-- src/app/auth/components/login/login.component.html -->
+<div class="login-container" dir="rtl">
   <div class="login-card">
-    <div class="logo-section">
+    <!-- Logo -->
+    <div class="logo-container">
       <img src="assets/images/logo.png" alt="Binaa Center Logo" class="logo">
-      <h1>Welcome Back!</h1>
     </div>
 
+    <!-- Login Form -->
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <!-- Username Field -->
       <div class="form-group">
-        <label for="username">Username</label>
-        <input
-          id="username"
-          type="text"
-          formControlName="username"
-          class="theme-input"
-          placeholder="Enter your username"
-          [class.error]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
-        >
+        <label for="username">اسم المستخدم</label>
+        <div class="input-wrapper">
+          <i class="fas fa-user input-icon"></i>
+          <input
+            type="text"
+            id="username"
+            formControlName="username"
+            class="form-input"
+            placeholder="ادخل اسم المستخدم"
+            [class.error]="loginForm.get('username')?.touched && loginForm.get('username')?.invalid"
+          >
+        </div>
+        <span class="error-message" *ngIf="loginForm.get('username')?.touched && loginForm.get('username')?.invalid">
+          اسم المستخدم مطلوب
+        </span>
       </div>
 
+      <!-- Password Field -->
       <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          formControlName="password"
-          class="theme-input"
-          placeholder="Enter your password"
-          [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
-        >
+        <label for="password">كلمة المرور</label>
+        <div class="input-wrapper">
+          <i class="fas fa-lock input-icon"></i>
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            class="form-input"
+            placeholder="ادخل كلمة المرور"
+            [class.error]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
+          >
+        </div>
+        <span class="error-message" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+          كلمة المرور مطلوبة
+        </span>
       </div>
 
-      <div class="form-group">
-        <label for="role">Role</label>
-        <select
-          id="role"
-          formControlName="role"
-          class="theme-input"
-        >
-          <option value="STAFF">Staff</option>
-          <option value="ADMIN">Admin</option>
-        </select>
-      </div>
-
-      <button
-        type="submit"
-        class="theme-button-primary login-button"
-        [disabled]="!loginForm.valid || isLoading"
+      <!-- Submit Button -->
+      <button 
+        type="submit" 
+        class="login-button"
+        [disabled]="loginForm.invalid || isLoading"
       >
-        <span *ngIf="!isLoading">Login</span>
-        <span *ngIf="isLoading">Logging in...</span>
+        <span *ngIf="!isLoading">تسجيل الدخول</span>
+        <i class="fas fa-spinner fa-spin" *ngIf="isLoading"></i>
       </button>
 
+      <!-- Forgot Password Link -->
       <a routerLink="/auth/forgot-password" class="forgot-password">
-        Forgot Password?
+        نسيت كلمة المرور؟
       </a>
     </form>
   </div>
 </div>
-

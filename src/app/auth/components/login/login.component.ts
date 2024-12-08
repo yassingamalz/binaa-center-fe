@@ -1,6 +1,5 @@
 // src/app/auth/components/login/login.component.ts
-import { group } from '@angular/animations';
-import { Component, input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -23,8 +22,7 @@ export class LoginComponent implements OnInit {
   ) {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]],
-      password: ['', [Validators.required]],
-      role: ['STAFF', [Validators.required]]
+      password: ['', [Validators.required]]
     });
   }
 
@@ -42,10 +40,10 @@ export class LoginComponent implements OnInit {
       this.authService.login(username, password).subscribe({
         next: () => {
           this.router.navigate(['/dashboard']);
-          this.toastr.success('Login successful!', 'Welcome');
+          this.toastr.success('تم تسجيل الدخول بنجاح', 'مرحباً');
         },
         error: (error) => {
-          this.toastr.error('Invalid credentials', 'Error');
+          this.toastr.error('اسم المستخدم او كلمة المرور غير صحيحة', 'خطأ');
           this.isLoading = false;
         }
       });

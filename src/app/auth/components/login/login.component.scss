@@ -2,72 +2,137 @@
 @import 'styles/main';
 
 .login-container {
-  @include flex-center;
   min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: $color-light;
   padding: $spacing-md;
 }
 
 .login-card {
   @include card;
-  max-width: 400px;
   width: 100%;
-  animation: slideUp 0.5s ease-out;
+  max-width: 400px;
+  padding: $spacing-xl;
+  text-align: center;
+
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-lg;
+  }
 }
 
-.logo-section {
-  @include flex-center;
-  flex-direction: column;
-  margin-bottom: $spacing-xl;
+.logo-container {
 
   .logo {
-    width: 120px;
+    width: 200px;
     height: auto;
     margin-bottom: $spacing-md;
   }
 
-  h1 {
+  .welcome-text {
     color: $color-primary;
+    font-family: $font-family-secondary;
     font-size: $font-size-2xl;
-    text-align: center;
-    margin: 0;
+    margin-bottom: $spacing-sm;
   }
 }
 
 .login-form {
+  text-align: right;
+
   .form-group {
     margin-bottom: $spacing-lg;
+  }
 
-    label {
-      display: block;
-      margin-bottom: $spacing-xs;
-      color: $color-gray-700;
-      font-weight: 600;
+  label {
+    display: block;
+    margin-bottom: $spacing-xs;
+    color: $color-gray-700;
+    font-weight: 600;
+  }
+
+  .input-wrapper {
+    position: relative;
+
+    .input-icon {
+      position: absolute;
+      right: $spacing-sm;
+      top: 50%;
+      transform: translateY(-50%);
+      color: $color-gray-500;
+      width: 20px;
+      text-align: center;
     }
+  }
 
-    .error {
+  .form-input {
+    @include input-base;
+    padding-right: $spacing-xl;
+    
+    &.error {
       border-color: $color-error;
+      
       &:focus {
         box-shadow: 0 0 0 3px rgba($color-error, 0.1);
       }
     }
   }
-}
 
-.login-button {
-  width: 100%;
-  margin-bottom: $spacing-md;
-  height: 48px;
-  font-size: $font-size-lg;
-}
-
-.forgot-password {
-  display: block;
-  text-align: center;
-  color: $color-secondary;
-  font-size: $font-size-sm;
-  
-  &:hover {
-    color: darken($color-secondary, 10%);
+  .error-message {
+    display: block;
+    color: $color-error;
+    font-size: $font-size-sm;
+    margin-top: $spacing-xs;
   }
+
+  .login-button {
+    @include button-base;
+    width: 100%;
+    background-color: $color-primary;
+    color: $color-white;
+    margin-bottom: $spacing-md;
+    height: 48px;
+
+    &:hover:not(:disabled) {
+      background-color: darken($color-primary, 5%);
+    }
+
+    &:disabled {
+      background-color: $color-gray-400;
+    }
+
+    .fa-spinner {
+      margin-right: $spacing-xs;
+    }
+  }
+
+  .forgot-password {
+    display: inline-block;
+    color: $color-primary;
+    font-size: $font-size-sm;
+    text-decoration: none;
+    transition: $transition-base;
+
+    &:hover {
+      color: $color-secondary;
+      text-decoration: underline;
+    }
+  }
+}
+
+// Animation
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-card {
+  animation: fadeIn 0.5s ease-out;
 }
