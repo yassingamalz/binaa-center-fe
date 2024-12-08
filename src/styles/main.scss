@@ -8,6 +8,12 @@
   padding: 0;
 }
 
+// layout-specific variables 
+$layout-header-height: 64px;
+$layout-footer-height: 60px;
+$layout-sidebar-width: 280px;
+$layout-sidebar-width-collapsed: 80px;
+
 // Brand Colors
 $color-primary: #800080;    // Purple
 $color-secondary: #FF69B4;  // Pink
@@ -203,6 +209,33 @@ $end: left;
   }
 }
 
+@mixin scrollable {
+  overflow-y: auto;
+  scrollbar-width: thin; // Firefox
+  scrollbar-color: $color-gray-400 transparent; // Firefox
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: $color-gray-400;
+    border-radius: $border-radius-full;
+    
+    &:hover {
+      background-color: $color-gray-500;
+    }
+  }
+}
+
+
 // Mobile-first container
 .container {
   width: 100%;
@@ -256,16 +289,7 @@ $end: left;
 }
 
 .scrollable {
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
-  &::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: $color-gray-400;
-    border-radius: $border-radius-full;
-  }
+  @include scrollable;
 }
 
 // Animations

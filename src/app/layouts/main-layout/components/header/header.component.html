@@ -1,112 +1,115 @@
 <!-- src/app/layout/components/header/header.component.html -->
-<header class="header" dir="rtl">
-  <div class="header-container">
-    <!-- Right Section -->
-    <div class="header-right">
-      <button 
-        class="menu-toggle"
-        (click)="toggleSidebar.emit()"
-        aria-label="القائمة">
-        <i class="fas" [class.fa-bars]="isSidebarCollapsed" [class.fa-times]="!isSidebarCollapsed"></i>
+<nav class="header">
+  <!-- Right/Start Section -->
+  <div class="header-start">
+    <button 
+      class="menu-button"
+      (click)="toggleSidebar.emit()"
+      aria-label="القائمة">
+      <i class="fas" [class.fa-bars]="isSidebarCollapsed" [class.fa-times]="!isSidebarCollapsed"></i>
+    </button>
+
+    <!-- Search Bar -->
+    <div class="search-wrapper">
+      <form class="search-form" (submit)="onSearch($event)">
+        <input 
+          type="text"
+          class="search-input"
+          placeholder="بحث..."
+          [(ngModel)]="searchQuery"
+          name="search"
+          [class.active]="isSearchActive">
+        <button type="submit" class="search-button">
+          <i class="fas fa-search"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Left/End Section -->
+  <div class="header-end">
+    <!-- Notifications -->
+    <div class="notifications" ngbDropdown placement="bottom-end">
+      <button class="icon-button" ngbDropdownToggle>
+        <i class="fas fa-bell"></i>
+        <span class="badge" *ngIf="notificationCount > 0">{{notificationCount}}</span>
       </button>
-
-      <!-- Logo for Mobile -->
-      <div class="mobile-logo">
-        <img src="assets/images/logo.png" alt="Binaa Center" class="logo-image">
-      </div>
-
-      <!-- Search Bar -->
-      <div class="search-container">
-        <form class="search-form" (submit)="onSearch($event)">
-          <input 
-            type="text"
-            class="search-input"
-            placeholder="بحث..."
-            [(ngModel)]="searchQuery"
-            name="search"
-            [class.active]="isSearchActive">
-          <button type="submit" class="search-button">
-            <i class="fas fa-search"></i>
+      <div class="dropdown-menu notification-menu" ngbDropdownMenu>
+        <div class="notification-header">
+          <h6>الإشعارات</h6>
+          <button class="clear-all">تعليم كمقروءة</button>
+        </div>
+        <div class="notification-list">
+          <div *ngFor="let notification of notifications" 
+               class="notification-item">
+            <div class="notification-icon">
+              <i [class]="notification.icon" [ngClass]="notification.iconClass"></i>
+            </div>
+            <div class="notification-content">
+              <p>{{notification.message}}</p>
+              <small>{{notification.time}}</small>
+            </div>
+          </div>
+        </div>
+        <div class="notification-footer">
+          <button class="view-all">
+            عرض جميع الإشعارات
+            <i class="fas fa-arrow-left"></i>
           </button>
-        </form>
+        </div>
       </div>
     </div>
 
-    <!-- Left Section -->
-    <div class="header-left">
-      <!-- Notifications -->
-      <div class="notifications-dropdown" ngbDropdown>
-        <button 
-          class="notification-button"
-          ngbDropdownToggle>
-          <i class="fas fa-bell"></i>
-          <span class="notification-badge">{{notificationCount}}</span>
-        </button>
-        <div 
-          class="notification-menu"
-          ngbDropdownMenu>
-          <div class="notification-content">
-            <h6 class="notification-header">الإشعارات</h6>
-            <div class="notification-list">
-              <div *ngFor="let notification of notifications" 
-                   class="notification-item">
-                <i [class]="notification.icon + ' ' + notification.iconClass"></i>
-                <div class="notification-text">
-                  <p>{{notification.message}}</p>
-                  <span class="notification-time">{{notification.time}}</span>
-                </div>
-              </div>
-            </div>
-            <button class="view-all">عرض جميع الإشعارات</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- User Profile -->
-      <div class="user-dropdown" ngbDropdown>
-        <button 
-          class="user-button"
-          ngbDropdownToggle>
-          <div class="user-avatar">
+    <!-- User Menu -->
+    <div class="user-menu" ngbDropdown placement="bottom-end">
+      <button class="user-button" ngbDropdownToggle>
+        <span class="avatar">
+          <i class="fas fa-user"></i>
+        </span>
+        <span class="username" *ngIf="currentUser$ | async as user">
+          {{user.username}}
+        </span>
+      </button>
+      <div class="dropdown-menu user-dropdown-menu" ngbDropdownMenu>
+        <div class="user-info">
+          <div class="avatar">
             <i class="fas fa-user"></i>
           </div>
-          <span class="user-name" *ngIf="currentUser$ | async as user">
-            {{user.username}}
-          </span>
-        </button>
-        <div class="user-menu" ngbDropdownMenu>
-          <div class="menu-items">
-            <button class="menu-item">
-              <i class="fas fa-user-circle"></i>
-              الملف الشخصي
-            </button>
-            <button class="menu-item">
-              <i class="fas fa-cog"></i>
-              الإعدادات
-            </button>
-            <div class="menu-divider"></div>
-            <button class="menu-item logout" (click)="onLogout()">
-              <i class="fas fa-sign-out-alt"></i>
-              تسجيل الخروج
-            </button>
+          <div class="user-details" *ngIf="currentUser$ | async as user">
+            <strong>{{user.username}}</strong>
+            <small>{{user.role}}</small>
           </div>
         </div>
+        <div class="dropdown-divider"></div>
+        <button class="dropdown-item">
+          <i class="fas fa-user-circle"></i>
+          الملف الشخصي
+        </button>
+        <button class="dropdown-item">
+          <i class="fas fa-cog"></i>
+          الإعدادات
+        </button>
+        <div class="dropdown-divider"></div>
+        <button class="dropdown-item logout" (click)="onLogout()">
+          <i class="fas fa-sign-out-alt"></i>
+          تسجيل الخروج
+        </button>
       </div>
     </div>
   </div>
+</nav>
 
-  <!-- Mobile Search -->
-  <div class="mobile-search" *ngIf="showMobileSearch">
-    <form class="mobile-search-form" (submit)="onSearch($event)">
-      <input 
-        type="text"
-        class="mobile-search-input"
-        placeholder="بحث..."
-        [(ngModel)]="searchQuery"
-        name="search">
-      <button type="submit" class="mobile-search-button">
-        <i class="fas fa-search"></i>
-      </button>
-    </form>
-  </div>
-</header>
+<!-- Mobile Search -->
+<div class="mobile-search" *ngIf="showMobileSearch">
+  <form class="search-form" (submit)="onSearch($event)">
+    <input 
+      type="text"
+      class="search-input"
+      placeholder="بحث..."
+      [(ngModel)]="searchQuery"
+      name="search">
+    <button type="submit" class="search-button">
+      <i class="fas fa-search"></i>
+    </button>
+  </form>
+</div>

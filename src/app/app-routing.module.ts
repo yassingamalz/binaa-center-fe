@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 // Layout Components
-import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout/auth-layout.component';
-import { MainLayoutComponent } from './layouts/main-layout/main-layout/main-layout.component';
+import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
+import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 
 // Guards
 import { AuthGuard } from './core/guards/auth.guard';

@@ -5,8 +5,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import { AuthLayoutComponent } from './auth-layout.component';
-import { AuthFooterComponent } from '../components/auth-footer/auth-footer.component';
-import { AuthHeaderComponent } from '../components/auth-header/auth-header.component';
+import { AuthFooterComponent } from './components/auth-footer/auth-footer.component';
+import { AuthHeaderComponent } from './components/auth-header/auth-header.component';
 
 @NgModule({
   declarations: [

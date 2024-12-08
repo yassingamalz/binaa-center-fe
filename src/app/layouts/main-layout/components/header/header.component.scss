@@ -1,64 +1,58 @@
 // src/app/layout/components/header/header.component.scss
 @import 'styles/main';
 
+// Header Container
 .header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  width: 100%;
+  height: $layout-header-height;
   background-color: $color-white;
-  box-shadow: $shadow-rtl-md;
-}
+  border-bottom: 1px solid $color-gray-200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 $spacing-md;
+  direction: rtl;
+  z-index: $z-index-fixed;
+  transition: $transition-base;
+  position: relative;
 
-.header-container {
-  @include flex-between;
-  padding: $spacing-md $spacing-lg;
-  
-  @media (max-width: $breakpoint-md) {
-    padding: $spacing-sm $spacing-md;
+  &.scrolled {
+    box-shadow: $shadow-rtl-md;
   }
 }
 
-// Right Section Styles
-.header-right {
-  @include flex-center;
+// Start Section (Right Side in RTL)
+.header-start {
+  display: flex;
+  align-items: center;
   gap: $spacing-md;
 }
 
-.menu-toggle {
-  @include button-base;
-  display: none;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  color: $color-gray-700;
+// Menu Button
+.menu-button {
+  width: 40px;
+  height: 40px;
+  border-radius: $border-radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: transparent;
-  
-  @media (max-width: $breakpoint-md) {
-    display: flex;
-  }
+  border: none;
+  color: $color-gray-700;
+  cursor: pointer;
+  transition: $transition-base;
 
   &:hover {
+    background-color: rgba($color-primary, 0.05);
     color: $color-primary;
-    background-color: $color-gray-100;
+  }
+
+  i {
+    font-size: $font-size-lg;
   }
 }
 
-.mobile-logo {
-  display: none;
-  
-  @media (max-width: $breakpoint-md) {
-    display: block;
-  }
-
-  .logo-image {
-    height: 32px;
-    width: auto;
-  }
-}
-
-// Search Styles
-.search-container {
+// Search Section
+.search-wrapper {
   @media (max-width: $breakpoint-md) {
     display: none;
   }
@@ -66,7 +60,7 @@
 
 .search-form {
   position: relative;
-  width: 360px;
+  width: 320px;
 
   @media (max-width: $breakpoint-lg) {
     width: 280px;
@@ -74,235 +68,371 @@
 }
 
 .search-input {
-  @include input-base;
-  padding-right: $spacing-xl;
+  width: 100%;
+  height: 40px;
+  padding: 0 $spacing-xl 0 $spacing-md;
+  border: 1px solid $color-gray-200;
+  border-radius: $border-radius-md;
   background-color: $color-gray-100;
-  
-  &.active {
+  transition: $transition-base;
+  font-family: $font-family-primary;
+  color: $color-gray-900;
+
+  &:focus {
+    outline: none;
     background-color: $color-white;
-    box-shadow: $shadow-sm;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+  }
+
+  &::placeholder {
+    color: $color-gray-900;
   }
 }
 
 .search-button {
-  @include button-base;
   position: absolute;
-  left: $spacing-sm;
+  right: $spacing-sm;
   top: 50%;
   transform: translateY(-50%);
-  color: $color-gray-500;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-}
-
-// Left Section Styles
-.header-left {
-  @include flex-center;
-  gap: $spacing-lg;
-}
-
-// Notifications Styles
-.notifications-dropdown {
-  position: relative;
-}
-
-.notification-button {
-  @include button-base;
-  position: relative;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  font-size: $font-size-xl;
-  color: $color-gray-700;
-  background: transparent;
+  color: $color-gray-900;
+  background: none;
+  border: none;
+  padding: $spacing-xs;
+  cursor: pointer;
+  transition: $transition-base;
 
   &:hover {
     color: $color-primary;
-    background-color: $color-gray-100;
   }
 }
 
-.notification-badge {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  background-color: $color-error;
-  color: $color-white;
-  font-size: $font-size-xs;
+// End Section (Left Side in RTL)
+.header-end {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+// Notification Styles
+.notifications {
+  position: relative;
+}
+
+.icon-button {
+  width: 40px;
+  height: 40px;
+  border-radius: $border-radius-md;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 9999px;
-  min-width: 20px;
-  min-height: 20px;
-  padding: 2px 6px;
+  background: transparent;
+  border: none;
+  color: $color-gray-700;
+  cursor: pointer;
+  transition: $transition-base;
+  position: relative;
+
+  &:hover {
+    background-color: rgba($color-primary, 0.05);
+    color: $color-primary;
+  }
 }
 
-.notification-menu {
-  width: 320px;
-  margin-top: $spacing-sm;
-  padding: $spacing-md;
-  border-radius: $border-radius-lg;
-  background-color: $color-white;
-  box-shadow: $shadow-lg;
+.badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: $color-error;
+  color: $color-white;
+  font-size: $font-size-xs;
+  min-width: 18px;
+  height: 18px;
+  border-radius: $border-radius-full;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  font-weight: 600;
+}
 
-  @media (max-width: $breakpoint-md) {
-    width: 300px;
+// Dropdown Menus
+.dropdown-menu {
+  margin-top: $spacing-sm;
+  padding: 0;
+  border: none;
+  box-shadow: $shadow-lg;
+  border-radius: $border-radius-lg;
+  overflow: hidden;
+
+  &.notification-menu {
+    width: 360px;
+    
+    @media (max-width: $breakpoint-md) {
+      width: 320px;
+    }
   }
 }
 
 .notification-header {
-  font-weight: 600;
-  margin-bottom: $spacing-md;
+  padding: $spacing-md;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid $color-gray-200;
+  background-color: $color-white;
+  
+  h6 {
+    margin: 0;
+    font-weight: 600;
+    color: $color-gray-900;
+  }
+  
+  .clear-all {
+    background: none;
+    border: none;
+    color: $color-primary;
+    font-size: $font-size-sm;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $border-radius-sm;
+    cursor: pointer;
+    
+    &:hover {
+      background-color: rgba($color-primary, 0.05);
+    }
+  }
 }
 
 .notification-list {
-  max-height: 300px;
-  overflow-y: auto;
+  max-height: 360px;
+  @include scrollable;
 }
 
 .notification-item {
-  @include flex-center;
+  display: flex;
+  align-items: flex-start;
   gap: $spacing-sm;
+  padding: $spacing-md;
+  transition: $transition-base;
+  border-bottom: 1px solid $color-gray-100;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: $color-gray-100;
+  }
+
+  .notification-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: $border-radius-lg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background-color: $color-gray-100;
+    
+    i {
+      font-size: $font-size-lg;
+      
+      &.text-success { color: $color-success; }
+      &.text-warning { color: $color-warning; }
+      &.text-info { color: $color-info; }
+    }
+  }
+
+  .notification-content {
+    flex: 1;
+    min-width: 0;
+    
+    p {
+      margin: 0;
+      color: $color-gray-900;
+      font-size: $font-size-sm;
+      line-height: 1.4;
+    }
+
+    small {
+      display: block;
+      color: $color-gray-600;
+      font-size: $font-size-xs;
+      margin-top: 4px;
+    }
+  }
+}
+
+.notification-footer {
   padding: $spacing-sm;
-  border-radius: $border-radius-md;
+  background-color: $color-white;
+  border-top: 1px solid $color-gray-200;
   
-  &:hover {
+  .view-all {
+    width: 100%;
+    padding: $spacing-sm;
+    border: none;
     background-color: $color-gray-100;
-  }
-
-  i {
-    font-size: $font-size-xl;
-  }
-}
-
-.notification-text {
-  flex: 1;
-  
-  p {
-    font-size: $font-size-sm;
-    color: $color-gray-800;
-  }
-}
-
-.notification-time {
-  font-size: $font-size-xs;
-  color: $color-gray-500;
-}
-
-.view-all {
-  @include button-base;
-  width: 100%;
-  margin-top: $spacing-sm;
-  color: $color-primary;
-  font-size: $font-size-sm;
-  
-  &:hover {
-    background-color: $color-gray-100;
+    color: $color-primary;
+    border-radius: $border-radius-md;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-sm;
+    cursor: pointer;
+    transition: $transition-base;
+    
+    &:hover {
+      background-color: rgba($color-primary, 0.05);
+    }
+    
+    i {
+      font-size: $font-size-sm;
+    }
   }
 }
 
-// User Profile Styles
-.user-dropdown {
+// User Menu Styles
+.user-menu {
   position: relative;
 }
 
 .user-button {
-  @include button-base;
-  background: transparent;
+  display: flex;
+  align-items: center;
   gap: $spacing-sm;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $border-radius-md;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: $transition-base;
 
   &:hover {
-    background-color: $color-gray-100;
+    background-color: rgba($color-primary, 0.05);
   }
-}
 
-.user-avatar {
-  width: 32px;
-  height: 32px;
-  @include flex-center;
-  background-color: $color-primary;
-  color: $color-white;
-  border-radius: $border-radius-full;
-}
-
-.user-name {
-  display: none;
-  
-  @media (min-width: $breakpoint-md) {
-    display: block;
-    margin: 0 $spacing-sm;
+  .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: $border-radius-full;
+    background-color: $color-primary;
+    color: $color-white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: $font-size-sm;
   }
+
+  .username {
+    color: $color-gray-700;
+    font-weight: 500;
+    
+    @media (max-width: $breakpoint-md) {
+      display: none;
+    }
+  }
 }
 
-.user-menu {
-  width: 200px;
-  margin-top: $spacing-sm;
-  padding: $spacing-xs 0;
-  border-radius: $border-radius-lg;
-  background-color: $color-white;
-  box-shadow: $shadow-lg;
+.user-dropdown-menu {
+  width: 280px;
 }
 
-.menu-item {
-  @include button-base;
-  width: 100%;
-  justify-content: flex-start;
+.user-info {
+  padding: $spacing-md;
+  background-color: rgba($color-primary, 0.02);
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  
+  .avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: $border-radius-full;
+    background-color: $color-primary;
+    color: $color-white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: $font-size-lg;
+  }
+  
+  .user-details {
+    strong {
+      display: block;
+      color: $color-gray-900;
+    }
+    
+    small {
+      color: $color-gray-600;
+      font-size: $font-size-xs;
+    }
+  }
+}
+
+.dropdown-item {
   padding: $spacing-sm $spacing-md;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
   color: $color-gray-700;
-  font-size: $font-size-sm;
+  cursor: pointer;
+  transition: $transition-base;
   
   i {
-    margin-left: $spacing-sm;
     width: 20px;
     text-align: center;
+    font-size: $font-size-lg;
   }
-
+  
   &:hover {
-    background-color: $color-gray-100;
+    background-color: rgba($color-primary, 0.05);
+    color: $color-primary;
   }
-
+  
   &.logout {
     color: $color-error;
+    
+    &:hover {
+      background-color: rgba($color-error, 0.05);
+    }
   }
 }
 
-.menu-divider {
-  height: 1px;
-  margin: $spacing-xs 0;
-  background-color: $color-gray-200;
-}
-
-// Mobile Search Styles
+// Mobile Search
 .mobile-search {
   display: none;
-  padding: 0 $spacing-md $spacing-md;
+  padding: $spacing-sm;
+  background-color: $color-white;
+  border-bottom: 1px solid $color-gray-200;
   
   @media (max-width: $breakpoint-md) {
     display: block;
   }
+
+  .search-form {
+    width: 100%;
+  }
 }
 
-.mobile-search-form {
-  position: relative;
-}
+// RTL Specific Adjustments
+[dir="rtl"] {
+  .search-input {
+    padding: 0 $spacing-xl 0 $spacing-md;
+  }
 
-.mobile-search-input {
-  @include input-base;
-  padding-right: $spacing-xl;
-  background-color: $color-gray-100;
-}
+  .search-button {
+    right: $spacing-sm;
+    left: auto;
+  }
 
-.mobile-search-button {
-  @include button-base;
-  position: absolute;
-  left: $spacing-sm;
-  top: 50%;
-  transform: translateY(-50%);
-  color: $color-gray-500;
-  padding: 0;
-  width: 32px;
-  height: 32px;
+  .dropdown-menu {
+    text-align: right;
+  }
+
+  .notification-item,
+  .dropdown-item {
+    i {
+      margin-right: 0;
+      margin-left: $spacing-sm;
+    }
+  }
 }

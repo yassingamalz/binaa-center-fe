@@ -30,6 +30,7 @@
     "@swimlane/ngx-charts": "^20.5.0",
     "@types/chart.js": "^2.9.41",
     "@types/lodash": "^4.14.202",
+    "bootstrap": "^5.3.2",
     "chart.js": "^4.4.7",
     "lodash": "^4.17.21",
     "moment": "^2.30.1",

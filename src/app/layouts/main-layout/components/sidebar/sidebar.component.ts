@@ -1,5 +1,5 @@
 // src/app/layout/components/sidebar/sidebar.component.ts
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
 interface MenuItem {
@@ -15,6 +15,8 @@ interface MenuItem {
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent {
+  @Input() isCollapsed = false;
+
   menuItems: MenuItem[] = [
     { icon: 'fa-home', label: 'لوحة التحكم', route: '/dashboard' },
     { icon: 'fa-users', label: 'إدارة الحالات', route: '/cases' },
