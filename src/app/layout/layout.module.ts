@@ -1,21 +1,31 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
+// src/app/layout/layout.module.ts
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 import { HeaderComponent } from './components/header/header.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { MainLayoutComponent } from './components/main-layout/main-layout.component';
-
-
 
 @NgModule({
   declarations: [
-    SidebarComponent,
+    MainLayoutComponent,
     HeaderComponent,
-    FooterComponent,
-    MainLayoutComponent
+    SidebarComponent,
+    FooterComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule,
+    NgbModule
+  ],
+  exports: [
+    MainLayoutComponent,
+    HeaderComponent,
+    SidebarComponent,
+    FooterComponent
   ]
 })
 export class LayoutModule { }
