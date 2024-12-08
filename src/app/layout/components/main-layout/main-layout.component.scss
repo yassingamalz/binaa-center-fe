@@ -5,78 +5,136 @@
 .main-layout {
   display: flex;
   height: 100vh;
+  direction: rtl;
+  overflow: hidden;
   background-color: $color-gray-100;
-  transition: $transition-base;
 
+  // Loading Overlay
+  .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba($color-white, 0.8);
+    z-index: $z-index-modal;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .spinner-container {
+      text-align: center;
+
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 3px solid $color-gray-200;
+        border-top-color: $color-primary;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      p {
+        margin-top: $spacing-md;
+        color: $color-gray-700;
+      }
+    }
+  }
+
+  // Sidebar
+  .sidebar {
+    width: 280px;
+    background-color: $color-white;
+    box-shadow: $shadow-rtl-md;
+    transition: $transition-base;
+    z-index: $z-index-fixed;
+    
+    @media (max-width: $breakpoint-md) {
+      position: fixed;
+      height: 100vh;
+      transform: translateX(280px);
+      
+      &.collapsed {
+        transform: translateX(0);
+      }
+    }
+  }
+
+  // Main Content Area
+  .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-right: 280px;
+    transition: $transition-base;
+    
+    @media (max-width: $breakpoint-md) {
+      margin-right: 0;
+    }
+  }
+
+  // Header
+  .header {
+    height: 64px;
+    background-color: $color-white;
+    box-shadow: $shadow-sm;
+    position: sticky;
+    top: 0;
+    z-index: $z-index-sticky;
+  }
+
+  // Content Area
+  .content {
+    flex: 1;
+    padding: $spacing-lg;
+    overflow-y: auto;
+    
+    @media (max-width: $breakpoint-md) {
+      padding: $spacing-md;
+    }
+
+    &.loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+  }
+
+  // Footer
+  .footer {
+    background-color: $color-white;
+    padding: $spacing-md;
+    border-top: 1px solid $color-gray-200;
+  }
+
+  // Collapsed State
   &.sidebar-collapsed {
     .sidebar {
-      width: 60px;
-      
-      @include responsive($breakpoint-md) {
+      @media (min-width: $breakpoint-md) {
         width: 80px;
       }
     }
 
     .main-content {
-      margin-left: 60px;
-      
-      @include responsive($breakpoint-md) {
-        margin-left: 80px;
+      @media (min-width: $breakpoint-md) {
+        margin-right: 80px;
       }
     }
   }
 }
 
-.sidebar {
-  position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 250px;
-  background-color: $color-white;
-  box-shadow: $shadow-md;
-  z-index: $z-index-fixed;
-  transition: $transition-base;
-
-  @include responsive($breakpoint-md) {
-    width: 280px;
-  }
-}
-
-.main-content {
-  flex: 1;
-  margin-left: 250px;
-  transition: $transition-base;
-  display: flex;
-  flex-direction: column;
+// Auth Layout
+.auth-layout {
   min-height: 100vh;
-
-  @include responsive($breakpoint-md) {
-    margin-left: 280px;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $color-light;
+  padding: $spacing-md;
 }
 
-.header {
-  position: sticky;
-  top: 0;
-  background-color: $color-white;
-  box-shadow: $shadow-sm;
-  z-index: $z-index-sticky;
-}
-
-.content {
-  flex: 1;
-  padding: $spacing-lg;
-  overflow-y: auto;
-}
-
-.footer {
-  background-color: $color-white;
-  border-top: 1px solid $color-gray-200;
-}
-
-@include responsive($breakpoint-sm) {
-  .content {
-    padding: $spacing-xl;
+// Animation
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }

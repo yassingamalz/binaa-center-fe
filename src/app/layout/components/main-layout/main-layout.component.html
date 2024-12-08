@@ -1,24 +1,45 @@
-
 <!-- src/app/layout/components/main-layout/main-layout.component.html -->
-<div class="main-layout" [class.sidebar-collapsed]="isSidebarCollapsed">
-  <aside class="sidebar">
-    <app-sidebar></app-sidebar>
-  </aside>
+<ng-container *ngIf="currentUser$ | async as user; else loginLayout">
+  <div class="main-layout" [class.sidebar-collapsed]="isSidebarCollapsed">
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" *ngIf="isLoading$ | async">
+      <div class="spinner-container">
+        <div class="spinner"></div>
+        <p>جاري التحميل...</p>
+      </div>
+    </div>
 
-  <div class="main-content">
-    <header class="header">
-      <app-header 
-        [isSidebarCollapsed]="isSidebarCollapsed"
-        (toggleSidebar)="toggleSidebar()"
-      ></app-header>
-    </header>
+    <!-- Sidebar -->
+    <aside class="sidebar" [class.collapsed]="isSidebarCollapsed">
+      <app-sidebar></app-sidebar>
+    </aside>
 
-    <main class="content">
-      <router-outlet></router-outlet>
-    </main>
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <!-- Header -->
+      <header class="header">
+        <app-header 
+          [isSidebarCollapsed]="isSidebarCollapsed"
+          (toggleSidebar)="toggleSidebar()"
+        ></app-header>
+      </header>
 
-    <footer class="footer">
-      <app-footer></app-footer>
-    </footer>
+      <!-- Main Content -->
+      <main class="content" [class.loading]="isLoading$ | async">
+        <router-outlet></router-outlet>
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <app-footer></app-footer>
+      </footer>
+    </div>
   </div>
-</div>
+</ng-container>
+
+<!-- Auth Layout Template -->
+<ng-template #loginLayout>
+  <div class="auth-layout">
+    <router-outlet></router-outlet>
+  </div>
+</ng-template>

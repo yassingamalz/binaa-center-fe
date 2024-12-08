@@ -1,0 +1,111 @@
+
+
+// src/app/layout/components/sidebar/sidebar.component.scss
+@import 'styles/main';
+
+.sidebar-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: $color-white;
+}
+
+.logo-container {
+  @include flex-center;
+  flex-direction: column;
+  padding: $spacing-lg;
+  border-bottom: 1px solid $color-gray-200;
+
+  .logo {
+    width: 80px;
+    height: auto;
+    margin-bottom: $spacing-sm;
+  }
+
+  .brand-name {
+    color: $color-primary;
+    font-size: $font-size-xl;
+    font-weight: 700;
+    margin: 0;
+  }
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: $spacing-md 0;
+  overflow-y: auto;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item {
+  margin: $spacing-xs 0;
+
+  .nav-link {
+    @include flex-center;
+    padding: $spacing-sm $spacing-lg;
+    color: $color-gray-600;
+    transition: $transition-base;
+    
+    i {
+      margin-left: $spacing-md;
+      width: 20px;
+      text-align: center;
+    }
+    
+    &:hover {
+      background-color: $color-light;
+      color: $color-primary;
+    }
+  }
+
+  &.active .nav-link {
+    background-color: rgba($color-primary, 0.1);
+    color: $color-primary;
+    font-weight: 600;
+
+    &::before {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background-color: $color-primary;
+      border-radius: 0 $border-radius-md $border-radius-md 0;
+    }
+  }
+}
+
+.sidebar-footer {
+  padding: $spacing-md;
+  border-top: 1px solid $color-gray-200;
+}
+
+.support-card {
+  @include card;
+  @include flex-center;
+  flex-direction: column;
+  background-color: $color-light;
+  padding: $spacing-lg;
+  text-align: center;
+
+  i {
+    font-size: $font-size-2xl;
+    color: $color-primary;
+    margin-bottom: $spacing-sm;
+  }
+
+  p {
+    color: $color-gray-600;
+    margin-bottom: $spacing-md;
+  }
+
+  button {
+    width: 100%;
+  }
+}

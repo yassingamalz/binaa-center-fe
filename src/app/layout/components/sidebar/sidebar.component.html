@@ -1,1 +1,29 @@
-<p>sidebar works!</p>
+
+<!-- src/app/layout/components/sidebar/sidebar.component.html -->
+<div class="sidebar-container" dir="rtl">
+  <div class="logo-container">
+    <img src="assets/images/logo.png" alt="Binaa Center Logo" class="logo">
+    <h1 class="brand-name">مركز بناء</h1>
+  </div>
+
+  <nav class="sidebar-nav">
+    <ul class="nav-list">
+      <li *ngFor="let item of menuItems" 
+          class="nav-item"
+          [class.active]="isActive(item.route)">
+        <a [routerLink]="item.route" class="nav-link">
+          <i class="fas {{item.icon}}"></i>
+          <span class="nav-label">{{item.label}}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="support-card">
+      <i class="fas fa-headset"></i>
+      <p>بحاجة للمساعدة؟</p>
+      <button class="theme-button-secondary">تواصل معنا</button>
+    </div>
+  </div>
+</div>

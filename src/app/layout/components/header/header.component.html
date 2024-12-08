@@ -1,1 +1,86 @@
-<p>header works!</p>
+<!-- src/app/layout/components/header/header.component.html -->
+<header class="header" dir="rtl">
+  <div class="header-start">
+    <button 
+      class="menu-toggle"
+      type="button"
+      (click)="toggleSidebar.emit()"
+      aria-label="القائمة">
+      <i class="fas" [class.fa-bars]="isSidebarCollapsed" [class.fa-times]="!isSidebarCollapsed"></i>
+    </button>
+
+    <form class="search-form" (submit)="onSearch($event)">
+      <div class="search-wrapper">
+        <i class="fas fa-search search-icon"></i>
+        <input 
+          type="text"
+          class="search-input"
+          placeholder="بحث..."
+          [(ngModel)]="searchQuery"
+          name="search"
+          autocomplete="off">
+      </div>
+    </form>
+  </div>
+
+  <div class="header-end">
+    <div class="header-actions">
+      <!-- Notifications Dropdown -->
+      <div class="notification-dropdown" ngbDropdown>
+        <button 
+          class="notification-button"
+          type="button"
+          ngbDropdownToggle
+          aria-label="الإشعارات">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </button>
+        <div class="dropdown-menu notification-menu" ngbDropdownMenu>
+          <h6 class="dropdown-header">الإشعارات</h6>
+          <div class="notification-item">
+            <i class="fas fa-calendar-check text-success"></i>
+            <div class="notification-content">
+              <p>موعد جديد تم تأكيده</p>
+              <small>منذ 5 دقائق</small>
+            </div>
+          </div>
+          <!-- Add more notifications here -->
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item text-center">
+            عرض جميع الإشعارات
+          </button>
+        </div>
+      </div>
+
+      <!-- User Profile Dropdown -->
+      <div class="user-dropdown" ngbDropdown>
+        <button 
+          class="user-button"
+          type="button"
+          ngbDropdownToggle>
+          <div class="user-avatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <span class="user-name" *ngIf="currentUser$ | async as user">
+            {{ user.username }}
+          </span>
+        </button>
+        <div class="dropdown-menu user-menu" ngbDropdownMenu>
+          <button class="dropdown-item" ngbDropdownItem>
+            <i class="fas fa-user-circle ml-2"></i>
+            الملف الشخصي
+          </button>
+          <button class="dropdown-item" ngbDropdownItem>
+            <i class="fas fa-cog ml-2"></i>
+            الإعدادات
+          </button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" ngbDropdownItem (click)="onLogout()">
+            <i class="fas fa-sign-out-alt ml-2"></i>
+            تسجيل الخروج
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
