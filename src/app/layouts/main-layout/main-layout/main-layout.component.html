@@ -1,13 +1,5 @@
-<!-- Auth Layout Template -->
-<ng-container *ngIf="isAuthRoute(); else mainLayout">
-  <div class="auth-layout">
-    <router-outlet></router-outlet>
-  </div>
-</ng-container>
-
-<!-- Main Application Layout Template -->
-<ng-template #mainLayout>
-  <div class="main-layout" [class.sidebar-collapsed]="isSidebarCollapsed">
+<!-- src/app/layouts/main-layout/main-layout.component.html -->
+<div class="main-layout" [class.sidebar-collapsed]="isSidebarCollapsed">
     <!-- Loading Overlay -->
     <div class="loading-overlay" *ngIf="isLoading$ | async">
       <div class="spinner-container">
@@ -15,28 +7,37 @@
         <p>جاري التحميل...</p>
       </div>
     </div>
-
+  
     <!-- Sidebar -->
     <aside class="sidebar" [class.collapsed]="isSidebarCollapsed">
       <app-sidebar></app-sidebar>
     </aside>
-
+  
     <!-- Main Content Area -->
     <div class="main-content">
+      <!-- Header -->
       <header class="header">
         <app-header 
           [isSidebarCollapsed]="isSidebarCollapsed"
           (toggleSidebar)="toggleSidebar()"
         ></app-header>
       </header>
-
+  
+      <!-- Main Content -->
       <main class="content" [class.loading]="isLoading$ | async">
         <router-outlet></router-outlet>
       </main>
-
+  
+      <!-- Footer -->
       <footer class="footer">
         <app-footer></app-footer>
       </footer>
     </div>
   </div>
-</ng-template>
+  
+  <!-- Mobile Overlay -->
+  <div 
+    class="mobile-overlay" 
+    [class.visible]="!isSidebarCollapsed" 
+    (click)="toggleSidebar()"
+  ></div>

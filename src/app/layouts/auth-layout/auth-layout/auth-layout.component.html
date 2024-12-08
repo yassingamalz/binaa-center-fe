@@ -1,0 +1,15 @@
+<!-- src/app/layouts/auth-layout/auth-layout.component.html -->
+<div class="auth-layout">
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" *ngIf="isLoading$ | async">
+      <div class="spinner-container">
+        <div class="spinner"></div>
+        <p>جاري التحميل...</p>
+      </div>
+    </div>
+  
+    <!-- Auth Content -->
+    <div class="auth-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>

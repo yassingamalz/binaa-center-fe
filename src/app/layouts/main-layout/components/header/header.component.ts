@@ -2,8 +2,8 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { UserDTO } from '../../../core/models/user';
-import { AuthService } from '../../../core/services/auth.service';
+import { UserDTO } from '../../../../core/models/user';
+import { AuthService } from '../../../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({

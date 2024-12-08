@@ -1,10 +1,16 @@
 // src/app/app-routing.module.ts
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MainLayoutComponent } from './layout/components/main-layout/main-layout.component';
+
+// Layout Components
+import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout/auth-layout.component';
+import { MainLayoutComponent } from './layouts/main-layout/main-layout/main-layout.component';
+
+// Guards
 import { AuthGuard } from './core/guards/auth.guard';
 import { AdminGuard } from './core/guards/admin.guard';
 import { NoAuthGuard } from './core/guards/no-auth.guard';
+
 
 export const routes: Routes = [
   {
@@ -52,7 +58,7 @@ export const routes: Routes = [
         path: 'finance',
         loadChildren: () => import('./features/finance/finance.module')
           .then(m => m.FinanceModule),
-        canActivate: [AdminGuard] // Only admins can access finance
+        canActivate: [AdminGuard]
       },
       {
         path: 'fidelity',
@@ -63,20 +69,27 @@ export const routes: Routes = [
         path: 'reports',
         loadChildren: () => import('./features/reports/reports.module')
           .then(m => m.ReportsModule),
-        canActivate: [AdminGuard] // Only admins can access reports
+        canActivate: [AdminGuard]
       },
       {
         path: 'settings',
         loadChildren: () => import('./features/settings/settings.module')
           .then(m => m.SettingsModule),
-        canActivate: [AdminGuard] // Only admins can access settings
+        canActivate: [AdminGuard]
       }
     ]
   },
   {
     path: 'auth',
-    canActivate: [NoAuthGuard], // Prevent authenticated users from accessing auth pages
-    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
+    component: AuthLayoutComponent,
+    canActivate: [NoAuthGuard],
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./auth/auth.module')
+          .then(m => m.AuthModule)
+      }
+    ]
   },
   {
     path: '**',
@@ -87,7 +100,12 @@ export const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      scrollPositionRestoration: 'enabled' // Enable scroll restoration
+      scrollPositionRestoration: 'enabled',
+      useHash: false,
+      anchorScrolling: 'enabled',
+      onSameUrlNavigation: 'reload',
+      scrollOffset: [0, 64], // [x, y] - adjust scroll offset for header height
+      paramsInheritanceStrategy: 'always'
     })
   ],
   exports: [RouterModule]

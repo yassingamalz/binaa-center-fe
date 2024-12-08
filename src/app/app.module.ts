@@ -7,13 +7,21 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { JwtModule } from '@auth0/angular-jwt';
 import { ToastrModule } from 'ngx-toastr';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AppRoutingModule } from './app-routing.module'; 
+
+// Routing
+import { AppRoutingModule } from './app-routing.module';
+
+// Components
 import { AppComponent } from './app.component';
+
+// Interceptors
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+
+// Modules
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
+import { LayoutsModule } from './layouts/layouts.module';
 import { AuthModule } from './auth/auth.module';
-import { LayoutModule } from './layout/layout.module';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -24,14 +32,20 @@ export function tokenGetter() {
     AppComponent
   ],
   imports: [
+    // Angular Modules
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    
+    // Third Party Modules
     NgbModule,
-    AppRoutingModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true
+    }),
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
@@ -39,10 +53,13 @@ export function tokenGetter() {
         disallowedRoutes: ['http://localhost:8080/api/auth/login']
       }
     }),
+
+    // App Modules
+    AppRoutingModule,
     CoreModule,
     SharedModule,
-    AuthModule,
-    LayoutModule
+    LayoutsModule,
+    AuthModule
   ],
   providers: [
     {

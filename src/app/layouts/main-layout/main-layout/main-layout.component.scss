@@ -1,0 +1,178 @@
+// src/app/layouts/main-layout/main-layout.component.scss
+@import 'styles/main';
+
+.main-layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  direction: rtl;
+  overflow: hidden;
+  background-color: $color-gray-100;
+  position: relative;
+}
+
+// Sidebar
+.sidebar {
+  width: 280px;
+  height: 100vh;
+  background-color: $color-white;
+  box-shadow: $shadow-rtl-md;
+  transition: all 0.3s ease;
+  z-index: $z-index-fixed;
+  
+  @media (max-width: #{$breakpoint-md - 1}) {
+    position: fixed;
+    right: 0;
+    transform: translateX(100%);
+    
+    &.collapsed {
+      transform: translateX(0);
+    }
+  }
+
+  @media (min-width: $breakpoint-md) {
+    position: fixed;
+    height: 100%;
+    
+    &.collapsed {
+      width: 80px;
+    }
+  }
+}
+
+// Main Content Area
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin-right: 280px;
+  transition: all 0.3s ease;
+  
+  @media (max-width: #{$breakpoint-md - 1}) {
+    margin-right: 0;
+  }
+
+  @media (min-width: $breakpoint-md) {
+    .sidebar-collapsed & {
+      margin-right: 80px;
+    }
+  }
+}
+
+// Header
+.header {
+  height: 64px;
+  min-height: 64px;
+  background-color: $color-white;
+  box-shadow: $shadow-sm;
+  position: relative;
+  z-index: $z-index-sticky;
+  padding: 0 $spacing-md;
+  display: flex;
+  align-items: center;
+
+  @media (max-width: #{$breakpoint-md - 1}) {
+    padding: 0 $spacing-sm;
+  }
+}
+
+// Content Area
+.content {
+  flex: 1;
+  padding: $spacing-lg;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background-color: $color-gray-100;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  
+  @media (max-width: #{$breakpoint-md - 1}) {
+    padding: $spacing-md;
+  }
+
+  &.loading {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}
+
+// Footer
+.footer {
+  background-color: $color-white;
+  padding: $spacing-md;
+  border-top: 1px solid $color-gray-200;
+  
+  @media (max-width: #{$breakpoint-md - 1}) {
+    padding: $spacing-sm;
+    padding-bottom: max($spacing-sm, env(safe-area-inset-bottom));
+  }
+}
+
+// Loading Overlay
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba($color-white, 0.8);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: $z-index-modal;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .spinner-container {
+    text-align: center;
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid $color-gray-200;
+      border-top-color: $color-primary;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    p {
+      margin-top: $spacing-md;
+      color: $color-gray-700;
+      font-weight: 500;
+    }
+  }
+}
+
+// Mobile Overlay
+.mobile-overlay {
+  display: none;
+  
+  @media (max-width: #{$breakpoint-md - 1}) {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba($color-black, 0.5);
+    z-index: calc(#{$z-index-fixed} - 1);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+
+    &.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
