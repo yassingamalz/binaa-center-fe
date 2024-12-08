@@ -77,7 +77,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     this.isSidebarCollapsed = window.innerWidth < 768;
   }
 
-  private isAuthRoute(): boolean {
+  public isAuthRoute(): boolean {
     return this.router.url.includes('/auth/');
   }
 }

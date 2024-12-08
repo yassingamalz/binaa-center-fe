@@ -1,61 +1,74 @@
-
-// src/app/layout/components/main-layout/main-layout.component.scss
 @import 'styles/main';
 
-.main-layout {
-  display: flex;
-  height: 100vh;
-  direction: rtl;
-  overflow: hidden;
-  background-color: $color-gray-100;
+// Mixins
+@mixin mobile-safe-area {
+  padding-top: max(env(safe-area-inset-top), $spacing-md);
+  padding-bottom: max(env(safe-area-inset-bottom), $spacing-md);
+  padding-left: max(env(safe-area-inset-left), $spacing-md);
+  padding-right: max(env(safe-area-inset-right), $spacing-md);
+}
 
-  // Loading Overlay
-  .loading-overlay {
+// Auth Layout
+.auth-layout {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+  
+  @media (min-width: $breakpoint-md) {
+    background-color: $color-light;
+    padding: $spacing-md;
+  }
+
+  @media (max-width: #{$breakpoint-md - 1}) {
+    background-color: $color-white;
+    padding: 0;
+    margin: 0;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba($color-white, 0.8);
-    z-index: $z-index-modal;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    .spinner-container {
-      text-align: center;
-
-      .spinner {
-        width: 50px;
-        height: 50px;
-        border: 3px solid $color-gray-200;
-        border-top-color: $color-primary;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-      }
-
-      p {
-        margin-top: $spacing-md;
-        color: $color-gray-700;
-      }
-    }
+    @include mobile-safe-area;
   }
+}
+
+// Main Layout
+.main-layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  direction: rtl;
+  overflow: hidden;
+  background-color: $color-gray-100;
+  position: relative;
 
   // Sidebar
   .sidebar {
     width: 280px;
+    height: 100vh;
     background-color: $color-white;
     box-shadow: $shadow-rtl-md;
-    transition: $transition-base;
+    transition: all 0.3s ease;
     z-index: $z-index-fixed;
+    display: flex;
+    flex-direction: column;
     
-    @media (max-width: $breakpoint-md) {
+    @media (max-width: #{$breakpoint-md - 1}) {
       position: fixed;
-      height: 100vh;
-      transform: translateX(280px);
+      right: 0;
+      transform: translateX(100%);
       
       &.collapsed {
         transform: translateX(0);
+      }
+    }
+
+    @media (min-width: $breakpoint-md) {
+      &.collapsed {
+        width: 80px;
       }
     }
   }
@@ -65,22 +78,36 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    min-width: 0; // Fixes flexbox text overflow
+    transition: all 0.3s ease;
     margin-right: 280px;
-    transition: $transition-base;
-    
-    @media (max-width: $breakpoint-md) {
+
+    @media (max-width: #{$breakpoint-md - 1}) {
       margin-right: 0;
+    }
+
+    @media (min-width: $breakpoint-md) {
+      .sidebar-collapsed & {
+        margin-right: 80px;
+      }
     }
   }
 
   // Header
   .header {
     height: 64px;
+    min-height: 64px; // Prevents shrinking
     background-color: $color-white;
     box-shadow: $shadow-sm;
-    position: sticky;
-    top: 0;
+    position: relative;
     z-index: $z-index-sticky;
+    display: flex;
+    align-items: center;
+    padding: 0 $spacing-md;
+
+    @media (max-width: #{$breakpoint-md - 1}) {
+      padding: 0 $spacing-sm;
+    }
   }
 
   // Content Area
@@ -88,8 +115,10 @@
     flex: 1;
     padding: $spacing-lg;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
     
-    @media (max-width: $breakpoint-md) {
+    @media (max-width: #{$breakpoint-md - 1}) {
       padding: $spacing-md;
     }
 
@@ -104,37 +133,151 @@
     background-color: $color-white;
     padding: $spacing-md;
     border-top: 1px solid $color-gray-200;
-  }
-
-  // Collapsed State
-  &.sidebar-collapsed {
-    .sidebar {
-      @media (min-width: $breakpoint-md) {
-        width: 80px;
-      }
-    }
-
-    .main-content {
-      @media (min-width: $breakpoint-md) {
-        margin-right: 80px;
-      }
+    
+    @media (max-width: #{$breakpoint-md - 1}) {
+      padding: $spacing-sm;
+      padding-bottom: max($spacing-sm, env(safe-area-inset-bottom));
     }
   }
 }
 
-// Auth Layout
-.auth-layout {
-  min-height: 100vh;
+// Loading Overlay
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba($color-white, 0.8);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: $z-index-modal;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: $color-light;
-  padding: $spacing-md;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .spinner-container {
+    text-align: center;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+
+    .visible & {
+      transform: translateY(0);
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid $color-gray-200;
+      border-top-color: $color-primary;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    p {
+      margin-top: $spacing-md;
+      color: $color-gray-700;
+      font-size: $font-size-sm;
+      font-weight: 500;
+    }
+  }
 }
 
-// Animation
+// Mobile Overlay
+.mobile-overlay {
+  display: none;
+  
+  @media (max-width: #{$breakpoint-md - 1}) {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba($color-black, 0.5);
+    z-index: $z-index-modal - 1;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+
+    .sidebar:not(.collapsed) + & {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
+// Utility Classes
+.no-scroll {
+  overflow: hidden !important;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+// Animations
 @keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Responsive Helpers
+@media (max-width: #{$breakpoint-md - 1}) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+@media (min-width: $breakpoint-md) {
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+// Print Styles
+@media print {
+  .main-layout {
+    display: block;
+    height: auto;
+    
+    .sidebar,
+    .header,
+    .footer {
+      display: none;
+    }
+
+    .main-content {
+      margin: 0;
+      padding: 0;
+    }
+
+    .content {
+      padding: 0;
+    }
   }
 }

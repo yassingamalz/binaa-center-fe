@@ -1,5 +1,12 @@
-<!-- src/app/layout/components/main-layout/main-layout.component.html -->
-<ng-container *ngIf="currentUser$ | async as user; else loginLayout">
+<!-- Auth Layout Template -->
+<ng-container *ngIf="isAuthRoute(); else mainLayout">
+  <div class="auth-layout">
+    <router-outlet></router-outlet>
+  </div>
+</ng-container>
+
+<!-- Main Application Layout Template -->
+<ng-template #mainLayout>
   <div class="main-layout" [class.sidebar-collapsed]="isSidebarCollapsed">
     <!-- Loading Overlay -->
     <div class="loading-overlay" *ngIf="isLoading$ | async">
@@ -16,7 +23,6 @@
 
     <!-- Main Content Area -->
     <div class="main-content">
-      <!-- Header -->
       <header class="header">
         <app-header 
           [isSidebarCollapsed]="isSidebarCollapsed"
@@ -24,22 +30,13 @@
         ></app-header>
       </header>
 
-      <!-- Main Content -->
       <main class="content" [class.loading]="isLoading$ | async">
         <router-outlet></router-outlet>
       </main>
 
-      <!-- Footer -->
       <footer class="footer">
         <app-footer></app-footer>
       </footer>
     </div>
-  </div>
-</ng-container>
-
-<!-- Auth Layout Template -->
-<ng-template #loginLayout>
-  <div class="auth-layout">
-    <router-outlet></router-outlet>
   </div>
 </ng-template>
