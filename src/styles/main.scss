@@ -1,0 +1,273 @@
+// _variables.scss
+// Brand Colors from Logo
+$color-primary: #800080;    // Purple
+$color-secondary: #FF69B4;  // Pink
+$color-accent: #FFA500;     // Orange
+$color-light: #FFF5FA;      // Light Pink/White
+$color-white: #FFFFFF;
+$color-black: #000000;
+
+// Semantic Colors
+$color-success: #4CAF50;
+$color-warning: #FFC107;
+$color-error: #F44336;
+$color-info: #2196F3;
+
+// Gray Scale
+$color-gray-100: #F8F9FA;
+$color-gray-200: #E9ECEF;
+$color-gray-300: #DEE2E6;
+$color-gray-400: #CED4DA;
+$color-gray-500: #ADB5BD;
+$color-gray-600: #6C757D;
+$color-gray-700: #495057;
+$color-gray-800: #343A40;
+$color-gray-900: #212529;
+
+// Typography
+$font-family-primary: 'Nunito', sans-serif;
+$font-family-secondary: 'Quicksand', sans-serif;
+
+$font-size-xs: 0.75rem;    // 12px
+$font-size-sm: 0.875rem;   // 14px
+$font-size-base: 1rem;     // 16px
+$font-size-lg: 1.125rem;   // 18px
+$font-size-xl: 1.25rem;    // 20px
+$font-size-2xl: 1.5rem;    // 24px
+$font-size-3xl: 1.875rem;  // 30px
+$font-size-4xl: 2.25rem;   // 36px
+
+// Spacing
+$spacing-unit: 0.25rem;  // 4px
+$spacing-xs: $spacing-unit;      // 4px
+$spacing-sm: $spacing-unit * 2;  // 8px
+$spacing-md: $spacing-unit * 4;  // 16px
+$spacing-lg: $spacing-unit * 6;  // 24px
+$spacing-xl: $spacing-unit * 8;  // 32px
+$spacing-2xl: $spacing-unit * 12; // 48px
+
+// Border Radius
+$border-radius-sm: 0.25rem;
+$border-radius-md: 0.5rem;
+$border-radius-lg: 1rem;
+$border-radius-xl: 1.5rem;
+$border-radius-full: 9999px;
+
+// Shadows
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+// Transitions
+$transition-base: all 0.3s ease-in-out;
+$transition-fast: all 0.15s ease-in-out;
+$transition-slow: all 0.45s ease-in-out;
+
+// Z-index
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-fixed: 1030;
+$z-index-modal-backdrop: 1040;
+$z-index-modal: 1050;
+$z-index-popover: 1060;
+$z-index-tooltip: 1070;
+
+// Breakpoints
+$breakpoint-xs: 0;
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+$breakpoint-xxl: 1400px;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin card {
+  background-color: $color-white;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-md;
+  padding: $spacing-lg;
+  transition: $transition-base;
+  
+  &:hover {
+    box-shadow: $shadow-lg;
+    transform: translateY(-2px);
+  }
+}
+
+@mixin button-base {
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $border-radius-md;
+  font-weight: 600;
+  transition: $transition-base;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+@mixin button-primary {
+  @include button-base;
+  background-color: $color-primary;
+  color: $color-white;
+  
+  &:hover:not(:disabled) {
+    background-color: darken($color-primary, 10%);
+  }
+}
+
+@mixin button-secondary {
+  @include button-base;
+  background-color: $color-secondary;
+  color: $color-white;
+  
+  &:hover:not(:disabled) {
+    background-color: darken($color-secondary, 10%);
+  }
+}
+
+@mixin input-base {
+  width: 100%;
+  padding: $spacing-sm;
+  border: 1px solid $color-gray-300;
+  border-radius: $border-radius-md;
+  font-family: $font-family-primary;
+  font-size: $font-size-base;
+  transition: $transition-base;
+  
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+  }
+  
+  &::placeholder {
+    color: $color-gray-500;
+  }
+}
+
+@mixin responsive($breakpoint) {
+  @media (min-width: $breakpoint) {
+    @content;
+  }
+}
+
+// Utility Classes
+.container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: $spacing-lg;
+  padding-left: $spacing-lg;
+  
+  @include responsive($breakpoint-sm) {
+    max-width: 540px;
+  }
+  
+  @include responsive($breakpoint-md) {
+    max-width: 720px;
+  }
+  
+  @include responsive($breakpoint-lg) {
+    max-width: 960px;
+  }
+  
+  @include responsive($breakpoint-xl) {
+    max-width: 1140px;
+  }
+}
+
+// Animation Keyframes
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// Theme Classes
+.theme-card {
+  @include card;
+  background-color: $color-light;
+  border: 2px solid rgba($color-primary, 0.1);
+}
+
+.theme-input {
+  @include input-base;
+  &:focus {
+    border-color: $color-secondary;
+    box-shadow: 0 0 0 3px rgba($color-secondary, 0.1);
+  }
+}
+
+.theme-button-primary {
+  @include button-primary;
+}
+
+.theme-button-secondary {
+  @include button-secondary;
+}
+
+// Global Styles
+body {
+  font-family: $font-family-primary;
+  font-size: $font-size-base;
+  line-height: 1.5;
+  color: $color-gray-900;
+  background-color: $color-gray-100;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-family-secondary;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: $spacing-md;
+}
+
+a {
+  color: $color-primary;
+  text-decoration: none;
+  transition: $transition-base;
+  
+  &:hover {
+    color: $color-secondary;
+  }
+}
+
+// Animations
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.slide-up {
+  animation: slideUp 0.4s ease-out;
+}
