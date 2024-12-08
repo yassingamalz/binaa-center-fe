@@ -1,1 +1,24 @@
-<p>main-layout works!</p>
+
+<!-- src/app/layout/components/main-layout/main-layout.component.html -->
+<div class="main-layout" [class.sidebar-collapsed]="isSidebarCollapsed">
+  <aside class="sidebar">
+    <app-sidebar></app-sidebar>
+  </aside>
+
+  <div class="main-content">
+    <header class="header">
+      <app-header 
+        [isSidebarCollapsed]="isSidebarCollapsed"
+        (toggleSidebar)="toggleSidebar()"
+      ></app-header>
+    </header>
+
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+
+    <footer class="footer">
+      <app-footer></app-footer>
+    </footer>
+  </div>
+</div>

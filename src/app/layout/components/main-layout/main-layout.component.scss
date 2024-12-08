@@ -1,0 +1,82 @@
+
+// src/app/layout/components/main-layout/main-layout.component.scss
+@import 'styles/main';
+
+.main-layout {
+  display: flex;
+  height: 100vh;
+  background-color: $color-gray-100;
+  transition: $transition-base;
+
+  &.sidebar-collapsed {
+    .sidebar {
+      width: 60px;
+      
+      @include responsive($breakpoint-md) {
+        width: 80px;
+      }
+    }
+
+    .main-content {
+      margin-left: 60px;
+      
+      @include responsive($breakpoint-md) {
+        margin-left: 80px;
+      }
+    }
+  }
+}
+
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 250px;
+  background-color: $color-white;
+  box-shadow: $shadow-md;
+  z-index: $z-index-fixed;
+  transition: $transition-base;
+
+  @include responsive($breakpoint-md) {
+    width: 280px;
+  }
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 250px;
+  transition: $transition-base;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  @include responsive($breakpoint-md) {
+    margin-left: 280px;
+  }
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  background-color: $color-white;
+  box-shadow: $shadow-sm;
+  z-index: $z-index-sticky;
+}
+
+.content {
+  flex: 1;
+  padding: $spacing-lg;
+  overflow-y: auto;
+}
+
+.footer {
+  background-color: $color-white;
+  border-top: 1px solid $color-gray-200;
+}
+
+@include responsive($breakpoint-sm) {
+  .content {
+    padding: $spacing-xl;
+  }
+}

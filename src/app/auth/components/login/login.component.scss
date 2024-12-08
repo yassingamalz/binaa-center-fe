@@ -1,0 +1,73 @@
+// src/app/auth/components/login/login.component.scss
+@import 'styles/main';
+
+.login-container {
+  @include flex-center;
+  min-height: 100vh;
+  background-color: $color-light;
+  padding: $spacing-md;
+}
+
+.login-card {
+  @include card;
+  max-width: 400px;
+  width: 100%;
+  animation: slideUp 0.5s ease-out;
+}
+
+.logo-section {
+  @include flex-center;
+  flex-direction: column;
+  margin-bottom: $spacing-xl;
+
+  .logo {
+    width: 120px;
+    height: auto;
+    margin-bottom: $spacing-md;
+  }
+
+  h1 {
+    color: $color-primary;
+    font-size: $font-size-2xl;
+    text-align: center;
+    margin: 0;
+  }
+}
+
+.login-form {
+  .form-group {
+    margin-bottom: $spacing-lg;
+
+    label {
+      display: block;
+      margin-bottom: $spacing-xs;
+      color: $color-gray-700;
+      font-weight: 600;
+    }
+
+    .error {
+      border-color: $color-error;
+      &:focus {
+        box-shadow: 0 0 0 3px rgba($color-error, 0.1);
+      }
+    }
+  }
+}
+
+.login-button {
+  width: 100%;
+  margin-bottom: $spacing-md;
+  height: 48px;
+  font-size: $font-size-lg;
+}
+
+.forgot-password {
+  display: block;
+  text-align: center;
+  color: $color-secondary;
+  font-size: $font-size-sm;
+  
+  &:hover {
+    color: darken($color-secondary, 10%);
+  }
+}
