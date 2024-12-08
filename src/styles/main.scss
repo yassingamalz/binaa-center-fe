@@ -1,5 +1,14 @@
-// _variables.scss
-// Brand Colors from Logo
+// Import external fonts
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Tajawal:wght@400;500;700&display=swap');
+
+// Reset & Base Styles
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+// Brand Colors
 $color-primary: #800080;    // Purple
 $color-secondary: #FF69B4;  // Pink
 $color-accent: #FFA500;     // Orange
@@ -25,26 +34,27 @@ $color-gray-800: #343A40;
 $color-gray-900: #212529;
 
 // Typography
-$font-family-primary: 'Nunito', sans-serif;
-$font-family-secondary: 'Quicksand', sans-serif;
+$font-family-primary: 'Cairo', sans-serif;
+$font-family-secondary: 'Tajawal', sans-serif;
 
-$font-size-xs: 0.75rem;    // 12px
-$font-size-sm: 0.875rem;   // 14px
-$font-size-base: 1rem;     // 16px
-$font-size-lg: 1.125rem;   // 18px
-$font-size-xl: 1.25rem;    // 20px
-$font-size-2xl: 1.5rem;    // 24px
-$font-size-3xl: 1.875rem;  // 30px
-$font-size-4xl: 2.25rem;   // 36px
+// Font Sizes - with mobile-first approach
+$font-size-xs: clamp(0.75rem, 2vw, 0.875rem);     
+$font-size-sm: clamp(0.875rem, 2.5vw, 1rem);      
+$font-size-base: clamp(1rem, 3vw, 1.125rem);      
+$font-size-lg: clamp(1.125rem, 3.5vw, 1.25rem);   
+$font-size-xl: clamp(1.25rem, 4vw, 1.5rem);       
+$font-size-2xl: clamp(1.5rem, 5vw, 1.875rem);     
+$font-size-3xl: clamp(1.875rem, 6vw, 2.25rem);    
+$font-size-4xl: clamp(2.25rem, 7vw, 3rem);        
 
-// Spacing
-$spacing-unit: 0.25rem;  // 4px
-$spacing-xs: $spacing-unit;      // 4px
-$spacing-sm: $spacing-unit * 2;  // 8px
-$spacing-md: $spacing-unit * 4;  // 16px
-$spacing-lg: $spacing-unit * 6;  // 24px
-$spacing-xl: $spacing-unit * 8;  // 32px
-$spacing-2xl: $spacing-unit * 12; // 48px
+// Spacing - with mobile-first approach
+$spacing-unit: clamp(0.25rem, 1vw, 0.5rem);
+$spacing-xs: $spacing-unit;
+$spacing-sm: clamp(0.5rem, 2vw, 0.75rem);
+$spacing-md: clamp(1rem, 3vw, 1.5rem);
+$spacing-lg: clamp(1.5rem, 4vw, 2rem);
+$spacing-xl: clamp(2rem, 5vw, 3rem);
+$spacing-2xl: clamp(3rem, 6vw, 4rem);
 
 // Border Radius
 $border-radius-sm: 0.25rem;
@@ -54,10 +64,16 @@ $border-radius-xl: 1.5rem;
 $border-radius-full: 9999px;
 
 // Shadows
-$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+$shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+// RTL Shadows
+$shadow-rtl-sm: -1px 1px 2px rgba(0, 0, 0, 0.05);
+$shadow-rtl-md: -4px 4px 6px -1px rgba(0, 0, 0, 0.1);
+$shadow-rtl-lg: -10px 10px 15px -3px rgba(0, 0, 0, 0.1);
+$shadow-rtl-xl: -20px 20px 25px -5px rgba(0, 0, 0, 0.1);
 
 // Transitions
 $transition-base: all 0.3s ease-in-out;
@@ -73,13 +89,17 @@ $z-index-modal: 1050;
 $z-index-popover: 1060;
 $z-index-tooltip: 1070;
 
-// Breakpoints
+// Breakpoints with Mobile First Approach
 $breakpoint-xs: 0;
 $breakpoint-sm: 576px;
 $breakpoint-md: 768px;
 $breakpoint-lg: 992px;
 $breakpoint-xl: 1200px;
 $breakpoint-xxl: 1400px;
+
+// RTL Helpers
+$start: right;
+$end: left;
 
 // Mixins
 @mixin flex-center {
@@ -94,51 +114,59 @@ $breakpoint-xxl: 1400px;
   justify-content: space-between;
 }
 
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin mobile-padding {
+  padding: $spacing-md;
+  
+  @include responsive($breakpoint-md) {
+    padding: $spacing-lg;
+  }
+}
+
 @mixin card {
   background-color: $color-white;
   border-radius: $border-radius-lg;
-  box-shadow: $shadow-md;
-  padding: $spacing-lg;
+  box-shadow: $shadow-rtl-md;
+  @include mobile-padding;
   transition: $transition-base;
   
-  &:hover {
-    box-shadow: $shadow-lg;
-    transform: translateY(-2px);
+  @media (hover: hover) {
+    &:hover {
+      box-shadow: $shadow-rtl-lg;
+      transform: translateY(-2px);
+    }
   }
 }
 
 @mixin button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: $spacing-sm $spacing-lg;
   border-radius: $border-radius-md;
   font-weight: 600;
+  font-family: $font-family-primary;
+  font-size: $font-size-base;
   transition: $transition-base;
   cursor: pointer;
   border: none;
   outline: none;
+  min-height: 44px; // Mobile touch target
   
   &:disabled {
     opacity: 0.7;
     cursor: not-allowed;
   }
-}
 
-@mixin button-primary {
-  @include button-base;
-  background-color: $color-primary;
-  color: $color-white;
-  
-  &:hover:not(:disabled) {
-    background-color: darken($color-primary, 10%);
-  }
-}
-
-@mixin button-secondary {
-  @include button-base;
-  background-color: $color-secondary;
-  color: $color-white;
-  
-  &:hover:not(:disabled) {
-    background-color: darken($color-secondary, 10%);
+  // Mobile active state
+  @media (hover: none) {
+    &:active {
+      transform: scale(0.98);
+    }
   }
 }
 
@@ -150,6 +178,8 @@ $breakpoint-xxl: 1400px;
   font-family: $font-family-primary;
   font-size: $font-size-base;
   transition: $transition-base;
+  min-height: 44px; // Mobile touch target
+  text-align: right;
   
   &:focus {
     outline: none;
@@ -160,6 +190,11 @@ $breakpoint-xxl: 1400px;
   &::placeholder {
     color: $color-gray-500;
   }
+
+  // Larger hit area on mobile
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-md;
+  }
 }
 
 @mixin responsive($breakpoint) {
@@ -168,16 +203,18 @@ $breakpoint-xxl: 1400px;
   }
 }
 
-// Utility Classes
+// Mobile-first container
 .container {
   width: 100%;
   margin-right: auto;
   margin-left: auto;
-  padding-right: $spacing-lg;
-  padding-left: $spacing-lg;
+  padding-right: $spacing-md;
+  padding-left: $spacing-md;
   
   @include responsive($breakpoint-sm) {
     max-width: 540px;
+    padding-right: $spacing-lg;
+    padding-left: $spacing-lg;
   }
   
   @include responsive($breakpoint-md) {
@@ -193,14 +230,48 @@ $breakpoint-xxl: 1400px;
   }
 }
 
-// Animation Keyframes
+// Mobile Grid System
+.grid {
+  display: grid;
+  gap: $spacing-md;
+  grid-template-columns: repeat(4, 1fr);
+  
+  @include responsive($breakpoint-sm) {
+    grid-template-columns: repeat(8, 1fr);
+  }
+  
+  @include responsive($breakpoint-lg) {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+// Utility Classes
+.rtl-shadow {
+  box-shadow: $shadow-rtl-md;
+}
+
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.scrollable {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $color-gray-400;
+    border-radius: $border-radius-full;
+  }
+}
+
+// Animations
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes slideUp {
@@ -214,38 +285,49 @@ $breakpoint-xxl: 1400px;
   }
 }
 
-// Theme Classes
-.theme-card {
-  @include card;
-  background-color: $color-light;
-  border: 2px solid rgba($color-primary, 0.1);
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
 }
 
-.theme-input {
-  @include input-base;
-  &:focus {
-    border-color: $color-secondary;
-    box-shadow: 0 0 0 3px rgba($color-secondary, 0.1);
-  }
+// Animation Classes
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-.theme-button-primary {
-  @include button-primary;
+.slide-up {
+  animation: slideUp 0.4s ease-out;
 }
 
-.theme-button-secondary {
-  @include button-secondary;
+// Loading State
+.skeleton {
+  background: linear-gradient(90deg, $color-gray-200 25%, $color-gray-300 50%, $color-gray-200 75%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
 }
 
 // Global Styles
+html, body {
+  height: 100%;
+  direction: rtl;
+  text-align: right;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
 body {
   font-family: $font-family-primary;
   font-size: $font-size-base;
   line-height: 1.5;
   color: $color-gray-900;
   background-color: $color-gray-100;
+  
+  // Prevent pull-to-refresh on mobile
+  overscroll-behavior-y: none;
 }
 
+// Typography
 h1, h2, h3, h4, h5, h6 {
   font-family: $font-family-secondary;
   font-weight: 700;
@@ -261,13 +343,33 @@ a {
   &:hover {
     color: $color-secondary;
   }
+  
+  // Larger touch target on mobile
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-xs;
+  }
 }
 
-// Animations
-.fade-in {
-  animation: fadeIn 0.3s ease-in-out;
+// Mobile Touch Optimizations
+@media (max-width: $breakpoint-md) {
+  input, select, textarea {
+    font-size: 16px !important; // Prevent zoom on iOS
+  }
+  
+  button, .button {
+    min-height: 44px;
+    min-width: 44px;
+  }
 }
 
-.slide-up {
-  animation: slideUp 0.4s ease-out;
+// Print Styles
+@media print {
+  body {
+    background: none;
+    color: black;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
 }
