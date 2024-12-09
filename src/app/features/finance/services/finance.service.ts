@@ -37,7 +37,7 @@ export class FinanceService {
 
   // Payments
   getPaymentsByDateRange(startDate: Date, endDate: Date): Observable<PaymentDTO[]> {
-    return this.apiService.get<PaymentDTO[]>(`${this.paymentsEndpoint}/dateRange`, {
+    return this.apiService.get<PaymentDTO[]>(`${this.paymentsEndpoint}/by-date-range`, {
       start: startDate.toISOString(),
       end: endDate.toISOString()
     });
@@ -53,9 +53,9 @@ export class FinanceService {
   }
 
   getExpensesByDateRange(startDate: Date, endDate: Date): Observable<ExpenseDTO[]> {
-    return this.apiService.get<ExpenseDTO[]>(`${this.expensesEndpoint}/dateRange`, {
-      start: startDate.toISOString(),
-      end: endDate.toISOString()
+    return this.apiService.get<ExpenseDTO[]>(`${this.expensesEndpoint}/by-date-range`, {
+      start: startDate.toISOString().split('T')[0],
+      end: endDate.toISOString().split('T')[0]
     });
   }
 
@@ -70,5 +70,9 @@ export class FinanceService {
         variance: summary.netIncome
       }))
     );
+  }
+
+  getPaymentsByStatus(status: PaymentStatus): Observable<PaymentDTO[]> {
+    return this.apiService.get<PaymentDTO[]>(`${this.paymentsEndpoint}/status/${status}`);
   }
 }

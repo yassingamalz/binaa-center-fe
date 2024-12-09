@@ -1,1 +1,52 @@
-<p>recent-activities works!</p>
+<!-- src\app\features\dashboard\components\recent-activities\recent-activities.component.html -->
+<div class="widget-card" [class.loading]="isLoading">
+  <div class="widget-header">
+    <div class="header-title">
+      <h3>النشاطات الأخيرة</h3>
+      <span class="activity-count" *ngIf="activities.length">
+        {{activities.length}} نشاطات
+      </span>
+    </div>
+    <button class="btn-icon refresh" (click)="loadActivities()" [class.spinning]="isLoading">
+      <i class="fas fa-sync-alt"></i>
+    </button>
+  </div>
+
+  <div class="widget-content">
+    <div class="activities-list" *ngIf="activities.length; else noActivities">
+      <div class="activity-item" *ngFor="let activity of activities" 
+           [class]="'activity-type-' + activity.type">
+        <div class="activity-icon" [ngClass]="activity.type">
+          <i [class]="getActivityIcon(activity.type)"></i>
+        </div>
+        
+        <div class="activity-details">
+          <div class="activity-main">
+            <h4>{{ getActivityTitle(activity) }}</h4>
+            <span class="activity-time">{{ activity.date | date:'shortTime' }}</span>
+          </div>
+          <p class="activity-description">{{ getActivityDescription(activity) }}</p>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noActivities>
+      <div class="empty-state">
+        <i class="far fa-clock"></i>
+        <p>لا توجد نشاطات حديثة</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="widget-footer">
+    <button class="btn-link" (click)="viewAllActivities()">
+      عرض كل النشاطات
+      <i class="fas fa-chevron-left"></i>
+    </button>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+  </div>
+</div>

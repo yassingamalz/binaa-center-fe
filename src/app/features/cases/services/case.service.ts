@@ -1,55 +1,41 @@
-// src/app/features/sessions/services/sessions.service.ts
+// src/app/features/cases/services/case.service.ts
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { SessionDTO, AttendanceStatus, SessionType } from '../../../core/models/session';
 import { ApiService } from '../../../core/services/api.service';
+import { CaseDTO } from '../../../core/models/case';
 
 @Injectable({
   providedIn: 'root'
+})@Injectable({
+  providedIn: 'root'
 })
-export class SessionsService {
-  private endpoint = 'sessions';
+export class CaseService {
+  private endpoint = 'cases';
 
   constructor(private apiService: ApiService) {}
 
-  getUpcomingSessions(): Observable<SessionDTO[]> {
-    const today = new Date();
-    const nextWeek = new Date();
-    nextWeek.setDate(today.getDate() + 7);
-
-    return this.apiService.get<SessionDTO[]>(`${this.endpoint}/dateRange`, {
-      start: today.toISOString(),
-      end: nextWeek.toISOString()
-    });
+  getAllCases(): Observable<CaseDTO[]> {
+    return this.apiService.get<CaseDTO[]>(this.endpoint);
   }
 
-  getSessionStats(startDate: Date, endDate: Date): Observable<any> {
-    return this.apiService.get<SessionDTO[]>(`${this.endpoint}/dateRange`, {
-      start: startDate.toISOString(),
-      end: endDate.toISOString()
-    }).pipe(
-      map(sessions => ({
-        totalSessions: sessions.length,
-        attendanceRate: this.calculateAttendanceRate(sessions),
-        byType: this.groupSessionsByType(sessions),
-        cancelledSessions: sessions.filter(s => s.attendanceStatus === AttendanceStatus.ABSENT).length
-      }))
-    );
+  getAllActiveCases(): Observable<CaseDTO[]> {
+    return this.apiService.get<CaseDTO[]>(`${this.endpoint}/active`);
   }
 
-  getSessionsByTherapist(staffId: number, date: Date): Observable<SessionDTO[]> {
-    return this.apiService.get<SessionDTO[]>(`${this.endpoint}/staff/${staffId}/date/${date.toISOString()}`);
+  getCaseById(id: number): Observable<CaseDTO> {
+    return this.apiService.get<CaseDTO>(`${this.endpoint}/${id}`);
   }
 
-  private calculateAttendanceRate(sessions: SessionDTO[]): number {
-    const attended = sessions.filter(s => s.attendanceStatus === AttendanceStatus.PRESENT).length;
-    return (attended / sessions.length) * 100;
+  createCase(caseData: Omit<CaseDTO, 'caseId'>): Observable<CaseDTO> {
+    return this.apiService.post<CaseDTO>(this.endpoint, caseData);
   }
 
-  private groupSessionsByType(sessions: SessionDTO[]): Record<SessionType, number> {
-    return sessions.reduce((acc, session) => ({
-      ...acc,
-      [session.sessionType]: (acc[session.sessionType] || 0) + 1
-    }), {} as Record<SessionType, number>);
+  updateCase(id: number, caseData: Partial<CaseDTO>): Observable<CaseDTO> {
+    return this.apiService.put<CaseDTO>(`${this.endpoint}/${id}`, caseData);
+  }
+
+  searchCases(query: string): Observable<CaseDTO[]> {
+    return this.apiService.get<CaseDTO[]>(`${this.endpoint}/search`, { query });
   }
 }

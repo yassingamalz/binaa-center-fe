@@ -1,0 +1,32 @@
+
+  
+  // src/app/features/dashboard/components/monthly-income-chart/monthly-income-chart.component.scss
+  @import 'styles/main';
+
+  .chart-card {
+    @include card;
+    padding: $spacing-lg;
+    height: 400px;
+  }
+  
+  .chart-header {
+    @include flex-between;
+    margin-bottom: $spacing-lg;
+    
+    h3 {
+      margin: 0;
+    }
+  }
+  
+  .chart-actions {
+    select {
+      @include input-base;
+      width: auto;
+      min-width: 120px;
+    }
+  }
+  
+  .chart-content {
+    height: calc(100% - 60px);
+  }
+  

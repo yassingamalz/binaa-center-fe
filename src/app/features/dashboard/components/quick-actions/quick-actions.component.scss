@@ -1,0 +1,46 @@
+
+  // src/app/features/dashboard/components/quick-actions/quick-actions.component.scss
+  @import 'styles/main';
+
+  .quick-actions-card {
+    @include card;
+    padding: $spacing-lg;
+  }
+  
+  .quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: $spacing-md;
+    
+    @media (max-width: $breakpoint-lg) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @media (max-width: $breakpoint-sm) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .quick-action-btn {
+    @include button-base;
+    flex-direction: column;
+    gap: $spacing-sm;
+    padding: $spacing-lg;
+    background-color: $color-light;
+    color: $color-primary;
+    height: 120px;
+    
+    i {
+      font-size: $font-size-2xl;
+    }
+    
+    span {
+      font-size: $font-size-sm;
+    }
+    
+    &:hover {
+      background-color: $color-primary;
+      color: $color-white;
+      transform: translateY(-2px);
+    }
+  }

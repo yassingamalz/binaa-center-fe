@@ -1,0 +1,80 @@
+@import 'styles/main';
+
+.dashboard-stats {
+  position: relative;
+  margin-bottom: $spacing-xl;
+  
+  &.loading {
+    min-height: 200px;
+    pointer-events: none;
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-lg;
+  
+  @media (max-width: $breakpoint-xl) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+  }
+
+  // RTL Support
+  [dir="rtl"] & {
+    direction: rtl;
+  }
+}
+
+// Loading States
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba($color-white, 0.7);
+  backdrop-filter: blur(4px);
+  border-radius: $border-radius-lg;
+  @include flex-center;
+  z-index: 10;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba($color-primary, 0.1);
+  border-radius: 50%;
+  border-top-color: $color-primary;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Print Styles
+@media print {
+  .stats-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    
+    app-payment-status {
+      width: calc(50% - 0.5rem);
+    }
+  }
+  
+  .loading-overlay {
+    display: none;
+  }
+}
+
+// High Contrast Mode
+@media (forced-colors: active) {
+  .stats-grid {
+    border: 1px solid CanvasText;
+  }
+}

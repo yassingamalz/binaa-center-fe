@@ -1,0 +1,43 @@
+<!-- src\app\features\dashboard\components\session-overview\session-overview.component.html-->
+<div class="overview-card">
+    <div class="overview-header">
+      <h3>نظرة عامة على الجلسات</h3>
+      <div class="overview-filters">
+        <select [(ngModel)]="selectedRange" (change)="updateOverview()">
+          <option value="week">هذا الأسبوع</option>
+          <option value="month">هذا الشهر</option>
+          <option value="quarter">هذا الربع</option>
+        </select>
+      </div>
+    </div>
+    <div class="overview-stats">
+      <div class="stat">
+        <h4>معدل الحضور</h4>
+        <div class="progress-circular">
+          {{ attendanceRate | number:'1.0-0' }}%
+        </div>
+      </div>
+      <div class="stat">
+        <h4>إجمالي الجلسات</h4>
+        <h2>{{ totalSessions }}</h2>
+      </div>
+      <div class="stat">
+        <h4>الجلسات الملغاة</h4>
+        <h2>{{ cancelledSessions }}</h2>
+      </div>
+    </div>
+    <div class="overview-chart" #chartContainer>
+      <ngx-charts-bar-vertical
+        [view]="view"
+        [results]="chartData"
+        [xAxis]="true"
+        [yAxis]="true"
+        [showXAxisLabel]="false"
+        [showYAxisLabel]="false"
+        [scheme]="colorScheme"
+        [gradient]="false"
+        [barPadding]="8"
+        (select)="onSelect($event)">
+      </ngx-charts-bar-vertical>
+    </div>
+  </div>

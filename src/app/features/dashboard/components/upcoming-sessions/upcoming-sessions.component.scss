@@ -1,0 +1,217 @@
+// src/app/features/dashboard/components/upcoming-sessions/upcoming-sessions.component.scss
+@import 'styles/main';
+
+.widget-card {
+  @include card;
+  padding: $spacing-lg;
+}
+
+.widget-header {
+  @include flex-between;
+  margin-bottom: $spacing-lg;
+  padding-bottom: $spacing-md;
+  border-bottom: 1px solid $color-gray-200;
+
+  .header-title {
+    @include flex-center;
+    gap: $spacing-sm;
+
+    h3 {
+      margin: 0;
+      font-size: $font-size-lg;
+    }
+
+    .session-count {
+      font-size: $font-size-sm;
+      color: $color-gray-600;
+      background: $color-gray-100;
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $border-radius-full;
+    }
+  }
+
+  .btn-primary {
+    @include button-base;
+    background: $color-primary;
+    color: $color-white;
+    gap: $spacing-sm;
+    
+    i {
+      font-size: $font-size-sm;
+    }
+  }
+}
+
+.sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.session-item {
+  @include flex-between;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  border-radius: $border-radius-lg;
+  background: $color-gray-100;
+  transition: $transition-base;
+
+  &:hover {
+    background: $color-light;
+    transform: translateY(-2px);
+    box-shadow: $shadow-sm;
+  }
+}
+
+.session-time-badge {
+  @include flex-column;
+  align-items: center;
+  min-width: 70px;
+  padding: $spacing-sm;
+  background: $color-white;
+  border-radius: $border-radius-md;
+  border: 1px solid $color-gray-200;
+
+  .time {
+    font-size: $font-size-lg;
+    font-weight: bold;
+    color: $color-primary;
+  }
+
+  .date {
+    font-size: $font-size-xs;
+    color: $color-gray-600;
+  }
+}
+
+.session-details {
+  flex: 1;
+
+  .session-main-info {
+    @include flex-between;
+    margin-bottom: $spacing-xs;
+
+    .session-title {
+      margin: 0;
+      font-size: $font-size-base;
+      color: $color-gray-900;
+    }
+
+    .session-type {
+      font-size: $font-size-xs;
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $border-radius-full;
+      background: rgba($color-primary, 0.1);
+      color: $color-primary;
+
+      &.group {
+        background: rgba($color-secondary, 0.1);
+        color: $color-secondary;
+      }
+    }
+  }
+
+  .session-meta {
+    @include flex-center;
+    gap: $spacing-md;
+    font-size: $font-size-sm;
+    color: $color-gray-600;
+
+    i {
+      margin-left: $spacing-xs;
+    }
+  }
+}
+
+.session-actions {
+  @include flex-center;
+  gap: $spacing-sm;
+
+  .btn-icon {
+    @include button-base;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    background: $color-white;
+    color: $color-gray-600;
+    border: 1px solid $color-gray-200;
+
+    &:hover {
+      background: $color-gray-100;
+      color: $color-primary;
+    }
+
+    &.danger:hover {
+      background: rgba($color-error, 0.1);
+      color: $color-error;
+      border-color: $color-error;
+    }
+  }
+}
+
+.empty-state {
+  @include flex-column;
+  align-items: center;
+  padding: $spacing-xl;
+  text-align: center;
+  color: $color-gray-600;
+
+  i {
+    font-size: $font-size-4xl;
+    margin-bottom: $spacing-md;
+    color: $color-gray-400;
+  }
+
+  p {
+    margin-bottom: $spacing-lg;
+  }
+
+  .btn-secondary {
+    @include button-base;
+    background: $color-gray-100;
+    color: $color-gray-700;
+
+    &:hover {
+      background: $color-gray-200;
+    }
+  }
+}
+
+// Loading Overlay
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba($color-white, 0.7);
+  backdrop-filter: blur(4px);
+  @include flex-center;
+  z-index: 10;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba($color-primary, 0.1);
+  border-radius: 50%;
+  border-top-color: $color-primary;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: $breakpoint-md) {
+  .session-time-badge {
+    min-width: 60px;
+    .time { font-size: $font-size-base; }
+  }
+
+  .session-meta {
+    flex-wrap: wrap;
+  }
+
+  .btn-primary span {
+    display: none;
+  }
+}

@@ -1,16 +1,15 @@
-// src/app/features/dashboard/components/dashboard-stats/dashboard-stats.component.ts
+// src/app/features/dashboard/components/stats-cards/stats-cards.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { DashboardService } from '../../services/dashboard.service';
 
 @Component({
-  selector: 'app-dashboard-stats',
-  templateUrl: './dashboard-stats.component.html',
-  styleUrls: ['./dashboard-stats.component.scss']
+  selector: 'app-stats-cards',
+  templateUrl: './stats-cards.component.html',
+  styleUrls: ['./stats-cards.component.scss']
 })
-export class DashboardStatsComponent implements OnInit, OnDestroy {
+export class StatsCardsComponent implements OnInit, OnDestroy {
   stats: any = {};
-  isLoading = true;
   private destroy$ = new Subject<void>();
 
   constructor(private dashboardService: DashboardService) {}
@@ -20,18 +19,11 @@ export class DashboardStatsComponent implements OnInit, OnDestroy {
   }
 
   private loadStats(): void {
-    this.isLoading = true;
     this.dashboardService.getDashboardStats()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (data) => {
-          this.stats = data;
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error loading stats:', error);
-          this.isLoading = false;
-        }
+        next: (data) => this.stats = data,
+        error: (error) => console.error('Error loading stats:', error)
       });
   }
 

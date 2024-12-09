@@ -1,0 +1,155 @@
+// src/app/features/dashboard/pages/dashboard/dashboard.component.scss
+@import 'styles/main';
+
+.dashboard-container {
+  padding: $spacing-md;
+  height: 100%;
+  min-height: calc(100vh - #{$layout-header-height});
+  background-color: $color-gray-100;
+
+  @media (min-width: $breakpoint-md) {
+    padding: $spacing-lg;
+  }
+}
+
+// Main Content Area
+.main-content {
+  margin-top: $spacing-lg;
+  display: grid;
+  gap: $spacing-lg;
+  grid-template-columns: 2fr 1fr;
+
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: 1fr;
+  }
+
+  // Left Column (Charts)
+  .charts-column {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+
+    .chart-card {
+      @include card;
+      padding: $spacing-lg;
+      background: $color-white;
+      min-height: 400px;
+
+      .chart-header {
+        @include flex-between;
+        margin-bottom: $spacing-lg;
+
+        h3 {
+          margin: 0;
+          font-size: $font-size-lg;
+        }
+
+        .chart-actions {
+          select {
+            @include input-base;
+            width: auto;
+            min-width: 120px;
+          }
+        }
+      }
+    }
+  }
+
+  // Right Column (Actions & Lists)
+  .widgets-column {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+
+    .widget-card {
+      @include card;
+      padding: $spacing-lg;
+      background: $color-white;
+
+      .widget-header {
+        @include flex-between;
+        margin-bottom: $spacing-lg;
+
+        h3 {
+          margin: 0;
+          font-size: $font-size-lg;
+        }
+      }
+    }
+  }
+}
+
+// Common Widget Card Styles
+.widget-card {
+  @include card;
+  background: $color-white;
+  overflow: hidden;
+
+  &.loading {
+    position: relative;
+    min-height: 200px;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        $color-gray-200 25%,
+        $color-gray-300 37%,
+        $color-gray-200 63%
+      );
+      background-size: 400% 100%;
+      animation: loading 1.4s ease infinite;
+    }
+  }
+}
+
+// Session Overview Section
+.session-overview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: 1fr;
+  }
+
+  .overview-card {
+    @include card;
+    text-align: center;
+    padding: $spacing-md;
+
+    .overview-value {
+      font-size: $font-size-2xl;
+      font-weight: bold;
+      color: $color-primary;
+      margin: $spacing-sm 0;
+    }
+
+    .overview-label {
+      color: $color-gray-600;
+      font-size: $font-size-sm;
+    }
+  }
+}
+
+// Animations
+@keyframes loading {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+// Print Styles
+@media print {
+  .dashboard-container {
+    padding: 0;
+  }
+
+  .widget-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    box-shadow: none;
+  }
+}

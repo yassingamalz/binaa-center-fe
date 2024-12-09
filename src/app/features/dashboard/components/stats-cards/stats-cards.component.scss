@@ -1,0 +1,51 @@
+// src/app/features/dashboard/components/stats-cards/stats-cards.component.scss
+@import 'styles/main';
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: $spacing-md;
+    
+    @media (max-width: $breakpoint-lg) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @media (max-width: $breakpoint-sm) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .stat-card {
+    @include card;
+    padding: $spacing-lg;
+  }
+  
+  .stat-header {
+    @include flex-between;
+    margin-bottom: $spacing-md;
+    
+    i {
+      font-size: $font-size-2xl;
+    }
+    
+    h3 {
+      font-size: $font-size-lg;
+      margin: 0;
+    }
+  }
+  
+  .stat-content {
+    text-align: center;
+    
+    h2 {
+      font-size: $font-size-3xl;
+      color: $color-primary;
+      margin-bottom: $spacing-xs;
+    }
+    
+    p {
+      color: $color-gray-600;
+      margin: 0;
+    }
+  }
+  

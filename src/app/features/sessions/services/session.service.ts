@@ -8,10 +8,18 @@ import { ApiService } from '../../../core/services/api.service';
 @Injectable({
   providedIn: 'root'
 })
-export class SessionsService {
+export class SessionService {
   private endpoint = 'sessions';
 
   constructor(private apiService: ApiService) {}
+
+  getSessionsByDateRange(startDate: Date, endDate: Date): Observable<SessionDTO[]> {
+    return this.apiService.get<SessionDTO[]>(`${this.endpoint}/dateRange`, {
+      start: startDate.toISOString(),
+      end: endDate.toISOString()
+    });
+  }
+
 
   getUpcomingSessions(): Observable<SessionDTO[]> {
     const today = new Date();

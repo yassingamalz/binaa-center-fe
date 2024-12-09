@@ -1,1 +1,39 @@
-<p>dashboard-stats works!</p>
+
+<!-- src/app/features/dashboard/components/dashboard-stats/dashboard-stats.component.html -->
+<div class="dashboard-stats" [class.loading]="isLoading">
+  <div class="stats-grid">
+    <app-payment-status
+      icon="fas fa-clipboard-list"
+      [value]="stats.upcomingAssessments || 0"
+      label="التقييمات القادمة"
+      [isPink]="false">
+    </app-payment-status>
+
+    <app-payment-status
+      icon="fas fa-coins"
+      [value]="stats.monthlyIncome?.total || 0"
+      label="الدخل الشهري"
+      unit=" جنيه"
+      [isPink]="true">
+    </app-payment-status>
+
+    <app-payment-status
+      icon="fas fa-calendar-check"
+      [value]="stats.todaySessions || 0"
+      label="جلسات اليوم"
+      [isPink]="false">
+    </app-payment-status>
+
+    <app-payment-status
+      icon="fas fa-users"
+      [value]="stats.activeCases || 0"
+      label="الحالات النشطة"
+      [isPink]="true">
+    </app-payment-status>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+  </div>
+</div>

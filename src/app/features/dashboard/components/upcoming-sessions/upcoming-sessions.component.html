@@ -1,0 +1,69 @@
+<!-- src/app/features/dashboard/components/upcoming-sessions/upcoming-sessions.component.html -->
+<div class="widget-card" [class.loading]="isLoading">
+  <div class="widget-header">
+    <div class="header-title">
+      <h3>الجلسات القادمة</h3>
+      <span class="session-count" *ngIf="upcomingSessions.length">
+        {{upcomingSessions.length}} جلسات
+      </span>
+    </div>
+    <button class="btn-primary" (click)="scheduleSession()">
+      <i class="fas fa-plus"></i>
+      <span>جدولة جلسة</span>
+    </button>
+  </div>
+
+  <div class="widget-content">
+    <div class="sessions-list" *ngIf="upcomingSessions.length; else noSessions">
+      <div class="session-item" *ngFor="let session of upcomingSessions">
+        <div class="session-time-badge">
+          <span class="time">{{ session.sessionDate | date:'shortTime' }}</span>
+          <span class="date">{{ session.sessionDate | date:'MMM d' }}</span>
+        </div>
+        
+        <div class="session-details">
+          <div class="session-main-info">
+            <h4 class="session-title">{{ session.purpose }}</h4>
+            <span class="session-type" [class]="session.sessionType">
+              {{ session.sessionType }}
+            </span>
+          </div>
+          <div class="session-meta">
+            <span class="case-name">
+              <i class="fas fa-user"></i>
+              {{ session.caseName }}
+            </span>
+            <span class="session-duration" *ngIf="session.duration">
+              <i class="far fa-clock"></i>
+              {{ session.duration }} دقيقة
+            </span>
+          </div>
+        </div>
+
+        <div class="session-actions">
+          <button class="btn-icon" (click)="editSession(session.sessionId)" title="تعديل">
+            <i class="fas fa-pencil-alt"></i>
+          </button>
+          <button class="btn-icon danger" (click)="cancelSession(session.sessionId)" title="إلغاء">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noSessions>
+      <div class="empty-state">
+        <i class="far fa-calendar-alt"></i>
+        <p>لا توجد جلسات قادمة</p>
+        <button class="btn-secondary" (click)="scheduleSession()">
+          جدولة جلسة جديدة
+        </button>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+  </div>
+</div>

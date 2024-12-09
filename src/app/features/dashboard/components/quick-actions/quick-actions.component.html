@@ -1,0 +1,24 @@
+<!-- src\app\features\dashboard\components\quick-actions\quick-actions.component.html-->
+<div class="quick-actions-card">
+    <div class="quick-actions-header">
+      <h3>إجراءات سريعة</h3>
+    </div>
+    <div class="quick-actions-grid">
+      <button class="quick-action-btn" (click)="addNewCase()">
+        <i class="fas fa-user-plus"></i>
+        <span>إضافة حالة</span>
+      </button>
+      <button class="quick-action-btn" (click)="scheduleSession()">
+        <i class="fas fa-calendar-plus"></i>
+        <span>جدولة جلسة</span>
+      </button>
+      <button class="quick-action-btn" (click)="recordPayment()">
+        <i class="fas fa-money-bill-wave"></i>
+        <span>تسجيل دفعة</span>
+      </button>
+      <button class="quick-action-btn" (click)="createReport()">
+        <i class="fas fa-file-alt"></i>
+        <span>إنشاء تقرير</span>
+      </button>
+    </div>
+  </div>

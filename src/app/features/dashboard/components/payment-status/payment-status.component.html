@@ -1,0 +1,10 @@
+<!-- src/app/features/dashboard/components/payment-status/payment-status.component.html -->
+<div class="stat-card">
+  <div class="stat-icon" [class.pink]="isPink" [class.purple]="!isPink">
+    <i [class]="icon"></i>
+  </div>
+  <div class="stat-content">
+    <div class="stat-value">{{value}}{{unit}}</div>
+    <div class="stat-label">{{label}}</div>
+  </div>
+</div>
