@@ -1,6 +1,9 @@
 <!-- src/app/layouts/main-layout/main-layout.component.html -->
 <div class="main-layout" [class.sidebar-collapsed]="isSidebarCollapsed">
-  <div class="sidebar-container" [class.sidebar-visible]="!isSidebarCollapsed || !isMobileView">
+  <div class="sidebar-overlay" [class.visible]="!isSidebarCollapsed && isMobileView" (click)="closeSidebar()">
+  </div>
+
+  <div class="sidebar-container" [class.sidebar-visible]="!isSidebarCollapsed">
     <aside class="sidebar" [class.collapsed]="isSidebarCollapsed">
       <app-sidebar [isCollapsed]="isSidebarCollapsed"></app-sidebar>
     </aside>
@@ -8,12 +11,10 @@
 
   <div class="main-content" #mainContent>
     <header class="header-container" [class.scrolled]="isScrolled">
-      <app-header 
-        [isSidebarCollapsed]="isSidebarCollapsed"
-        (toggleSidebar)="toggleSidebar()">
+      <app-header [isSidebarCollapsed]="isSidebarCollapsed" (toggleSidebar)="toggleSidebar()">
       </app-header>
     </header>
-    
+
     <main class="content-area" [class.loading]="isLoading$ | async">
       <div class="route-container">
         <router-outlet></router-outlet>
