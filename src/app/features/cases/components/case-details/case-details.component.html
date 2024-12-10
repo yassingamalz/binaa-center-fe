@@ -1,1 +1,194 @@
-<p>case-details works!</p>
+<!--src\app\features\cases\components\case-details\case-details.component.html-->
+<div class="page-container" [class.loading]="isLoading">
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb">
+    <a [routerLink]="['/cases']">الحالات</a>
+    <i class="fas fa-chevron-left"></i>
+    <span *ngIf="case">{{case.name}}</span>
+  </nav>
+
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="case-info" *ngIf="case">
+        <div class="case-title">
+          <h1>{{case.name}}</h1>
+          <span class="case-age">{{case.age}} سنة</span>
+        </div>
+        <div class="case-meta">
+          <span class="status-badge" [class]="case.status.toLowerCase()">
+            {{case.status === 'ACTIVE' ? 'نشط' : 'غير نشط'}}
+          </span>
+          <span class="meta-item">
+            <i class="far fa-calendar"></i>
+            تاريخ التسجيل: {{case.admissionDate | date:'mediumDate'}}
+          </span>
+          <span class="meta-item">
+            <i class="fas fa-user"></i>
+            ولي الأمر: {{case.guardianName}}
+          </span>
+          <span class="meta-item">
+            <i class="fas fa-phone"></i>
+            {{case.contactNumber}}
+          </span>
+        </div>
+      </div>
+      <div class="header-actions" *ngIf="case">
+        <button class="btn-secondary" (click)="toggleCaseStatus()">
+          <i class="fas" [class.fa-toggle-on]="case.status === 'ACTIVE'" [class.fa-toggle-off]="case.status === 'INACTIVE'"></i>
+          {{case.status === 'ACTIVE' ? 'إيقاف الحالة' : 'تنشيط الحالة'}}
+        </button>
+        <button class="btn-primary" (click)="editCase()">
+          <i class="fas fa-edit"></i>
+          تعديل البيانات
+        </button>
+      </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="tabs-navigation">
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'info'"
+        (click)="switchTab('info')">
+        <i class="fas fa-info-circle"></i>
+        <span>المعلومات الأساسية</span>
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'sessions'"
+        (click)="switchTab('sessions')">
+        <i class="fas fa-calendar-check"></i>
+        <span>الجلسات</span>
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'assessments'"
+        (click)="switchTab('assessments')">
+        <i class="fas fa-clipboard-list"></i>
+        <span>التقييمات</span>
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'payments'"
+        (click)="switchTab('payments')">
+        <i class="fas fa-money-bill-wave"></i>
+        <span>المدفوعات</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="page-content" *ngIf="case">
+    <div [ngSwitch]="activeTab">
+      <!-- Basic Information Tab -->
+      <div *ngSwitchCase="'info'" class="info-tab">
+        <div class="grid-layout">
+          <!-- Medical Information -->
+          <div class="info-card">
+            <div class="card-header">
+              <h3>
+                <i class="fas fa-notes-medical"></i>
+                المعلومات الطبية
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="info-grid">
+                <div class="info-item full-width">
+                  <label>الاحتياجات الخاصة</label>
+                  <p>{{case.specialNeeds || 'لا يوجد'}}</p>
+                </div>
+                <div class="info-item">
+                  <label>التشخيص الأولي</label>
+                  <p>{{case.primaryDiagnosis || 'لا يوجد'}}</p>
+                </div>
+                <div class="info-item">
+                  <label>التشخيص الثانوي</label>
+                  <p>{{case.secondaryDiagnosis || 'لا يوجد'}}</p>
+                </div>
+                <div class="info-item full-width">
+                  <label>التاريخ الطبي</label>
+                  <p>{{case.medicalHistory || 'لا يوجد'}}</p>
+                </div>
+                <div class="info-item">
+                  <label>الأدوية الحالية</label>
+                  <p>{{case.currentMedications || 'لا يوجد'}}</p>
+                </div>
+                <div class="info-item">
+                  <label>الحساسية</label>
+                  <p>{{case.allergies || 'لا يوجد'}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Educational Information -->
+          <div class="info-card">
+            <div class="card-header">
+              <h3>
+                <i class="fas fa-school"></i>
+                المعلومات التعليمية
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="info-grid">
+                <div class="info-item">
+                  <label>المدرسة</label>
+                  <p>{{case.schoolName || 'لا يوجد'}}</p>
+                </div>
+                <div class="info-item">
+                  <label>المرحلة الدراسية</label>
+                  <p>{{case.gradeLevel || 'لا يوجد'}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Guardian Information -->
+          <div class="info-card">
+            <div class="card-header">
+              <h3>
+                <i class="fas fa-user"></i>
+                معلومات الاتصال
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="info-grid">
+                <div class="info-item">
+                  <label>ولي الأمر</label>
+                  <p>{{case.guardianName}}</p>
+                </div>
+                <div class="info-item">
+                  <label>رقم الهاتف</label>
+                  <p>{{case.contactNumber}}</p>
+                </div>
+                <div class="info-item">
+                  <label>رقم الطوارئ</label>
+                  <p>{{case.emergencyContact}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Other Tabs -->
+      <div *ngSwitchCase="'sessions'">
+        <app-case-sessions [caseId]="case.caseId"></app-case-sessions>
+      </div>
+
+      <div *ngSwitchCase="'assessments'">
+        <app-case-assessments [caseId]="case.caseId"></app-case-assessments>
+      </div>
+
+      <div *ngSwitchCase="'payments'">
+        <app-case-payments [caseId]="case.caseId"></app-case-payments>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+  </div>
+</div>
