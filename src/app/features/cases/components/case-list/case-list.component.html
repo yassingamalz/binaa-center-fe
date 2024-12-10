@@ -1,1 +1,128 @@
-<p>case-list works!</p>
+<!-- src\app\features\cases\components\case-list\case-list.component.html -->
+<div class="cases-container">
+  <!-- Header -->
+  <div class="cases-header">
+    <div class="header-title">
+      <h1>قائمة الحالات</h1>
+      <span class="case-count" *ngIf="totalCases">
+        {{totalCases}} حالة
+      </span>
+    </div>
+    
+    <button class="btn-primary" (click)="createNewCase()">
+      <i class="fas fa-plus"></i>
+      <span>إضافة حالة جديدة</span>
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <form [formGroup]="searchForm" class="search-form">
+      <div class="search-input">
+        <i class="fas fa-search"></i>
+        <input 
+          type="text"
+          formControlName="searchTerm"
+          placeholder="بحث بالاسم أو رقم الهاتف..."
+        >
+      </div>
+    </form>
+
+    <div class="status-filters">
+      <button 
+        class="filter-btn" 
+        [class.active]="statusFilter === 'all'"
+        (click)="onStatusFilterChange('all')">
+        الكل
+      </button>
+      <button 
+      class="filter-btn" 
+      [class.active]="statusFilter === CaseStatus.ACTIVE"
+      (click)="onStatusFilterChange(CaseStatus.ACTIVE)">
+        نشط
+      </button>
+      <button 
+      class="filter-btn" 
+      [class.active]="statusFilter === CaseStatus.INACTIVE"
+      (click)="onStatusFilterChange(CaseStatus.INACTIVE)">
+      غير نشط
+    </button>
+    </div>
+  </div>
+
+  <!-- Cases Table -->
+  <div class="table-container" [class.loading]="isLoading">
+    <table class="cases-table">
+      <thead>
+        <tr>
+          <th>الاسم</th>
+          <th>ولي الأمر</th>
+          <th>رقم الهاتف</th>
+          <th>تاريخ التسجيل</th>
+          <th>الحالة</th>
+          <th>الإجراءات</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let case of filteredCases" 
+            (click)="viewCaseDetails(case.caseId)"
+            [class.inactive]="case.status === 'INACTIVE'">
+          <td>{{case.name}}</td>
+          <td>{{case.guardianName}}</td>
+          <td>{{case.contactNumber}}</td>
+          <td>{{case.admissionDate | date:'mediumDate'}}</td>
+          <td>
+            <span class="status-badge" [class]="case.status.toLowerCase()">
+              {{case.status === 'ACTIVE' ? 'نشط' : 'غير نشط'}}
+            </span>
+          </td>
+          <td class="actions">
+            <button class="btn-icon" (click)="editCase(case.caseId, $event)" title="تعديل">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button 
+              class="btn-icon" 
+              [class.deactivate]="case.status === 'ACTIVE'"
+              [class.activate]="case.status === 'INACTIVE'"
+              (click)="toggleCaseStatus(case.caseId, $event)"
+              [title]="case.status === 'ACTIVE' ? 'إيقاف' : 'تنشيط'">
+              <i class="fas" [class.fa-toggle-on]="case.status === 'ACTIVE'" [class.fa-toggle-off]="case.status === 'INACTIVE'"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!isLoading && filteredCases.length === 0">
+      <i class="fas fa-folder-open"></i>
+      <p>لا توجد حالات مطابقة للبحث</p>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-overlay" *ngIf="isLoading">
+      <div class="loading-spinner"></div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="totalCases > pageSize">
+    <button 
+      class="btn-icon" 
+      [disabled]="currentPage === 1"
+      (click)="onPageChange(currentPage - 1)">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+    
+    <span class="page-info">
+      صفحة {{currentPage}} من {{getTotalPages()}}
+    </span>
+    
+    <button 
+      class="btn-icon" 
+      [disabled]="currentPage >= totalCases / pageSize"
+      (click)="onPageChange(currentPage + 1)">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+  </div>
+</div>
