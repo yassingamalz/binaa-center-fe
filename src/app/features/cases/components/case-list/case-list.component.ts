@@ -6,6 +6,8 @@ import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { CaseService } from '../../services/case.service';
 import { ToastrService } from 'ngx-toastr';
 import { CaseDTO, CaseStatus } from '../../../../core/models/case';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CaseFormComponent } from '../case-form/case-form.component';
 
 @Component({
   selector: 'app-case-list',
@@ -33,7 +35,8 @@ export class CaseListComponent implements OnInit, OnDestroy {
     private caseService: CaseService,
     private router: Router,
     private fb: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private modalService: NgbModal
   ) {
     this.searchForm = this.fb.group({
       searchTerm: ['']
@@ -118,17 +121,57 @@ export class CaseListComponent implements OnInit, OnDestroy {
 
   editCase(caseId: number, event: Event): void {
     event.stopPropagation();
-    this.router.navigate(['/cases', caseId, 'edit']);
+    
+    const case_ = this.cases.find(c => c.caseId === caseId);
+    if (!case_) return;
+  
+    const modalRef = this.modalService.open(CaseFormComponent, {
+      size: 'lg',
+      backdrop: 'static',
+      keyboard: false,
+      centered: true
+    });
+  
+    modalRef.componentInstance.case = case_;
+  
+    modalRef.result.then(
+      (result) => {
+        if (result) {
+          this.loadCases(); // Refresh the list
+          this.toastr.success('تم تحديث الحالة بنجاح');
+        }
+      },
+      (reason) => {
+        // Modal dismissed
+      }
+    );
   }
 
   createNewCase(): void {
-    this.router.navigate(['/cases/new']);
+    const modalRef = this.modalService.open(CaseFormComponent, {
+      size: 'lg',
+      backdrop: 'static',
+      keyboard: false,
+      centered: true
+    });
+  
+    modalRef.result.then(
+      (result) => {
+        if (result) {
+          this.loadCases(); // Refresh the list
+          this.toastr.success('تم إضافة الحالة بنجاح');
+        }
+      },
+      (reason) => {
+        // Modal dismissed
+      }
+    );
   }
 
   getTotalPages(): number {
     return Math.ceil(this.totalCases / this.pageSize);
   }
-  
+
   toggleCaseStatus(caseId: number, event: Event): void {
     event.stopPropagation();
     const case_ = this.cases.find(c => c.caseId === caseId);

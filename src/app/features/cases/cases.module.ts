@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 // Components
 import { CaseListComponent } from './components/case-list/case-list.component';
@@ -25,10 +25,6 @@ const routes: Routes = [
     path: ':id',
     component: CaseDetailsComponent
   },
-  {
-    path: ':id/edit',
-    component: CaseFormComponent
-  }
 ];
 
 @NgModule({
@@ -41,7 +37,8 @@ const routes: Routes = [
     CommonModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
-    NgbModule
+    NgbModule,
+    NgbModalModule
   ],
   providers: [
     CaseService
