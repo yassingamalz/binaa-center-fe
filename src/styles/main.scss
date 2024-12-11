@@ -2,7 +2,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Tajawal:wght@400;500;700&display=swap');
 
 // Reset & Base Styles
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -15,10 +17,10 @@ $layout-sidebar-width: 280px;
 $layout-sidebar-width-collapsed: 80px;
 
 // Brand Colors
-$color-primary: #800080;    // Purple
-$color-secondary: #FF69B4;  // Pink
-$color-accent: #FFA500;     // Orange
-$color-light: #FFF5FA;      // Light Pink/White
+$color-primary: #800080; // Purple
+$color-secondary: #FF69B4; // Pink
+$color-accent: #FFA500; // Orange
+$color-light: #FFF5FA; // Light Pink/White
 $color-white: #FFFFFF;
 $color-black: #000000;
 
@@ -44,14 +46,14 @@ $font-family-primary: 'Cairo', sans-serif;
 $font-family-secondary: 'Tajawal', sans-serif;
 
 // Font Sizes - with mobile-first approach
-$font-size-xs: clamp(0.75rem, 2vw, 0.875rem);     
-$font-size-sm: clamp(0.875rem, 2.5vw, 1rem);      
-$font-size-base: clamp(1rem, 3vw, 1.125rem);      
-$font-size-lg: clamp(1.125rem, 3.5vw, 1.25rem);   
-$font-size-xl: clamp(1.25rem, 4vw, 1.5rem);       
-$font-size-2xl: clamp(1.5rem, 5vw, 1.875rem);     
-$font-size-3xl: clamp(1.875rem, 6vw, 2.25rem);    
-$font-size-4xl: clamp(2.25rem, 7vw, 3rem);        
+$font-size-xs: clamp(0.75rem, 2vw, 0.875rem);
+$font-size-sm: clamp(0.875rem, 2.5vw, 1rem);
+$font-size-base: clamp(1rem, 3vw, 1.125rem);
+$font-size-lg: clamp(1.125rem, 3.5vw, 1.25rem);
+$font-size-xl: clamp(1.25rem, 4vw, 1.5rem);
+$font-size-2xl: clamp(1.5rem, 5vw, 1.875rem);
+$font-size-3xl: clamp(1.875rem, 6vw, 2.25rem);
+$font-size-4xl: clamp(2.25rem, 7vw, 3rem);
 
 // Spacing - with mobile-first approach
 $spacing-unit: clamp(0.25rem, 1vw, 0.5rem);
@@ -127,7 +129,7 @@ $end: left;
 
 @mixin mobile-padding {
   padding: $spacing-md;
-  
+
   @include responsive($breakpoint-md) {
     padding: $spacing-lg;
   }
@@ -139,7 +141,7 @@ $end: left;
   box-shadow: $shadow-rtl-md;
   @include mobile-padding;
   transition: $transition-base;
-  
+
   @media (hover: hover) {
     &:hover {
       box-shadow: $shadow-rtl-lg;
@@ -162,7 +164,7 @@ $end: left;
   border: none;
   outline: none;
   min-height: 44px; // Mobile touch target
-  
+
   &:disabled {
     opacity: 0.7;
     cursor: not-allowed;
@@ -186,13 +188,13 @@ $end: left;
   transition: $transition-base;
   min-height: 44px; // Mobile touch target
   text-align: right;
-  
+
   &:focus {
     outline: none;
     border-color: $color-primary;
     box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
   }
-  
+
   &::placeholder {
     color: $color-gray-500;
   }
@@ -215,20 +217,20 @@ $end: left;
   scrollbar-color: $color-gray-400 transparent; // Firefox
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
-  
+
   &::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: transparent;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background-color: $color-gray-400;
     border-radius: $border-radius-full;
-    
+
     &:hover {
       background-color: $color-gray-500;
     }
@@ -243,21 +245,21 @@ $end: left;
   margin-left: auto;
   padding-right: $spacing-md;
   padding-left: $spacing-md;
-  
+
   @include responsive($breakpoint-sm) {
     max-width: 540px;
     padding-right: $spacing-lg;
     padding-left: $spacing-lg;
   }
-  
+
   @include responsive($breakpoint-md) {
     max-width: 720px;
   }
-  
+
   @include responsive($breakpoint-lg) {
     max-width: 960px;
   }
-  
+
   @include responsive($breakpoint-xl) {
     max-width: 1140px;
   }
@@ -268,11 +270,11 @@ $end: left;
   display: grid;
   gap: $spacing-md;
   grid-template-columns: repeat(4, 1fr);
-  
+
   @include responsive($breakpoint-sm) {
     grid-template-columns: repeat(8, 1fr);
   }
-  
+
   @include responsive($breakpoint-lg) {
     grid-template-columns: repeat(12, 1fr);
   }
@@ -294,8 +296,13 @@ $end: left;
 
 // Animations
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
@@ -303,6 +310,7 @@ $end: left;
     transform: translateY(20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -310,8 +318,13 @@ $end: left;
 }
 
 @keyframes shimmer {
-  0% { background-position: -1000px 0; }
-  100% { background-position: 1000px 0; }
+  0% {
+    background-position: -1000px 0;
+  }
+
+  100% {
+    background-position: 1000px 0;
+  }
 }
 
 // Animation Classes
@@ -331,7 +344,8 @@ $end: left;
 }
 
 // Global Styles
-html, body {
+html,
+body {
   height: 100%;
   direction: rtl;
   text-align: right;
@@ -346,13 +360,18 @@ body {
   line-height: 1.5;
   color: $color-gray-900;
   background-color: $color-gray-100;
-  
+
   // Prevent pull-to-refresh on mobile
   overscroll-behavior-y: none;
 }
 
 // Typography
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: $font-family-secondary;
   font-weight: 700;
   line-height: 1.2;
@@ -363,11 +382,11 @@ a {
   color: $color-primary;
   text-decoration: none;
   transition: $transition-base;
-  
+
   &:hover {
     color: $color-secondary;
   }
-  
+
   // Larger touch target on mobile
   @media (max-width: $breakpoint-md) {
     padding: $spacing-xs;
@@ -376,11 +395,15 @@ a {
 
 // Mobile Touch Optimizations
 @media (max-width: $breakpoint-md) {
-  input, select, textarea {
+
+  input,
+  select,
+  textarea {
     font-size: 16px !important; // Prevent zoom on iOS
   }
-  
-  button, .button {
+
+  button,
+  .button {
     min-height: 44px;
     min-width: 44px;
   }
@@ -392,8 +415,41 @@ a {
     background: none;
     color: black;
   }
-  
+
   .no-print {
     display: none !important;
+  }
+
+  // shimmer
+  .shimmer-effect {
+    position: relative;
+    background: $color-gray-200;
+    color: transparent !important;
+    border-color: transparent !important;
+    cursor: wait;
+    pointer-events: none;
+    overflow: hidden;
+
+    &::after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      transform: translateX(-100%);
+      background-image: linear-gradient(90deg,
+          rgba($color-white, 0) 0,
+          rgba($color-white, 0.2) 20%,
+          rgba($color-white, 0.5) 60%,
+          rgba($color-white, 0));
+      animation: shimmer 2s infinite;
+      content: '';
+    }
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
   }
 }
