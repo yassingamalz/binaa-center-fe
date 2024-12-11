@@ -1,6 +1,6 @@
 // src/app/features/finance/services/finance.service.ts
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin, map } from 'rxjs';
+import { Observable, forkJoin, from, map } from 'rxjs';
 import { ExpenseCategory, ExpenseDTO } from '../../../core/models/expense';
 import { PaymentDTO, PaymentStatus } from '../../../core/models/payment';
 import { ApiService } from '../../../core/services/api.service';
@@ -43,8 +43,20 @@ export class FinanceService {
     });
   }
 
+  getPaymentsByCase(caseId: number): Observable<PaymentDTO[]> {
+    return this.apiService.get<PaymentDTO[]>(`${this.paymentsEndpoint}/case/${caseId}`);
+  }
+
   getOverduePayments(): Observable<PaymentDTO[]> {
     return this.apiService.get<PaymentDTO[]>(`${this.paymentsEndpoint}/status/${PaymentStatus.OVERDUE}`);
+  }
+
+  createPayment(data: Omit<PaymentDTO, 'paymentId'>): Observable<PaymentDTO> {
+    return this.apiService.post<PaymentDTO>(this.paymentsEndpoint, data);
+  }
+
+  updatePayment(paymentId: number, data: Partial<PaymentDTO>): Observable<PaymentDTO> {
+    return this.apiService.put<PaymentDTO>(`${this.paymentsEndpoint}/${paymentId}`, data);
   }
 
   // Expenses
@@ -75,4 +87,55 @@ export class FinanceService {
   getPaymentsByStatus(status: PaymentStatus): Observable<PaymentDTO[]> {
     return this.apiService.get<PaymentDTO[]>(`${this.paymentsEndpoint}/status/${status}`);
   }
+
+
+  generateReceipt(paymentId: number): Observable<boolean> {
+    return from(this.handleReceiptGeneration(paymentId));
+  }
+
+  private async handleReceiptGeneration(paymentId: number): Promise<boolean> {
+    try {
+      const response = await this.apiService
+        .getBlob(`${this.paymentsEndpoint}/${paymentId}/receipt`)
+        .toPromise();
+  
+      if (response && response.body) {
+        const contentDisposition = response.headers.get('content-disposition');
+        const filename = contentDisposition
+          ? contentDisposition.split('filename=')[1].trim().replace(/"/g, '')
+          : `payment-receipt-${paymentId}.pdf`;
+  
+        const blob = new Blob([response.body], { 
+          type: response.headers.get('content-type') || 'application/pdf' 
+        });
+  
+        // Create URL and try to open print window
+        const url = window.URL.createObjectURL(blob);
+        const printWindow = window.open(url);
+        
+        if (printWindow) {
+          printWindow.onload = function() {
+            printWindow.print();
+            window.URL.revokeObjectURL(url);
+          };
+        } else {
+          // Fallback to download if popup is blocked
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = filename;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        }
+  
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Receipt generation failed:', error);
+      throw error;
+    }
+  }
+
 }

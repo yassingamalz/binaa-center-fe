@@ -1,0 +1,368 @@
+  // src\app\features\cases\components\case-payments\case-payments.component.scss
+  @import 'styles/main';
+
+  .payments-container {
+      .summary-cards {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: $spacing-md;
+          margin-bottom: $spacing-lg;
+
+          @media (max-width: $breakpoint-md) {
+              grid-template-columns: 1fr;
+          }
+
+          .summary-card {
+              @include card;
+              @include flex-center;
+              gap: $spacing-md;
+              padding: $spacing-lg;
+
+              .card-icon {
+                  width: 48px;
+                  height: 48px;
+                  border-radius: $border-radius-lg;
+                  @include flex-center;
+                  font-size: $font-size-xl;
+
+                  &.total-amount {
+                      background: rgba($color-primary, 0.1);
+                      color: $color-primary;
+                  }
+
+                  &.pending {
+                      background: rgba($color-warning, 0.1);
+                      color: $color-warning;
+                  }
+
+                  &.overdue {
+                      background: rgba($color-error, 0.1);
+                      color: $color-error;
+                  }
+              }
+
+              .card-content {
+                  @include flex-column;
+                  gap: $spacing-xs;
+
+                  .amount {
+                      font-size: $font-size-xl;
+                      font-weight: bold;
+                      color: $color-gray-900;
+                  }
+
+                  .label {
+                      font-size: $font-size-sm;
+                      color: $color-gray-600;
+                  }
+              }
+          }
+      }
+
+      .payment-card {
+          @include card;
+          margin-bottom: $spacing-md;
+
+          .payment-header {
+              @include flex-between;
+              margin-bottom: $spacing-md;
+
+              .payment-amount {
+                  font-size: $font-size-xl;
+                  font-weight: bold;
+                  color: $color-gray-900;
+              }
+          }
+
+          .payment-content {
+              .payment-details {
+                  @include flex-between;
+                  margin-bottom: $spacing-sm;
+
+                  .payment-method {
+                      @include flex-center;
+                      gap: $spacing-xs;
+                      color: $color-gray-700;
+
+                      i {
+                          color: $color-gray-400;
+                      }
+                  }
+
+                  .invoice-number {
+                      font-size: $font-size-sm;
+                      color: $color-gray-600;
+                  }
+              }
+
+              .payment-description {
+                  color: $color-gray-700;
+                  margin: $spacing-sm 0;
+              }
+          }
+
+          .payment-footer {
+              @include flex-between;
+              margin-top: $spacing-md;
+              padding-top: $spacing-md;
+              border-top: 1px solid $color-gray-200;
+
+              .status-badge {
+                  padding: $spacing-xs $spacing-sm;
+                  border-radius: $border-radius-full;
+                  font-size: $font-size-sm;
+
+                  &.paid {
+                      background: rgba($color-success, 0.1);
+                      color: $color-success;
+                  }
+
+                  &.pending {
+                      background: rgba($color-warning, 0.1);
+                      color: $color-warning;
+                  }
+
+                  &.overdue {
+                      background: rgba($color-error, 0.1);
+                      color: $color-error;
+                  }
+              }
+          }
+      }
+  }
+
+  // Payments Component Responsive Styles
+  .payments-container {
+      .summary-cards {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: $spacing-md;
+
+          .summary-card {
+              @media (max-width: $breakpoint-md) {
+                  flex-direction: row;
+
+                  .card-content {
+                      flex: 1;
+                  }
+              }
+          }
+      }
+
+      .payment-card {
+          .payment-header {
+              @media (max-width: $breakpoint-sm) {
+                  flex-direction: column;
+                  gap: $spacing-sm;
+                  text-align: right;
+              }
+          }
+
+          .payment-content {
+              .payment-details {
+                  @media (max-width: $breakpoint-sm) {
+                      flex-direction: column;
+                      gap: $spacing-sm;
+                  }
+              }
+          }
+
+          .payment-footer {
+              @media (max-width: $breakpoint-sm) {
+                  flex-direction: column;
+                  gap: $spacing-md;
+                  align-items: flex-start;
+
+                  .actions {
+                      width: 100%;
+                      display: flex;
+                      gap: $spacing-sm;
+                  }
+              }
+          }
+      }
+  }
+
+
+  .tab-header {
+      @include flex-between;
+      margin-bottom: $spacing-lg;
+
+      .header-title {
+          @include flex-center;
+          gap: $spacing-sm;
+
+          h2 {
+              margin: 0;
+              font-size: $font-size-xl;
+          }
+
+          span {
+              font-size: $font-size-sm;
+              color: $color-gray-600;
+              background: $color-gray-100;
+              padding: $spacing-xs $spacing-sm;
+              border-radius: $border-radius-full;
+          }
+      }
+  }
+
+  .empty-state {
+      @include flex-column;
+      align-items: center;
+      padding: $spacing-2xl;
+      text-align: center;
+      color: $color-gray-600;
+
+      i {
+          font-size: $font-size-4xl;
+          margin-bottom: $spacing-md;
+          color: $color-gray-400;
+      }
+
+      p {
+          margin-bottom: $spacing-lg;
+      }
+  }
+
+  .btn-primary {
+      @include button-base;
+      background: $color-primary;
+      color: $color-white;
+      gap: $spacing-sm;
+
+      &:hover {
+          background: darken($color-primary, 5%);
+      }
+  }
+
+  .btn-secondary {
+      @include button-base;
+      background: $color-gray-100;
+      color: $color-gray-700;
+
+      &:hover {
+          background: $color-gray-200;
+      }
+  }
+
+  .btn-icon {
+      @include button-base;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      background: $color-white;
+      color: $color-gray-600;
+      border: 1px solid $color-gray-200;
+
+      &:hover {
+          color: $color-primary;
+          background: $color-gray-100;
+      }
+
+      &.danger:hover {
+          color: $color-error;
+          background: rgba($color-error, 0.1);
+      }
+  }
+
+  // RTL Support
+  [dir="rtl"] {
+      .card-icon {
+          margin-left: $spacing-sm;
+          margin-right: 0;
+      }
+  }
+
+  .tab-header {
+      @include flex-between;
+      margin-bottom: $spacing-lg;
+
+      @media (max-width: $breakpoint-md) {
+          flex-direction: column;
+          gap: $spacing-md;
+
+          .header-title {
+              width: 100%;
+              justify-content: space-between;
+          }
+
+          .btn-primary {
+              width: 100%;
+          }
+      }
+  }
+
+  .card {
+      @include card;
+      margin-bottom: $spacing-md;
+
+      @media (max-width: $breakpoint-md) {
+          padding: $spacing-md;
+      }
+
+      @media (max-width: $breakpoint-sm) {
+          padding: $spacing-sm;
+      }
+  }
+
+  // Empty State Responsive
+  .empty-state {
+      padding: clamp($spacing-xl, 10vh, $spacing-2xl);
+
+      @media (max-width: $breakpoint-md) {
+          i {
+              font-size: $font-size-3xl;
+          }
+
+          button {
+              width: 100%;
+          }
+      }
+  }
+
+  // Action Buttons Responsive
+  .actions {
+      display: flex;
+      gap: $spacing-sm;
+
+      @media (max-width: $breakpoint-sm) {
+          .btn-icon {
+              flex: 1;
+              min-width: 44px; // Better touch target
+          }
+      }
+  }
+
+  // Status Badges Responsive
+  .status-badge {
+      @media (max-width: $breakpoint-sm) {
+          width: 100%;
+          justify-content: center;
+          text-align: center;
+      }
+  }
+
+  // Grid Layout Helper
+  .responsive-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+      gap: $spacing-md;
+  }
+
+  // Print Styles
+  @media print {
+
+      .filters-bar,
+      .actions,
+      .btn-primary,
+      .btn-secondary {
+          display: none !important;
+      }
+
+      .card {
+          break-inside: avoid;
+          border: 1px solid $color-gray-200;
+          box-shadow: none;
+      }
+  }

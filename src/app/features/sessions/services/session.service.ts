@@ -20,6 +20,9 @@ export class SessionService {
     });
   }
 
+  getSessionsByCase(caseId: number): Observable<SessionDTO[]> {
+    return this.apiService.get<SessionDTO[]>(`${this.endpoint}/case/${caseId}`);
+  }
 
   getUpcomingSessions(): Observable<SessionDTO[]> {
     const today = new Date();
@@ -61,4 +64,9 @@ export class SessionService {
       [session.sessionType]: (acc[session.sessionType] || 0) + 1
     }), {} as Record<SessionType, number>);
   }
+
+  deleteSession(sessionId: number): Observable<void> {
+    return this.apiService.delete<void>(`${this.endpoint}/${sessionId}`);
+  }
+
 }

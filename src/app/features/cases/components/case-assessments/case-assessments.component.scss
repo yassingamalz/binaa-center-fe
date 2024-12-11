@@ -1,0 +1,310 @@
+  // src\app\features\cases\components\case-assessments\case-assessments.component.scss
+  @import 'styles/main';
+
+  .assessments-container {
+      .assessment-card {
+          @include card;
+          margin-bottom: $spacing-md;
+
+          .assessment-header {
+              @include flex-between;
+              margin-bottom: $spacing-lg;
+
+              .assessment-type {
+                  padding: $spacing-xs $spacing-sm;
+                  border-radius: $border-radius-full;
+                  background: rgba($color-primary, 0.1);
+                  color: $color-primary;
+              }
+          }
+
+          .assessment-content {
+              display: grid;
+              grid-template-columns: auto 1fr;
+              gap: $spacing-lg;
+
+              @media (max-width: $breakpoint-md) {
+                  grid-template-columns: 1fr;
+              }
+
+              .score-section {
+                  @include flex-column;
+                  align-items: center;
+                  gap: $spacing-sm;
+
+                  .score-circle {
+                      width: 80px;
+                      height: 80px;
+                      border-radius: 50%;
+                      background: $color-primary;
+                      color: $color-white;
+                      @include flex-center;
+                      font-size: $font-size-2xl;
+                      font-weight: bold;
+                  }
+
+                  .score-label {
+                      font-size: $font-size-sm;
+                      color: $color-gray-600;
+                  }
+              }
+
+              .assessment-details {
+                  h3 {
+                      margin-bottom: $spacing-sm;
+                      font-size: $font-size-lg;
+                      color: $color-gray-900;
+                  }
+
+                  p {
+                      color: $color-gray-700;
+                      line-height: 1.6;
+                  }
+              }
+          }
+
+          .next-assessment {
+              margin-top: $spacing-md;
+              padding-top: $spacing-md;
+              border-top: 1px solid $color-gray-200;
+              color: $color-gray-600;
+              font-size: $font-size-sm;
+
+              i {
+                  margin-left: $spacing-xs;
+                  color: $color-gray-400;
+              }
+          }
+      }
+  }
+
+  // Assessments Component Responsive Styles
+  .assessments-container {
+      .assessment-card {
+          .assessment-header {
+              @media (max-width: $breakpoint-sm) {
+                  flex-direction: column;
+                  gap: $spacing-sm;
+              }
+          }
+
+          .assessment-content {
+              display: grid;
+              grid-template-columns: minmax(auto, 120px) 1fr;
+              gap: $spacing-lg;
+
+              @media (max-width: $breakpoint-md) {
+                  grid-template-columns: 1fr;
+                  gap: $spacing-md;
+
+                  .score-section {
+                      display: flex;
+                      flex-direction: row;
+                      align-items: center;
+                      gap: $spacing-md;
+
+                      .score-circle {
+                          width: 60px;
+                          height: 60px;
+                      }
+                  }
+              }
+          }
+
+          .assessment-footer {
+              @media (max-width: $breakpoint-sm) {
+                  flex-direction: column;
+                  gap: $spacing-md;
+
+                  .actions {
+                      width: 100%;
+                      display: flex;
+                      gap: $spacing-sm;
+                  }
+              }
+          }
+      }
+  }
+
+  .tab-header {
+      @include flex-between;
+      margin-bottom: $spacing-lg;
+
+      .header-title {
+          @include flex-center;
+          gap: $spacing-sm;
+
+          h2 {
+              margin: 0;
+              font-size: $font-size-xl;
+          }
+
+          span {
+              font-size: $font-size-sm;
+              color: $color-gray-600;
+              background: $color-gray-100;
+              padding: $spacing-xs $spacing-sm;
+              border-radius: $border-radius-full;
+          }
+      }
+  }
+
+  .empty-state {
+      @include flex-column;
+      align-items: center;
+      padding: $spacing-2xl;
+      text-align: center;
+      color: $color-gray-600;
+
+      i {
+          font-size: $font-size-4xl;
+          margin-bottom: $spacing-md;
+          color: $color-gray-400;
+      }
+
+      p {
+          margin-bottom: $spacing-lg;
+      }
+  }
+
+  .btn-primary {
+      @include button-base;
+      background: $color-primary;
+      color: $color-white;
+      gap: $spacing-sm;
+
+      &:hover {
+          background: darken($color-primary, 5%);
+      }
+  }
+
+  .btn-secondary {
+      @include button-base;
+      background: $color-gray-100;
+      color: $color-gray-700;
+
+      &:hover {
+          background: $color-gray-200;
+      }
+  }
+
+  .btn-icon {
+      @include button-base;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      background: $color-white;
+      color: $color-gray-600;
+      border: 1px solid $color-gray-200;
+
+      &:hover {
+          color: $color-primary;
+          background: $color-gray-100;
+      }
+
+      &.danger:hover {
+          color: $color-error;
+          background: rgba($color-error, 0.1);
+      }
+  }
+
+  // RTL Support
+  [dir="rtl"] {
+      .card-icon {
+          margin-left: $spacing-sm;
+          margin-right: 0;
+      }
+  }
+
+  .tab-header {
+      @include flex-between;
+      margin-bottom: $spacing-lg;
+
+      @media (max-width: $breakpoint-md) {
+          flex-direction: column;
+          gap: $spacing-md;
+
+          .header-title {
+              width: 100%;
+              justify-content: space-between;
+          }
+
+          .btn-primary {
+              width: 100%;
+          }
+      }
+  }
+
+  .card {
+      @include card;
+      margin-bottom: $spacing-md;
+
+      @media (max-width: $breakpoint-md) {
+          padding: $spacing-md;
+      }
+
+      @media (max-width: $breakpoint-sm) {
+          padding: $spacing-sm;
+      }
+  }
+
+  // Empty State Responsive
+  .empty-state {
+      padding: clamp($spacing-xl, 10vh, $spacing-2xl);
+
+      @media (max-width: $breakpoint-md) {
+          i {
+              font-size: $font-size-3xl;
+          }
+
+          button {
+              width: 100%;
+          }
+      }
+  }
+
+  // Action Buttons Responsive
+  .actions {
+      display: flex;
+      gap: $spacing-sm;
+
+      @media (max-width: $breakpoint-sm) {
+          .btn-icon {
+              flex: 1;
+              min-width: 44px; // Better touch target
+          }
+      }
+  }
+
+  // Status Badges Responsive
+  .status-badge {
+      @media (max-width: $breakpoint-sm) {
+          width: 100%;
+          justify-content: center;
+          text-align: center;
+      }
+  }
+
+  // Grid Layout Helper
+  .responsive-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+      gap: $spacing-md;
+  }
+
+  // Print Styles
+  @media print {
+
+      .filters-bar,
+      .actions,
+      .btn-primary,
+      .btn-secondary {
+          display: none !important;
+      }
+
+      .card {
+          break-inside: avoid;
+          border: 1px solid $color-gray-200;
+          box-shadow: none;
+      }
+  }

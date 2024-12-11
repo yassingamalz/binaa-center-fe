@@ -1,0 +1,102 @@
+<!-- payment-form.component.html -->
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title">{{ payment ? 'تعديل دفعة' : 'تسجيل دفعة جديدة' }}</h4>
+    <button type="button" class="close" (click)="dismiss()">
+      <span>&times;</span>
+    </button>
+  </div>
+
+  <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
+    <div class="modal-body">
+      <!-- Amount Field -->
+      <div class="form-group">
+        <label>المبلغ</label>
+        <input 
+          type="number" 
+          class="form-control" 
+          formControlName="amount"
+          [class.is-invalid]="isFieldInvalid('amount')"
+        >
+        <div class="invalid-feedback" *ngIf="isFieldInvalid('amount')">
+          {{ getFieldError('amount') }}
+        </div>
+      </div>
+
+      <!-- Payment Method -->
+      <div class="form-group">
+        <label>طريقة الدفع</label>
+        <select 
+          class="form-control" 
+          formControlName="paymentMethod"
+          [class.is-invalid]="isFieldInvalid('paymentMethod')"
+        >
+          <option *ngFor="let method of paymentMethods" [value]="method.value">
+            {{method.label}}
+          </option>
+        </select>
+      </div>
+
+      <!-- Payment Date -->
+      <div class="form-group">
+        <label>تاريخ الدفع</label>
+        <input 
+          type="date" 
+          class="form-control" 
+          formControlName="paymentDate"
+          [class.is-invalid]="isFieldInvalid('paymentDate')"
+        >
+      </div>
+
+      <!-- Invoice Number -->
+      <div class="form-group">
+        <label>رقم الإيصال</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          formControlName="invoiceNumber"
+          [class.is-invalid]="isFieldInvalid('invoiceNumber')"
+        >
+      </div>
+
+      <!-- Status -->
+      <div class="form-group">
+        <label>الحالة</label>
+        <select 
+          class="form-control" 
+          formControlName="status"
+          [class.is-invalid]="isFieldInvalid('status')"
+        >
+          <option *ngFor="let status of paymentStatuses" [value]="status.value">
+            {{status.label}}
+          </option>
+        </select>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label>الوصف</label>
+        <textarea 
+          class="form-control" 
+          formControlName="description"
+          rows="3">
+        </textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button 
+        type="button" 
+        class="btn btn-secondary" 
+        (click)="dismiss()">
+        إلغاء
+      </button>
+      <button 
+        type="submit" 
+        class="btn btn-primary"
+        [disabled]="isSubmitting">
+        {{ isSubmitting ? 'جاري الحفظ...' : (payment ? 'تحديث' : 'حفظ') }}
+      </button>
+    </div>
+  </form>
+</div>

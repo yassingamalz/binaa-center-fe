@@ -157,7 +157,7 @@
     
     &:hover {
       color: $color-primary;
-      background: $color-gray-50;
+      background: $color-gray-100;
     }
     
     &.active {
@@ -254,8 +254,8 @@
   }
   
   &.inactive {
-    background: rgba($color-gray-500, 0.1);
-    color: $color-gray-500;
+    background: rgba($color-gray-900, 0.1);
+    color: $color-gray-900;
   }
 }
 

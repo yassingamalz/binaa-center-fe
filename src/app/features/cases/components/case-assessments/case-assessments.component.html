@@ -1,0 +1,74 @@
+  <!-- case-assessments.component.html -->
+  <div class="assessments-container">
+    <div class="tab-header">
+      <div class="header-title">
+        <h2>التقييمات</h2>
+        <span class="assessment-count" *ngIf="assessments.length">
+          {{assessments.length}} تقييم
+        </span>
+      </div>
+      <button class="btn-primary" (click)="addAssessment()">
+        <i class="fas fa-plus"></i>
+        تقييم جديد
+      </button>
+    </div>
+  
+    <div class="assessments-list" *ngIf="assessments.length; else noAssessments">
+      <div class="assessment-card" *ngFor="let assessment of assessments">
+        <div class="assessment-header">
+          <div class="assessment-type">
+            {{getAssessmentTypeLabel(assessment.assessmentType)}}
+          </div>
+          <div class="assessment-date">
+            <i class="far fa-calendar"></i>
+            {{assessment.assessmentDate| date:'mediumDate'}}
+          </div>
+        </div>
+  
+        <div class="assessment-content">
+          <div class="score-section" *ngIf="assessment.score">
+            <div class="score-circle">
+              {{assessment.score}}
+            </div>
+            <span class="score-label">النتيجة</span>
+          </div>
+  
+          <div class="assessment-details">
+            <h3>ملاحظات التقييم</h3>
+            <p>{{assessment.recommendations || 'لا توجد ملاحظات'}}</p>
+          </div>
+  
+          <div class="next-assessment" *ngIf="assessment.nextAssessmentDate">
+            <i class="far fa-calendar-alt"></i>
+            التقييم القادم: {{assessment.nextAssessmentDate | date:'mediumDate'}}
+          </div>
+        </div>
+  
+        <div class="assessment-footer">
+          <div class="status-badge" [class]="assessment.status.toLowerCase()">
+            {{getStatusLabel(assessment.status)}}
+          </div>
+          
+          <div class="actions">
+            <button class="btn-icon" (click)="editAssessment(assessment)">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn-icon" (click)="downloadReport(assessment)">
+              <i class="fas fa-download"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <ng-template #noAssessments>
+      <div class="empty-state">
+        <i class="far fa-clipboard"></i>
+        <p>لا توجد تقييمات مسجلة</p>
+        <button class="btn-secondary" (click)="addAssessment()">
+          إضافة تقييم جديد
+        </button>
+      </div>
+    </ng-template>
+  </div>
+  

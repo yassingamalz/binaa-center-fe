@@ -11,6 +11,9 @@ import { CaseFormComponent } from './components/case-form/case-form.component';
 
 // Services
 import { CaseService } from './services/case.service';
+import { CaseSessionsComponent } from './components/case-sessions/case-sessions.component';
+import { CaseAssessmentsComponent } from './components/case-assessments/case-assessments.component';
+import { CasePaymentsComponent } from './components/case-payments/case-payments.component';
 
 const routes: Routes = [
   {
@@ -31,7 +34,10 @@ const routes: Routes = [
   declarations: [
     CaseListComponent,
     CaseDetailsComponent,
-    CaseFormComponent
+    CaseFormComponent,
+    CaseSessionsComponent,
+    CaseAssessmentsComponent,
+    CasePaymentsComponent
   ],
   imports: [
     CommonModule,

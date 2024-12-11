@@ -1,0 +1,105 @@
+<!-- case-sessions.component.html -->
+<div class="sessions-container">
+    <div class="tab-header">
+      <div class="header-title">
+        <h2>الجلسات العلاجية</h2>
+        <span class="session-count" *ngIf="sessions.length">
+          {{sessions.length}} جلسة
+        </span>
+      </div>
+      <button class="btn-primary" (click)="addSession()">
+        <i class="fas fa-plus"></i>
+        جلسة جديدة
+      </button>
+    </div>
+  
+    <div class="filters-bar">
+      <div class="date-filter">
+        <label>التاريخ</label>
+        <div class="date-inputs">
+          <input 
+            type="date" 
+            (ngModelChange)="onDateChange($event, 'start')"
+            class="form-control">
+          <span>إلى</span>
+          <input 
+            type="date" 
+            (ngModelChange)="onDateChange($event, 'end')"
+            class="form-control">
+        </div>
+      </div>
+      
+      <div class="status-filter">
+        <label>الحالة</label>
+        <div class="btn-group">
+          <button 
+            *ngFor="let status of sessionStatuses"
+            class="btn-filter"
+            [class.active]="selectedStatus === status.value"
+            (click)="filterByStatus(status.value)">
+            {{status.label}}
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <div class="sessions-list" *ngIf="sessions.length; else noSessions">
+      <div class="session-card" *ngFor="let session of filteredSessions">
+        <div class="session-header">
+          <div class="session-type" [class]="session.sessionType">
+            {{session.sessionType === 'INDIVIDUAL' ? 'فردي' : 'جماعي'}}
+          </div>
+          <div class="session-date">
+            <i class="far fa-calendar"></i>
+            {{session.sessionDate | date:'mediumDate'}}
+          </div>
+          <div class="session-time">
+            <i class="far fa-clock"></i>
+            {{session.sessionDate}}
+          </div>
+        </div>
+  
+        <div class="session-content">
+          <h3>{{session.purpose}}</h3>
+          <p class="session-notes">{{session.notes}}</p>
+          
+          <div class="session-meta">
+            <span class="therapist">
+              <i class="fas fa-user"></i>
+              {{session.staffId}}
+            </span>
+            <span class="duration">
+              <i class="fas fa-hourglass-half"></i>
+              {{session.duration}} دقيقة
+            </span>
+          </div>
+        </div>
+  
+        <div class="session-footer">
+          <div class="attendance-status" [class]="session.attendanceStatus">
+            {{session.attendanceStatus === 'PRESENT' ? 'حضر' : 'غائب'}}
+          </div>
+          
+          <div class="actions">
+            <button class="btn-icon" (click)="editSession(session)">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn-icon" (click)="deleteSession(session)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <ng-template #noSessions>
+      <div class="empty-state">
+        <i class="far fa-calendar-alt"></i>
+        <p>لا توجد جلسات مسجلة</p>
+        <button class="btn-secondary" (click)="addSession()">
+          إضافة جلسة جديدة
+        </button>
+      </div>
+    </ng-template>
+  </div>
+  

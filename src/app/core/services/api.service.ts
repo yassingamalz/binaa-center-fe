@@ -1,6 +1,6 @@
 // src/app/core/services/api.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
@@ -28,4 +28,12 @@ export class ApiService {
   delete<T>(endpoint: string): Observable<T> {
     return this.http.delete<T>(`${this.apiUrl}/${endpoint}`);
   }
+
+  getBlob(endpoint: string): Observable<HttpResponse<Blob>> {
+    return this.http.get(`${this.apiUrl}/${endpoint}`, {
+      responseType: 'blob',
+      observe: 'response'
+    });
+  }
+
 }
