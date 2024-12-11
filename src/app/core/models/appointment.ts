@@ -20,3 +20,9 @@
     type: AppointmentType;
     notes?: string;
   }
+
+  // Extended DTO for list view
+export interface AppointmentListDTO extends AppointmentDTO {
+  caseName: string;
+  staffName: string;
+}

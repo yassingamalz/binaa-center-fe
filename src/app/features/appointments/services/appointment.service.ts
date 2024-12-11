@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { ApiService } from "../../../core/services/api.service";
-import { AppointmentDTO, AppointmentStatus } from "../../../core/models/appointment";
+import { AppointmentDTO, AppointmentListDTO, AppointmentStatus } from "../../../core/models/appointment";
 
 @Injectable({
   providedIn: 'root'
@@ -15,12 +15,12 @@ export class AppointmentService {
     return this.apiService.post<AppointmentDTO>(this.endpoint, data);
   }
 
-  getAppointmentById(id: number): Observable<AppointmentDTO> {
-    return this.apiService.get<AppointmentDTO>(`${this.endpoint}/${id}`);
+  getAppointmentsByDateTime(date: Date): Observable<AppointmentListDTO[]> {
+    return this.apiService.get<AppointmentListDTO[]>(`${this.endpoint}/list/date/${date.toISOString()}`);
   }
 
-  getAppointmentsByDateTime(dateTime: Date): Observable<AppointmentDTO[]> {
-    return this.apiService.get<AppointmentDTO[]>(`${this.endpoint}/datetime/${dateTime.toISOString()}`);
+  getAppointmentById(id: number): Observable<AppointmentDTO> {
+    return this.apiService.get<AppointmentDTO>(`${this.endpoint}/${id}`);
   }
 
   getAppointmentsByStatus(status: AppointmentStatus): Observable<AppointmentDTO[]> {

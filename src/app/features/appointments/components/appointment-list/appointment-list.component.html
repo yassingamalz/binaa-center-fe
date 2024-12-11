@@ -1,1 +1,105 @@
-<p>appointment-list works!</p>
+
+  <!-- src\app\features\appointments\components\appointment-list\appointment-list.component.html -->
+
+<div class="appointments-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-title">
+      <h1>المواعيد</h1>
+      <span class="appointment-count" *ngIf="filteredAppointments.length">
+        {{filteredAppointments.length}} موعد
+      </span>
+    </div>
+    
+    <button class="btn-primary" (click)="createAppointment()">
+      <i class="fas fa-plus"></i>
+      <span>موعد جديد</span>
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input 
+      type="text" 
+      placeholder="بحث..."
+      [(ngModel)]="searchTerm"
+      (input)="onSearch($event)">
+    </div>
+
+    <div class="date-filter">
+      <input 
+        type="date" 
+        [ngModel]="selectedDate | date:'yyyy-MM-dd'"
+        (ngModelChange)="onDateChange($event)">
+    </div>
+
+    <div class="status-filter">
+      <button 
+        *ngFor="let status of statusOptions"
+        class="filter-btn"
+        [class.active]="selectedStatus === status.value"
+        (click)="onStatusChange(status.value)">
+        {{status.label}}
+      </button>
+    </div>
+  </div>
+
+  <!-- Appointments List -->
+  <div class="appointments-list" [class.loading]="isLoading">
+    <div class="appointment-card" 
+         *ngFor="let appointment of filteredAppointments"
+         [appShimmer]="isLoading">
+      <div class="appointment-time">
+        <span class="time">{{appointment.dateTime | date:'shortTime'}}</span>
+        <span class="date">{{appointment.dateTime | date:'shortDate'}}</span>
+      </div>
+
+      <div class="appointment-info">
+        <div class="appointment-header">
+          <span class="appointment-type">{{getTypeLabel(appointment.type)}}</span>
+          <span class="status-badge" [class]="getStatusClass(appointment.status)">
+            {{getStatusLabel(appointment.status)}}
+          </span>
+        </div>
+
+        <div class="appointment-details">
+          <div class="case-info">
+            <i class="fas fa-user"></i>
+            <span>{{appointment.caseName}}</span>
+          </div>
+          <div class="staff-info">
+            <i class="fas fa-user-md"></i>
+            <span>{{appointment.staffName}}</span>
+          </div>
+        </div>
+
+        <div class="appointment-notes" *ngIf="appointment.notes">
+          {{appointment.notes}}
+        </div>
+      </div>
+
+      <div class="appointment-actions">
+        <button class="btn-icon" (click)="editAppointment(appointment)">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button 
+          class="btn-icon danger" 
+          (click)="cancelAppointment(appointment)"
+          *ngIf="appointment.status === 'SCHEDULED'">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!isLoading && filteredAppointments.length === 0">
+      <i class="far fa-calendar"></i>
+      <p>لا توجد مواعيد</p>
+      <button class="btn-secondary" (click)="createAppointment()">
+        إضافة موعد جديد
+      </button>
+    </div>
+  </div>
+</div>

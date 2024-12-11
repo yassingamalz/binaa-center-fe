@@ -22,6 +22,8 @@ import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 import { LayoutsModule } from './layouts/layouts.module';
 import { AuthModule } from './auth/auth.module';
+import { CasesModule } from './features/cases/cases.module';
+import { AppointmentsModule } from './features/appointments/appointments.module';
 
 export function tokenGetter() {
   return localStorage.getItem('token');
@@ -59,7 +61,10 @@ export function tokenGetter() {
     CoreModule,
     SharedModule,
     LayoutsModule,
-    AuthModule
+    AuthModule,
+    CasesModule,
+    AppointmentsModule
+
   ],
   providers: [
     {
