@@ -1,1 +1,107 @@
-<p>appointment-form works!</p>
+<!-- src/app/features/appointments/components/appointment-form/appointment-form.component.html -->
+<div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">{{ appointment ? 'تعديل موعد' : 'إضافة موعد جديد' }}</h4>
+      <button type="button" class="close" (click)="dismiss()">
+        <span>&times;</span>
+      </button>
+    </div>
+  
+    <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
+      <div class="modal-body">
+        <!-- Case Selection -->
+        <div class="form-group">
+          <label>الحالة</label>
+          <select 
+            class="form-control" 
+            formControlName="caseId"
+            [class.is-invalid]="isFieldInvalid('caseId')">
+            <option value="">اختر الحالة</option>
+            <!-- Add case options dynamically -->
+          </select>
+          <div class="invalid-feedback" *ngIf="isFieldInvalid('caseId')">
+            {{ getFieldError('caseId') }}
+          </div>
+        </div>
+  
+        <!-- Staff Selection -->
+        <div class="form-group">
+          <label>المعالج</label>
+          <select 
+            class="form-control" 
+            formControlName="staffId"
+            [class.is-invalid]="isFieldInvalid('staffId')">
+            <option value="">اختر المعالج</option>
+            <!-- Add staff options dynamically -->
+          </select>
+          <div class="invalid-feedback" *ngIf="isFieldInvalid('staffId')">
+            {{ getFieldError('staffId') }}
+          </div>
+        </div>
+  
+        <!-- Date and Time -->
+        <div class="form-group">
+          <label>التاريخ والوقت</label>
+          <input 
+            type="datetime-local" 
+            class="form-control" 
+            formControlName="dateTime"
+            [class.is-invalid]="isFieldInvalid('dateTime')">
+          <div class="invalid-feedback" *ngIf="isFieldInvalid('dateTime')">
+            {{ getFieldError('dateTime') }}
+          </div>
+        </div>
+  
+        <!-- Appointment Type -->
+        <div class="form-group">
+          <label>نوع الموعد</label>
+          <select 
+            class="form-control" 
+            formControlName="type"
+            [class.is-invalid]="isFieldInvalid('type')">
+            <option *ngFor="let type of appointmentTypes" [value]="type.value">
+              {{type.label}}
+            </option>
+          </select>
+        </div>
+  
+        <!-- Status -->
+        <div class="form-group">
+          <label>الحالة</label>
+          <select 
+            class="form-control" 
+            formControlName="status"
+            [class.is-invalid]="isFieldInvalid('status')">
+            <option *ngFor="let status of appointmentStatuses" [value]="status.value">
+              {{status.label}}
+            </option>
+          </select>
+        </div>
+  
+        <!-- Notes -->
+        <div class="form-group">
+          <label>ملاحظات</label>
+          <textarea 
+            class="form-control" 
+            formControlName="notes"
+            rows="3">
+          </textarea>
+        </div>
+      </div>
+  
+      <div class="modal-footer">
+        <button 
+          type="button" 
+          class="btn btn-secondary" 
+          (click)="dismiss()">
+          إلغاء
+        </button>
+        <button 
+          type="submit" 
+          class="btn btn-primary"
+          [disabled]="isSubmitting">
+          {{ isSubmitting ? 'جاري الحفظ...' : (appointment ? 'تحديث' : 'حفظ') }}
+        </button>
+      </div>
+    </form>
+  </div>

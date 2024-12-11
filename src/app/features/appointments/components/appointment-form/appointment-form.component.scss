@@ -1,0 +1,175 @@
+// src/app/features/appointments/components/appointment-form/appointment-form.component.scss
+@import 'styles/main';
+
+:host {
+  display: block;
+}
+
+.modal-header {
+  border-bottom: 1px solid $color-gray-200;
+  padding: $spacing-md $spacing-lg;
+
+  .modal-title {
+    margin: 0;
+    font-size: $font-size-xl;
+    color: $color-gray-900;
+  }
+
+  .close {
+    padding: $spacing-sm;
+    margin: calc(-1 * #{$spacing-sm});
+    color: $color-gray-600;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    
+    &:hover {
+      color: $color-gray-900;
+    }
+  }
+}
+
+.modal-body {
+  padding: $spacing-lg;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  @include scrollable;
+}
+
+.form-group {
+  margin-bottom: $spacing-md;
+
+  label {
+    display: block;
+    margin-bottom: $spacing-xs;
+    color: $color-gray-700;
+    font-weight: 500;
+  }
+}
+
+.form-control {
+  @include input-base;
+  
+  &.is-invalid {
+    border-color: $color-error;
+    
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($color-error, 0.1);
+    }
+  }
+
+  // Specific styles for select
+  &[type="datetime-local"] {
+    padding: calc(#{$spacing-sm} - 2px);  // Adjust for native input padding
+  }
+
+  // Textarea specific styles
+  &textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+}
+
+.invalid-feedback {
+  display: block;
+  margin-top: $spacing-xs;
+  color: $color-error;
+  font-size: $font-size-sm;
+}
+
+.modal-footer {
+  border-top: 1px solid $color-gray-200;
+  padding: $spacing-md $spacing-lg;
+  @include flex-between;
+  gap: $spacing-sm;
+
+  button {
+    @include button-base;
+    min-width: 100px;
+  }
+
+  .btn-secondary {
+    background: $color-gray-100;
+    color: $color-gray-700;
+    
+    &:hover {
+      background: $color-gray-200;
+    }
+  }
+
+  .btn-primary {
+    background: $color-primary;
+    color: $color-white;
+    
+    &:hover:not(:disabled) {
+      background: darken($color-primary, 5%);
+    }
+    
+    &:disabled {
+      background: lighten($color-primary, 20%);
+    }
+  }
+}
+
+// Mobile optimizations
+@media (max-width: $breakpoint-md) {
+  .modal-body {
+    padding: $spacing-md;
+  }
+
+  .form-group {
+    margin-bottom: $spacing-sm;
+  }
+
+  .form-control {
+    font-size: 16px; // Prevent zoom on iOS
+  }
+
+  .modal-footer {
+    flex-direction: column;
+    
+    button {
+      width: 100%;
+    }
+  }
+}
+
+// High contrast mode support
+@media (forced-colors: active) {
+  .form-control {
+    border: 1px solid currentColor;
+  }
+
+  .is-invalid {
+    border: 2px solid currentColor;
+  }
+}
+
+// Print styles
+@media print {
+  .modal-header,
+  .modal-footer {
+    display: none;
+  }
+
+  .modal-body {
+    padding: 0;
+  }
+
+  .form-control {
+    border: none;
+    padding: 0;
+  }
+}
+
+// RTL specific adjustments
+[dir="rtl"] {
+  .form-control {
+    text-align: right;
+  }
+
+  .modal-header .close {
+    margin-left: calc(-1 * #{$spacing-sm});
+    margin-right: auto;
+  }
+}
