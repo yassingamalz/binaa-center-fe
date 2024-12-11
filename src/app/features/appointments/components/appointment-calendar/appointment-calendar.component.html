@@ -1,1 +1,108 @@
-<p>appointment-calendar works!</p>
+<div class="calendar-container">
+    <!-- Header -->
+    <div class="calendar-header">
+      <div class="header-title">
+        <h1>التقويم</h1>
+        <div class="month-navigation">
+          <button class="nav-btn" (click)="previousMonth()">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+          <div class="current-month">
+            {{getFormattedDate() | date:'MMMM yyyy'}}
+          </div>
+          <button class="nav-btn" (click)="nextMonth()">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+        </div>
+      </div>
+      
+      <button class="btn-primary" (click)="createAppointment()">
+        <i class="fas fa-plus"></i>
+        <span>موعد جديد</span>
+      </button>
+    </div>
+  
+    <!-- Calendar Grid -->
+    <div class="calendar-grid" [class.loading]="isLoading">
+      <!-- Week Days Header -->
+      <div class="weekdays-header">
+        <div class="weekday">الأحد</div>
+        <div class="weekday">الإثنين</div>
+        <div class="weekday">الثلاثاء</div>
+        <div class="weekday">الأربعاء</div>
+        <div class="weekday">الخميس</div>
+        <div class="weekday">الجمعة</div>
+        <div class="weekday">السبت</div>
+      </div>
+  
+      <!-- Calendar Days -->
+      <div class="calendar-body">
+        <div class="week" *ngFor="let week of calendarDays">
+          <div class="day" 
+               *ngFor="let day of week"
+               [class.empty]="!day.date"
+               [class.today]="day.isToday"
+               [class.selected]="day.isSelected"
+               [class.has-appointments]="day.appointments.length > 0"
+               (click)="onDateSelect(day)">
+            <div class="day-header" *ngIf="day.date">
+              <span class="date">{{day.date.day}}</span>
+              <span class="appointment-count" *ngIf="day.appointments.length">
+                {{day.appointments.length}}
+              </span>
+            </div>
+            <div class="appointment-dots" *ngIf="day.appointments.length">
+              <span class="dot" 
+                    *ngFor="let appointment of day.appointments.slice(0, 3)"
+                    [class]="getStatusClass(appointment.status)">
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Selected Day Appointments -->
+    <ng-container *ngIf="!isLoading">
+      <div class="selected-day-appointments" *ngIf="selectedDayAppointments.length">
+        <h2>مواعيد {{getFormattedDate() | date:'longDate'}}</h2>
+        <div class="appointments-list">
+          <div class="appointment-card" *ngFor="let appointment of selectedDayAppointments">
+            <div class="appointment-time">
+              {{appointment.dateTime | date:'shortTime'}}
+            </div>
+            <div class="appointment-info">
+              <div class="appointment-type">
+                {{getTypeLabel(appointment.type)}}
+              </div>
+              <div class="appointment-details">
+                <span>
+                  <i class="fas fa-user"></i>
+                  {{appointment.caseName}}
+                </span>
+                <span>
+                  <i class="fas fa-user-md"></i>
+                  {{appointment.staffName}}
+                </span>
+              </div>
+              <div class="appointment-notes" *ngIf="appointment.notes">
+                {{appointment.notes}}
+              </div>
+            </div>
+            <div class="appointment-status" [class]="getStatusClass(appointment.status)">
+              {{getStatusLabel(appointment.status)}}
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="!selectedDayAppointments.length">
+        <i class="far fa-calendar"></i>
+        <p>لا توجد مواعيد في هذا اليوم</p>
+        <button class="btn-secondary" (click)="createAppointment()">
+          إضافة موعد جديد
+        </button>
+      </div>
+    </ng-container>
+  </div>
