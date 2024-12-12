@@ -1,1 +1,92 @@
-<p>document-upload works!</p>
+<!-- document-upload.component.html -->
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title">رفع مستند جديد</h4>
+    <button type="button" class="close" (click)="dismiss()">
+      <span>&times;</span>
+    </button>
+  </div>
+
+  <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+    <div class="modal-body">
+      <!-- File Upload -->
+      <div class="upload-section">
+        <input
+          type="file"
+          #fileInput
+          class="file-input"
+          (change)="onFileSelected($event)"
+          [attr.accept]="'.pdf,.doc,.docx,.jpg,.jpeg,.png'"
+          hidden
+        >
+        
+        <div class="upload-area" 
+             (click)="fileInput.click()"
+             [class.has-file]="selectedFile">
+          <i class="fas" [class.fa-cloud-upload-alt]="!selectedFile" [class.fa-file-alt]="selectedFile"></i>
+          <p *ngIf="!selectedFile">اضغط أو اسحب الملف هنا للرفع</p>
+          <p *ngIf="selectedFile">{{selectedFile.name}}</p>
+        </div>
+      </div>
+
+      <!-- Case Selection -->
+      <div class="form-group">
+        <label>الحالة</label>
+        <select 
+          class="form-control" 
+          formControlName="caseId"
+          [class.is-invalid]="isFieldInvalid('caseId')">
+          <option value="">اختر الحالة</option>
+          <option *ngFor="let case of cases" [value]="case.caseId">
+            {{case.name}}
+          </option>
+        </select>
+        <div class="invalid-feedback" *ngIf="isFieldInvalid('caseId')">
+          {{ getFieldError('caseId') }}
+        </div>
+      </div>
+
+      <!-- Document Type -->
+      <div class="form-group">
+        <label>نوع المستند</label>
+        <select 
+          class="form-control" 
+          formControlName="type"
+          [class.is-invalid]="isFieldInvalid('type')">
+          <option *ngFor="let type of documentTypes" [value]="type.value">
+            {{type.label}}
+          </option>
+        </select>
+        <div class="invalid-feedback" *ngIf="isFieldInvalid('type')">
+          {{ getFieldError('type') }}
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label>الوصف</label>
+        <textarea 
+          class="form-control" 
+          formControlName="description"
+          rows="3"
+          placeholder="وصف اختياري للمستند">
+        </textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button 
+        type="button" 
+        class="btn btn-secondary" 
+        (click)="dismiss()">
+        إلغاء
+      </button>
+      <button 
+        type="submit" 
+        class="btn btn-primary"
+        [disabled]="!selectedFile || isUploading">
+        {{ isUploading ? 'جاري الرفع...' : 'رفع المستند' }}
+      </button>
+    </div>
+  </form>
+</div>
