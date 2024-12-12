@@ -23,3 +23,8 @@
     recommendations?: string;
     status: AssessmentStatus;
   }
+
+  export interface AssessmentResponseDTO extends AssessmentDTO {
+    caseName: string;
+    assessorName: string;
+  }

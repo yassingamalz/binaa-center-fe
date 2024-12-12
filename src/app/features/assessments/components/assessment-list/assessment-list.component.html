@@ -1,1 +1,133 @@
-<p>assessment-list works!</p>
+<div class="assessments-container">
+    <!-- Header -->
+    <div class="page-header">
+      <div class="header-title">
+        <h1>التقييمات</h1>
+        <span class="assessment-count" *ngIf="filteredAssessments.length">
+          {{filteredAssessments.length}} تقييم
+        </span>
+      </div>
+      
+      <button class="btn-primary" (click)="createAssessment()">
+        <i class="fas fa-plus"></i>
+        <span>تقييم جديد</span>
+      </button>
+    </div>
+  
+    <!-- Filters -->
+    <div class="filters-section">
+      <form [formGroup]="searchForm" class="search-form">
+        <div class="search-input">
+          <i class="fas fa-search"></i>
+          <input 
+            type="text"
+            formControlName="searchTerm"
+            placeholder="بحث بإسم الحالة أو المقيم..."
+          >
+        </div>
+      </form>
+  
+      <div class="filters-group">
+        <div class="type-filters">
+          <button 
+            *ngFor="let type of assessmentTypes"
+            class="filter-btn"
+            [class.active]="selectedType === type.value"
+            (click)="onTypeChange(type.value)">
+            {{type.label}}
+          </button>
+        </div>
+  
+        <div class="status-filters">
+          <button 
+            *ngFor="let status of assessmentStatuses"
+            class="filter-btn"
+            [class.active]="selectedStatus === status.value"
+            (click)="onStatusChange(status.value)">
+            {{status.label}}
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Assessments List -->
+    <div class="assessments-list" [class.loading]="isLoading">
+      <div class="assessment-card" *ngFor="let assessment of filteredAssessments">
+        <div class="assessment-header">
+          <div class="assessment-type" [class]="assessment.assessmentType.toLowerCase()">
+            {{getTypeLabel(assessment.assessmentType)}}
+          </div>
+          <div class="assessment-date">
+            <i class="far fa-calendar"></i>
+            {{assessment.assessmentDate | date:'mediumDate'}}
+          </div>
+        </div>
+  
+        <div class="assessment-content">
+          <div class="assessment-info">
+            <div class="case-info">
+              <i class="fas fa-user"></i>
+              <span>{{assessment.caseName}}</span>
+            </div>
+            <div class="assessor-info">
+              <i class="fas fa-user-md"></i>
+              <span>{{assessment.assessorName}}</span>
+            </div>
+          </div>
+  
+          <div class="assessment-score" *ngIf="assessment.score">
+            <div class="score-circle">
+              {{assessment.score}}
+            </div>
+            <span class="score-label">النتيجة</span>
+          </div>
+  
+          <div class="assessment-notes" *ngIf="assessment.recommendations">
+            <h4>الملاحظات</h4>
+            <p>{{assessment.recommendations}}</p>
+          </div>
+  
+          <div class="next-assessment" *ngIf="assessment.nextAssessmentDate">
+            <i class="far fa-calendar-alt"></i>
+            التقييم القادم: {{assessment.nextAssessmentDate | date:'mediumDate'}}
+          </div>
+        </div>
+  
+        <div class="assessment-footer">
+          <span class="status-badge" [class]="getStatusClass(assessment.status)">
+            {{getStatusLabel(assessment.status)}}
+          </span>
+  
+          <div class="actions">
+            <button 
+              class="btn-icon" 
+              (click)="editAssessment(assessment)" 
+              title="تعديل">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button 
+              class="btn-icon" 
+              (click)="downloadReport(assessment)" 
+              title="تحميل التقرير">
+              <i class="fas fa-download"></i>
+            </button>
+            <button 
+              class="btn-icon danger" 
+              (click)="deleteAssessment(assessment)" 
+              title="حذف">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="!isLoading && filteredAssessments.length === 0">
+        <i class="far fa-clipboard"></i>
+        <p>لا توجد تقييمات مطابقة للبحث</p>
+        <button class="btn-secondary" (click)="createAssessment()">
+          إضافة تقييم جديد
+        </button>
+      </div>
+    </div>
+  </div>
