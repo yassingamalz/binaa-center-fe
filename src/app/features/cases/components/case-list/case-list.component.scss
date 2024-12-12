@@ -176,6 +176,8 @@
     width: 36px;
     height: 36px;
     padding: 0;
+    color: $color-accent;
+    background-color: transparent;
     
     &:hover {
       background: $color-gray-100;

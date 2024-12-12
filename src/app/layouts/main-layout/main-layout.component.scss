@@ -133,9 +133,7 @@ $layout-content-padding: $spacing-lg;
  }
 
  .route-container {
-   background-color: $color-white;
-   border-radius: $border-radius-lg;
-   box-shadow: $shadow-md;
+  
    min-height: fit-content;
    transition: $transition-base;
    padding: $spacing-lg;
