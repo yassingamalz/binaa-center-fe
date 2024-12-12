@@ -1,0 +1,313 @@
+// src/app/features/sessions/components/session-list/session-list.component.scss
+@import 'styles/main';
+
+.sessions-container {
+    padding: $spacing-lg;
+
+    @media (max-width: $breakpoint-md) {
+        padding: $spacing-md;
+    }
+}
+
+.page-header {
+    @include flex-between;
+    margin-bottom: $spacing-lg;
+
+    .header-title {
+        @include flex-center;
+        gap: $spacing-sm;
+
+        h1 {
+            margin: 0;
+            font-size: $font-size-2xl;
+        }
+
+        .session-count {
+            font-size: $font-size-sm;
+            color: $color-gray-600;
+            background: $color-gray-100;
+            padding: $spacing-xs $spacing-sm;
+            border-radius: $border-radius-full;
+        }
+    }
+
+    .btn-primary {
+        @include button-base;
+        background: $color-primary;
+        color: $color-white;
+        gap: $spacing-sm;
+
+        @media (max-width: $breakpoint-sm) {
+            span {
+                display: none;
+            }
+        }
+    }
+}
+
+.filters-section {
+    margin-bottom: $spacing-lg;
+
+    .search-form {
+        margin-bottom: $spacing-md;
+
+        .search-input {
+            position: relative;
+            max-width: 400px;
+
+            input {
+                @include input-base;
+                padding-right: $spacing-xl;
+            }
+
+            i {
+                position: absolute;
+                right: $spacing-sm;
+                top: 50%;
+                transform: translateY(-50%);
+                color: $color-gray-500;
+            }
+        }
+    }
+
+    .filters-group {
+        display: flex;
+        gap: $spacing-lg;
+        flex-wrap: wrap;
+
+        @media (max-width: $breakpoint-md) {
+            flex-direction: column;
+            gap: $spacing-md;
+        }
+
+        .type-filters,
+        .status-filters {
+            @include flex-center;
+            gap: $spacing-sm;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            @include button-base;
+            background: $color-gray-100;
+            color: $color-gray-700;
+
+            &.active {
+                background: $color-primary;
+                color: $color-white;
+            }
+        }
+    }
+}
+
+.sessions-list {
+    display: grid;
+    gap: $spacing-lg;
+
+    &.loading {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+}
+
+.session-card {
+    @include card;
+    cursor: pointer;
+    transition: $transition-base;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: $shadow-lg;
+    }
+
+    .session-header {
+        @include flex-between;
+        margin-bottom: $spacing-md;
+        padding-bottom: $spacing-md;
+        border-bottom: 1px solid $color-gray-200;
+
+        .session-type {
+            padding: $spacing-xs $spacing-sm;
+            border-radius: $border-radius-full;
+            font-size: $font-size-sm;
+            font-weight: 500;
+
+            &.individual {
+                background: rgba($color-primary, 0.1);
+                color: $color-primary;
+            }
+
+            &.group {
+                background: rgba($color-secondary, 0.1);
+                color: $color-secondary;
+            }
+        }
+    }
+
+    .session-datetime {
+        @include flex-center;
+        gap: $spacing-md;
+        color: $color-gray-600;
+        font-size: $font-size-sm;
+
+        .date,
+        .time {
+            @include flex-center;
+            gap: $spacing-xs;
+        }
+    }
+}
+
+.session-content {
+    margin-bottom: $spacing-lg;
+
+    .session-purpose {
+        font-size: $font-size-lg;
+        color: $color-gray-900;
+        margin-bottom: $spacing-md;
+    }
+
+    .session-info {
+        @include flex-center;
+        gap: $spacing-lg;
+        flex-wrap: wrap;
+        margin-bottom: $spacing-sm;
+
+        @media (max-width: $breakpoint-md) {
+            gap: $spacing-md;
+        }
+
+        .case-info,
+        .staff-info,
+        .duration {
+            @include flex-center;
+            gap: $spacing-xs;
+            color: $color-gray-600;
+            font-size: $font-size-sm;
+
+            i {
+                color: $color-gray-500;
+            }
+        }
+    }
+
+    .session-notes {
+        color: $color-gray-600;
+        font-size: $font-size-sm;
+        margin: 0;
+        line-height: 1.5;
+    }
+}
+
+.session-footer {
+    @include flex-between;
+    padding-top: $spacing-md;
+    border-top: 1px solid $color-gray-200;
+
+    .status-badge {
+        padding: $spacing-xs $spacing-sm;
+        border-radius: $border-radius-full;
+        font-size: $font-size-sm;
+        font-weight: 500;
+
+        &.present {
+            background: rgba($color-success, 0.1);
+            color: $color-success;
+        }
+
+        &.absent {
+            background: rgba($color-error, 0.1);
+            color: $color-error;
+        }
+    }
+
+    .actions {
+        @include flex-center;
+        gap: $spacing-sm;
+
+        .btn-icon {
+            @include button-base;
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            background: $color-gray-100;
+            color: $color-gray-600;
+
+            &:hover {
+                background: rgba($color-primary, 0.1);
+                color: $color-primary;
+            }
+
+            &.danger:hover {
+                background: rgba($color-error, 0.1);
+                color: $color-error;
+            }
+        }
+    }
+}
+
+.empty-state {
+    @include flex-column;
+    align-items: center;
+    padding: $spacing-2xl;
+    background: $color-white;
+    border-radius: $border-radius-lg;
+    text-align: center;
+    box-shadow: $shadow-sm;
+
+    i {
+        font-size: $font-size-4xl;
+        color: $color-gray-400;
+        margin-bottom: $spacing-lg;
+    }
+
+    p {
+        color: $color-gray-600;
+        margin-bottom: $spacing-lg;
+    }
+
+    .btn-secondary {
+        @include button-base;
+        background: $color-gray-100;
+        color: $color-gray-700;
+
+        &:hover {
+            background: $color-gray-200;
+        }
+    }
+}
+
+// Print Styles
+@media print {
+
+    .filters-section,
+    .actions,
+    .btn-primary {
+        display: none !important;
+    }
+
+    .session-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid $color-gray-200;
+    }
+}
+
+// High Contrast Mode
+@media (forced-colors: active) {
+    .session-card {
+        border: 1px solid currentColor;
+    }
+
+    .status-badge {
+        border: 1px solid currentColor;
+    }
+}
+
+// Reduced Motion
+@media (prefers-reduced-motion: reduce) {
+    .session-card {
+        transition: none;
+    }
+}

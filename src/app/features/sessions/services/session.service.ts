@@ -1,8 +1,7 @@
-
-// src/app/features/sessions/services/sessions.service.ts
+// src/app/features/sessions/services/session.service.ts
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { SessionDTO, AttendanceStatus, SessionType } from '../../../core/models/session';
+import { SessionResponseDTO, SessionDTO, AttendanceStatus, SessionType } from '../../../core/models/session';
 import { ApiService } from '../../../core/services/api.service';
 
 @Injectable({
@@ -13,60 +12,113 @@ export class SessionService {
 
   constructor(private apiService: ApiService) {}
 
-  getSessionsByDateRange(startDate: Date, endDate: Date): Observable<SessionDTO[]> {
-    return this.apiService.get<SessionDTO[]>(`${this.endpoint}/dateRange`, {
-      start: startDate.toISOString(),
-      end: endDate.toISOString()
-    });
+  getAllSessions(): Observable<SessionResponseDTO[]> {
+    return this.apiService.get<SessionDTO[]>(this.endpoint)
+      .pipe(
+        map(sessions => this.mapToResponseDTOs(sessions))
+      );
   }
 
-  getSessionsByCase(caseId: number): Observable<SessionDTO[]> {
-    return this.apiService.get<SessionDTO[]>(`${this.endpoint}/case/${caseId}`);
+  getSessionById(id: number): Observable<SessionResponseDTO> {
+    return this.apiService.get<SessionDTO>(`${this.endpoint}/${id}`)
+      .pipe(
+        map(session => this.mapToResponseDTO(session))
+      );
   }
 
-  getUpcomingSessions(): Observable<SessionDTO[]> {
-    const today = new Date();
-    const nextWeek = new Date();
-    nextWeek.setDate(today.getDate() + 7);
-
-    return this.apiService.get<SessionDTO[]>(`${this.endpoint}/dateRange`, {
-      start: today.toISOString(),
-      end: nextWeek.toISOString()
-    });
+  createSession(data: Omit<SessionDTO, 'sessionId'>): Observable<SessionResponseDTO> {
+    return this.apiService.post<SessionDTO>(this.endpoint, data)
+      .pipe(
+        map(session => this.mapToResponseDTO(session))
+      );
   }
 
-  getSessionStats(startDate: Date, endDate: Date): Observable<any> {
+  updateSession(id: number, data: Partial<SessionDTO>): Observable<SessionResponseDTO> {
+    return this.apiService.put<SessionDTO>(`${this.endpoint}/${id}`, data)
+      .pipe(
+        map(session => this.mapToResponseDTO(session))
+      );
+  }
+
+  deleteSession(id: number): Observable<void> {
+    return this.apiService.delete<void>(`${this.endpoint}/${id}`);
+  }
+
+  getSessionsByDateRange(startDate: Date, endDate: Date): Observable<SessionResponseDTO[]> {
     return this.apiService.get<SessionDTO[]>(`${this.endpoint}/dateRange`, {
       start: startDate.toISOString(),
       end: endDate.toISOString()
     }).pipe(
-      map(sessions => ({
-        totalSessions: sessions.length,
-        attendanceRate: this.calculateAttendanceRate(sessions),
-        byType: this.groupSessionsByType(sessions),
-        cancelledSessions: sessions.filter(s => s.attendanceStatus === AttendanceStatus.ABSENT).length
-      }))
+      map(sessions => this.mapToResponseDTOs(sessions))
     );
   }
 
-  getSessionsByTherapist(staffId: number, date: Date): Observable<SessionDTO[]> {
-    return this.apiService.get<SessionDTO[]>(`${this.endpoint}/staff/${staffId}/date/${date.toISOString()}`);
+  getSessionsByCase(caseId: number): Observable<SessionResponseDTO[]> {
+    return this.apiService.get<SessionDTO[]>(`${this.endpoint}/case/${caseId}`)
+      .pipe(
+        map(sessions => this.mapToResponseDTOs(sessions))
+      );
   }
 
-  private calculateAttendanceRate(sessions: SessionDTO[]): number {
-    const attended = sessions.filter(s => s.attendanceStatus === AttendanceStatus.PRESENT).length;
+  getUpcomingSessions(): Observable<SessionResponseDTO[]> {
+    const today = new Date();
+    const nextWeek = new Date();
+    nextWeek.setDate(today.getDate() + 7);
+
+    return this.getSessionsByDateRange(today, nextWeek);
+  }
+
+  getSessionStats(startDate: Date, endDate: Date): Observable<any> {
+    return this.getSessionsByDateRange(startDate, endDate)
+      .pipe(
+        map(sessions => ({
+          totalSessions: sessions.length,
+          attendanceRate: this.calculateAttendanceRate(sessions),
+          byType: this.groupSessionsByType(sessions),
+          cancelledSessions: sessions.filter(s => 
+            s.attendanceStatus === AttendanceStatus.ABSENT
+          ).length
+        }))
+      );
+  }
+
+  getSessionsByTherapist(staffId: number, date: Date): Observable<SessionResponseDTO[]> {
+    return this.apiService.get<SessionDTO[]>(
+      `${this.endpoint}/staff/${staffId}/date/${date.toISOString()}`
+    ).pipe(
+      map(sessions => this.mapToResponseDTOs(sessions))
+    );
+  }
+
+  private calculateAttendanceRate(sessions: SessionResponseDTO[]): number {
+    const attended = sessions.filter(s => 
+      s.attendanceStatus === AttendanceStatus.PRESENT
+    ).length;
     return (attended / sessions.length) * 100;
   }
 
-  private groupSessionsByType(sessions: SessionDTO[]): Record<SessionType, number> {
+  private groupSessionsByType(sessions: SessionResponseDTO[]): Record<SessionType, number> {
     return sessions.reduce((acc, session) => ({
       ...acc,
       [session.sessionType]: (acc[session.sessionType] || 0) + 1
     }), {} as Record<SessionType, number>);
   }
 
-  deleteSession(sessionId: number): Observable<void> {
-    return this.apiService.delete<void>(`${this.endpoint}/${sessionId}`);
+  private mapToResponseDTO(session: SessionDTO): SessionResponseDTO {
+    return {
+      ...session,
+      caseName: 'Case Name', // This should come from the backend
+      staffName: 'Staff Name', // This should come from the backend
+      sessionTime: new Date(session.sessionDate).toLocaleTimeString('ar-EG', {
+        hour: '2-digit',
+        minute: '2-digit'
+      }),
+      statusLabel: session.attendanceStatus === AttendanceStatus.PRESENT ? 'حضر' : 'غائب',
+      typeLabel: session.sessionType === SessionType.INDIVIDUAL ? 'فردي' : 'جماعي'
+    };
   }
 
+  private mapToResponseDTOs(sessions: SessionDTO[]): SessionResponseDTO[] {
+    return sessions.map(session => this.mapToResponseDTO(session));
+  }
 }
