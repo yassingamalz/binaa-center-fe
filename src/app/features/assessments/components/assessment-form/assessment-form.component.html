@@ -1,1 +1,123 @@
-<p>assessment-form works!</p>
+<div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">إضافة تقييم جديد</h4>
+      <button type="button" class="close" (click)="dismiss()">
+        <span>&times;</span>
+      </button>
+    </div>
+  
+    <form [formGroup]="assessmentForm" (ngSubmit)="onSubmit()">
+      <div class="modal-body">
+        <!-- Basic Information -->
+        <div class="form-section">
+          <h5>المعلومات الأساسية</h5>
+          
+          <!-- Assessment Type -->
+          <div class="form-group">
+            <label>نوع التقييم</label>
+            <select 
+              class="form-control" 
+              formControlName="assessmentType"
+              [class.is-invalid]="isFieldInvalid('assessmentType')">
+              <option value="">اختر نوع التقييم</option>
+              <option *ngFor="let type of assessmentTypes" [value]="type.value">
+                {{type.label}}
+              </option>
+            </select>
+          </div>
+  
+          <!-- Case ID -->
+          <div class="form-group">
+            <label>رقم الحالة</label>
+            <input 
+              type="number" 
+              class="form-control" 
+              formControlName="caseId"
+              [class.is-invalid]="isFieldInvalid('caseId')">
+          </div>
+  
+          <!-- Assessment Date -->
+          <div class="form-group">
+            <label>تاريخ التقييم</label>
+            <input 
+              type="date" 
+              class="form-control" 
+              formControlName="assessmentDate"
+              [class.is-invalid]="isFieldInvalid('assessmentDate')">
+          </div>
+  
+          <!-- Assessor ID -->
+          <div class="form-group">
+            <label>المقيم</label>
+            <input 
+              type="number" 
+              class="form-control" 
+              formControlName="assessorId"
+              [class.is-invalid]="isFieldInvalid('assessorId')">
+          </div>
+        </div>
+  
+        <!-- Dynamic Fields Based on Type -->
+        <div class="form-section" *ngIf="assessmentForm.get('assessmentType')?.value">
+          <h5>بيانات التقييم</h5>
+          <div formGroupName="assessmentFields">
+            <div class="form-group" *ngFor="let field of getTypeSpecificFields()">
+              <label>{{field.label}}</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [formControlName]="field.key">
+            </div>
+          </div>
+        </div>
+  
+        <!-- Additional Information -->
+        <div class="form-section">
+          <h5>معلومات إضافية</h5>
+          
+          <!-- Score -->
+          <div class="form-group">
+            <label>النتيجة</label>
+            <input 
+              type="number" 
+              class="form-control" 
+              formControlName="score">
+          </div>
+  
+          <!-- Recommendations -->
+          <div class="form-group">
+            <label>التوصيات</label>
+            <textarea 
+              class="form-control" 
+              formControlName="recommendations"
+              rows="3">
+            </textarea>
+          </div>
+  
+          <!-- Next Assessment Date -->
+          <div class="form-group">
+            <label>موعد التقييم القادم</label>
+            <input 
+              type="date" 
+              class="form-control" 
+              formControlName="nextAssessmentDate">
+          </div>
+        </div>
+      </div>
+  
+      <div class="modal-footer">
+        <button 
+          type="button" 
+          class="btn btn-secondary" 
+          (click)="dismiss()">
+          إلغاء
+        </button>
+        <button 
+          type="submit" 
+          class="btn btn-primary"
+          [disabled]="assessmentForm.invalid || isSubmitting">
+          {{ isSubmitting ? 'جاري الحفظ...' : 'حفظ' }}
+        </button>
+      </div>
+    </form>
+  </div>
