@@ -1,0 +1,200 @@
+@import 'styles/main';
+
+.settings-container {
+  padding: $spacing-lg;
+  position: relative;
+  
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-md;
+  }
+}
+
+.page-header {
+  margin-bottom: $spacing-lg;
+
+  h1 {
+    font-size: $font-size-2xl;
+    margin: 0;
+  }
+}
+
+.settings-card {
+  @include card;
+  margin-bottom: $spacing-lg;
+
+  .card-header {
+    margin-bottom: $spacing-lg;
+
+    h2 {
+      @include flex-center;
+      gap: $spacing-sm;
+      margin: 0;
+      font-size: $font-size-xl;
+      color: $color-primary;
+      
+      i {
+        color: $color-gray-400;
+      }
+    }
+  }
+  .card-body {
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: $spacing-lg;
+      
+      @media (max-width: $breakpoint-md) {
+        gap: $spacing-md;
+      }
+    }
+  }
+
+  .form-group {
+    &.full-width {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      margin-bottom: $spacing-xs;
+      color: $color-gray-700;
+      font-weight: 500;
+    }
+  }
+
+  .working-days {
+    margin-bottom: $spacing-lg;
+
+    h3 {
+      font-size: $font-size-lg;
+      margin-bottom: $spacing-md;
+      color: $color-gray-800;
+    }
+
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: $spacing-md;
+
+      .day-checkbox {
+        label {
+          @include flex-center;
+          gap: $spacing-sm;
+          cursor: pointer;
+
+          input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+          }
+
+          span {
+            color: $color-gray-700;
+          }
+        }
+      }
+    }
+  }
+}
+
+.form-control {
+  @include input-base;
+  
+  &.is-invalid {
+    border-color: $color-error;
+    
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($color-error, 0.1);
+    }
+  }
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.invalid-feedback {
+  display: block;
+  margin-top: $spacing-xs;
+  color: $color-error;
+  font-size: $font-size-sm;
+}
+
+.logo-upload {
+  @include flex-center;
+  gap: $spacing-sm;
+
+  .btn-upload {
+    @include button-base;
+    background: $color-gray-100;
+    color: $color-gray-700;
+    
+    i {
+      margin-left: $spacing-xs;
+    }
+    
+    &:hover {
+      background: $color-gray-200;
+    }
+  }
+
+  .file-name {
+    font-size: $font-size-sm;
+    color: $color-gray-600;
+  }
+}
+
+.form-actions {
+  @include flex-center;
+  justify-content: flex-end;
+  padding-top: $spacing-lg;
+  
+  .btn-primary {
+    @include button-base;
+    background: $color-primary;
+    color: $color-white;
+    min-width: 150px;
+    
+    &:disabled {
+      background: lighten($color-primary, 20%);
+    }
+  }
+}
+
+// Loading States
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba($color-white, 0.7);
+  backdrop-filter: blur(4px);
+  @include flex-center;
+  z-index: 10;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba($color-primary, 0.1);
+  border-radius: 50%;
+  border-top-color: $color-primary;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Print Styles
+@media print {
+  .settings-card {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid $color-gray-200;
+  }
+
+  .form-actions {
+    display: none;
+  }
+}

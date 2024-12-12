@@ -1,1 +1,194 @@
-<p>user-settings works!</p>
+<div class="settings-container" [class.loading]="isLoading">
+    <div class="page-header">
+      <h1>إعدادات المستخدم</h1>
+    </div>
+  
+    <!-- Profile Settings -->
+    <div class="settings-card">
+      <div class="card-header">
+        <h2>
+          <i class="fas fa-user-circle"></i>
+          البيانات الشخصية
+        </h2>
+      </div>
+  
+      <div class="card-body">
+        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+          <div class="avatar-section">
+            <div class="avatar-upload">
+              <div class="avatar-preview">
+                <img [src]="profileForm.get('avatar')?.value || 'assets/images/default-avatar.png'" alt="صورة المستخدم">
+              </div>
+              <div class="avatar-actions">
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  (change)="onAvatarChange($event)"
+                  #avatarInput
+                  hidden
+                >
+                <button type="button" class="btn-upload" (click)="avatarInput.click()">
+                  <i class="fas fa-camera"></i>
+                  تغيير الصورة
+                </button>
+              </div>
+            </div>
+          </div>
+  
+          <div class="form-grid">
+            <!-- Name -->
+            <div class="form-group">
+              <label>الاسم</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                formControlName="name"
+                [class.is-invalid]="isFieldInvalid(profileForm, 'name')"
+              >
+              <div class="invalid-feedback" *ngIf="isFieldInvalid(profileForm, 'name')">
+                {{ getFieldError(profileForm, 'name') }}
+              </div>
+            </div>
+  
+            <!-- Email -->
+            <div class="form-group">
+              <label>البريد الإلكتروني</label>
+              <input 
+                type="email" 
+                class="form-control" 
+                formControlName="email"
+                [class.is-invalid]="isFieldInvalid(profileForm, 'email')"
+              >
+              <div class="invalid-feedback" *ngIf="isFieldInvalid(profileForm, 'email')">
+                {{ getFieldError(profileForm, 'email') }}
+              </div>
+            </div>
+  
+            <!-- Phone -->
+            <div class="form-group">
+              <label>رقم الهاتف</label>
+              <input 
+                type="tel" 
+                class="form-control" 
+                formControlName="phone"
+                [class.is-invalid]="isFieldInvalid(profileForm, 'phone')"
+              >
+              <div class="invalid-feedback" *ngIf="isFieldInvalid(profileForm, 'phone')">
+                {{ getFieldError(profileForm, 'phone') }}
+              </div>
+            </div>
+          </div>
+  
+          <!-- Preferences -->
+          <div class="preferences-section" formGroupName="preferences">
+            <h3>التفضيلات</h3>
+            <div class="preferences-grid">
+              <div class="form-check">
+                <label>
+                  <input type="checkbox" formControlName="notifications">
+                  تفعيل الإشعارات
+                </label>
+              </div>
+  
+              <div class="form-group">
+                <label>اللغة</label>
+                <select class="form-control" formControlName="language">
+                  <option value="ar">العربية</option>
+                  <option value="en">English</option>
+                </select>
+              </div>
+  
+              <div class="form-group">
+                <label>المظهر</label>
+                <select class="form-control" formControlName="theme">
+                  <option value="light">فاتح</option>
+                  <option value="dark">داكن</option>
+                </select>
+              </div>
+            </div>
+          </div>
+  
+          <div class="form-actions">
+            <button 
+              type="submit" 
+              class="btn-primary"
+              [disabled]="isSaving">
+              {{ isSaving ? 'جاري الحفظ...' : 'حفظ التغييرات' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  
+    <!-- Password Change -->
+    <div class="settings-card">
+      <div class="card-header">
+        <h2>
+          <i class="fas fa-lock"></i>
+          تغيير كلمة المرور
+        </h2>
+      </div>
+  
+      <div class="card-body">
+        <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+          <div class="form-grid">
+            <!-- Current Password -->
+            <div class="form-group">
+              <label>كلمة المرور الحالية</label>
+              <input 
+                type="password" 
+                class="form-control" 
+                formControlName="currentPassword"
+                [class.is-invalid]="isFieldInvalid(passwordForm, 'currentPassword')"
+              >
+              <div class="invalid-feedback" *ngIf="isFieldInvalid(passwordForm, 'currentPassword')">
+                {{ getFieldError(passwordForm, 'currentPassword') }}
+              </div>
+            </div>
+  
+            <!-- New Password -->
+            <div class="form-group">
+              <label>كلمة المرور الجديدة</label>
+              <input 
+                type="password" 
+                class="form-control" 
+                formControlName="newPassword"
+                [class.is-invalid]="isFieldInvalid(passwordForm, 'newPassword')"
+              >
+              <div class="invalid-feedback" *ngIf="isFieldInvalid(passwordForm, 'newPassword')">
+                {{ getFieldError(passwordForm, 'newPassword') }}
+              </div>
+            </div>
+  
+            <!-- Confirm Password -->
+            <div class="form-group">
+              <label>تأكيد كلمة المرور</label>
+              <input 
+                type="password" 
+                class="form-control" 
+                formControlName="confirmPassword"
+                [class.is-invalid]="isFieldInvalid(passwordForm, 'confirmPassword')"
+              >
+              <div class="invalid-feedback" *ngIf="isFieldInvalid(passwordForm, 'confirmPassword')">
+                {{ getFieldError(passwordForm, 'confirmPassword') }}
+              </div>
+            </div>
+          </div>
+  
+          <div class="form-actions">
+            <button 
+              type="submit" 
+              class="btn-primary"
+              [disabled]="isChangingPassword">
+              {{ isChangingPassword ? 'جاري التغيير...' : 'تغيير كلمة المرور' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" *ngIf="isLoading">
+      <div class="loading-spinner"></div>
+    </div>
+  </div>
