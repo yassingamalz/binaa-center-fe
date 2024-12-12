@@ -1,0 +1,158 @@
+// src\app\features\fidelity\components\reward-form\reward-form.component.scss
+@import 'styles/main';
+
+:host {
+  display: block;
+}
+
+.modal-header {
+  border-bottom: 1px solid $color-gray-200;
+  padding: $spacing-md $spacing-lg;
+
+  .modal-title {
+    margin: 0;
+    font-size: $font-size-xl;
+    color: $color-gray-900;
+  }
+
+  .close {
+    padding: $spacing-sm;
+    margin: calc(-1 * #{$spacing-sm});
+    color: $color-gray-600;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    
+    &:hover {
+      color: $color-gray-900;
+    }
+  }
+}
+
+.modal-body {
+  padding: $spacing-lg;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  @include scrollable;
+  
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-md;
+  }
+}
+
+.form-group {
+  margin-bottom: $spacing-md;
+
+  label {
+    display: block;
+    margin-bottom: $spacing-xs;
+    color: $color-gray-700;
+    font-weight: 500;
+  }
+
+  .form-control {
+    @include input-base;
+    
+    &.is-invalid {
+      border-color: $color-error;
+      
+      &:focus {
+        box-shadow: 0 0 0 3px rgba($color-error, 0.1);
+      }
+    }
+
+    &[type="date"] {
+      // Fix for date input padding in RTL
+      padding-right: $spacing-sm;
+      padding-left: $spacing-sm;
+    }
+  }
+
+  textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .invalid-feedback {
+    display: block;
+    margin-top: $spacing-xs;
+    color: $color-error;
+    font-size: $font-size-sm;
+  }
+}
+
+.modal-footer {
+  border-top: 1px solid $color-gray-200;
+  padding: $spacing-md $spacing-lg;
+  @include flex-between;
+  gap: $spacing-sm;
+
+  @media (max-width: $breakpoint-sm) {
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  button {
+    @include button-base;
+    min-width: 120px;
+
+    @media (max-width: $breakpoint-sm) {
+      width: 100%;
+    }
+  }
+
+  .btn-secondary {
+    background: $color-gray-100;
+    color: $color-gray-700;
+    
+    &:hover {
+      background: $color-gray-200;
+    }
+  }
+
+  .btn-primary {
+    background: $color-primary;
+    color: $color-white;
+    
+    &:hover:not(:disabled) {
+      background: darken($color-primary, 5%);
+    }
+    
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Print styles
+@media print {
+  .modal-header,
+  .modal-footer {
+    display: none;
+  }
+
+  .modal-body {
+    padding: 0;
+  }
+}
+
+// High contrast mode
+@media (forced-colors: active) {
+  .form-control {
+    border: 1px solid currentColor;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    border: 1px solid currentColor;
+  }
+}
+
+// Reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .form-control,
+  button {
+    transition: none;
+  }
+}

@@ -1,1 +1,103 @@
-<p>points-history works!</p>
+<!--src\app\features\fidelity\components\points-history\points-history.component.html -->
+<div class="points-history-container">
+  <div class="page-header">
+    <div class="header-title">
+      <h1>سجل النقاط</h1>
+    </div>
+  </div>
+
+  <!-- Search Form -->
+  <div class="search-section">
+    <form [formGroup]="searchForm" class="search-form">
+      <div class="form-group">
+        <label>اختر الحالة</label>
+        <select class="form-control" formControlName="caseId">
+          <option value="">اختر الحالة</option>
+          <!-- Cases will be populated dynamically -->
+        </select>
+      </div>
+    </form>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="statistics-grid">
+    <div class="stat-card total-points">
+      <div class="stat-icon">
+        <i class="fas fa-star"></i>
+      </div>
+      <div class="stat-content">
+        <span class="stat-value">{{ statistics.currentBalance || 0 }}</span>
+        <span class="stat-label">الرصيد الحالي</span>
+      </div>
+    </div>
+
+    <div class="stat-card earned-points">
+      <div class="stat-icon">
+        <i class="fas fa-plus-circle"></i>
+      </div>
+      <div class="stat-content">
+        <span class="stat-value">{{ statistics.totalPointsEarned || 0 }}</span>
+        <span class="stat-label">النقاط المكتسبة</span>
+      </div>
+    </div>
+
+    <div class="stat-card redeemed-points">
+      <div class="stat-icon">
+        <i class="fas fa-minus-circle"></i>
+      </div>
+      <div class="stat-content">
+        <span class="stat-value">{{ statistics.totalPointsRedeemed || 0 }}</span>
+        <span class="stat-label">النقاط المستبدلة</span>
+      </div>
+    </div>
+
+    <div class="stat-card expiring-points">
+      <div class="stat-icon">
+        <i class="fas fa-clock"></i>
+      </div>
+      <div class="stat-content">
+        <span class="stat-value">{{ statistics.expiringPoints || 0 }}</span>
+        <span class="stat-label">النقاط التي ستنتهي قريباً</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Points History List -->
+  <div class="history-list" [class.loading]="isLoading">
+    <div class="history-item" *ngFor="let transaction of pointsHistory">
+      <div class="transaction-info">
+        <div class="transaction-header">
+          <span class="transaction-type" [class]="getTransactionClass(transaction.type)">
+            {{ getTransactionLabel(transaction.type) }}
+          </span>
+          <span class="transaction-date">
+            {{ transaction.transactionDate | date:'mediumDate' }}
+          </span>
+        </div>
+
+        <div class="transaction-details">
+          <span class="points-amount" [class]="getTransactionClass(transaction.type)">
+            {{ transaction.type === 'EARN' ? '+' : '-' }}{{ transaction.points }} نقطة
+          </span>
+          <span class="source" *ngIf="transaction.source">
+            {{ transaction.source }}
+          </span>
+        </div>
+
+        <div class="expiry-info" *ngIf="transaction.expiryDate">
+          <i class="fas fa-calendar-times"></i>
+          تنتهي في: {{ transaction.expiryDate | date:'mediumDate' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!isLoading && pointsHistory.length === 0">
+      <i class="fas fa-history"></i>
+      <p>لا يوجد سجل للنقاط</p>
+      <span *ngIf="!searchForm.get('caseId')?.value">
+        الرجاء اختيار حالة لعرض سجل النقاط
+      </span>
+    </div>
+  </div>
+</div>

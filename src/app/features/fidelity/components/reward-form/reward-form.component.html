@@ -1,0 +1,55 @@
+<!-- src\app\features\fidelity\components\reward-form\reward-form.component.html-->
+<div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title">{{ reward ? 'تعديل مكافأة' : 'إضافة مكافأة جديدة' }}</h4>
+        <button type="button" class="close" (click)="dismiss()">
+            <span>&times;</span>
+        </button>
+    </div>
+
+    <form [formGroup]="rewardForm" (ngSubmit)="onSubmit()">
+        <div class="modal-body">
+            <div class="form-group">
+                <label>اسم المكافأة</label>
+                <input type="text" class="form-control" formControlName="name"
+                    [class.is-invalid]="isFieldInvalid('name')">
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('name')">
+                    {{ getFieldError('name') }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>النقاط المطلوبة</label>
+                <input type="number" class="form-control" formControlName="pointsRequired"
+                    [class.is-invalid]="isFieldInvalid('pointsRequired')">
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('pointsRequired')">
+                    {{ getFieldError('pointsRequired') }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>الوصف</label>
+                <textarea class="form-control" formControlName="description" rows="3">
+        </textarea>
+            </div>
+
+            <div class="form-group">
+                <label>تاريخ الانتهاء</label>
+                <input type="date" class="form-control" formControlName="validUntil"
+                    [class.is-invalid]="isFieldInvalid('validUntil')" [min]="getMinDate()">
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('validUntil')">
+                    {{ getFieldError('validUntil') }}
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="dismiss()">
+                إلغاء
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+                {{ isSubmitting ? 'جاري الحفظ...' : (reward ? 'تحديث' : 'حفظ') }}
+            </button>
+        </div>
+    </form>
+</div>

@@ -1,1 +1,60 @@
-<p>rewards-list works!</p>
+<!-- src\app\features\fidelity\components\rewards-list\rewards-list.component.html -->
+<div class="rewards-container">
+  <div class="page-header">
+    <div class="header-title">
+      <h1>برنامج الولاء</h1>
+      <span class="rewards-count" *ngIf="rewards.length">
+        {{rewards.length}} مكافأة
+      </span>
+    </div>
+    
+    <button class="btn-primary" (click)="createReward()">
+      <i class="fas fa-plus"></i>
+      <span>إضافة مكافأة</span>
+    </button>
+  </div>
+
+  <div class="rewards-grid" [class.loading]="isLoading">
+    <div class="reward-card" *ngFor="let reward of rewards">
+      <div class="reward-header">
+        <div class="points-required">
+          <i class="fas fa-star"></i>
+          {{reward.pointsRequired}} نقطة
+        </div>
+        <div class="validity">
+          صالح حتى: {{reward.validUntil | date:'mediumDate'}}
+        </div>
+      </div>
+
+      <div class="reward-content">
+        <h3>{{reward.name}}</h3>
+        <p>{{reward.description}}</p>
+      </div>
+
+      <div class="reward-footer">
+        <button class="btn-primary" (click)="redeemReward(reward)">
+          <i class="fas fa-gift"></i>
+          استبدال
+        </button>
+
+        <div class="actions">
+          <button class="btn-icon" (click)="editReward(reward)" title="تعديل">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="btn-icon danger" (click)="deactivateReward(reward)" title="إلغاء التفعيل">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!isLoading && rewards.length === 0">
+      <i class="fas fa-gift"></i>
+      <p>لا توجد مكافآت متاحة</p>
+      <button class="btn-secondary" (click)="createReward()">
+        إضافة مكافأة جديدة
+      </button>
+    </div>
+  </div>
+</div>
