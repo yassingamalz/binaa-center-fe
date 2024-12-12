@@ -75,7 +75,7 @@ export const routes: Routes = [
         path: 'settings',
         loadChildren: () => import('./features/settings/settings.module')
           .then(m => m.SettingsModule),
-        canActivate: [AdminGuard]
+        canActivate: [AuthGuard, AdminGuard]
       }
     ]
   },

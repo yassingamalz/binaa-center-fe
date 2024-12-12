@@ -1,10 +1,11 @@
 // src/app/core/services/auth.service.ts
+// src/app/core/services/auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { ApiService } from './api.service';
-import { UserDTO } from '../models/user';
+import { UserDTO, UserRole } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,13 @@ export class AuthService {
       tap(response => {
         localStorage.setItem('token', response.token);
         const decodedToken = this.jwtHelper.decodeToken(response.token);
-        this.currentUserSubject.next(decodedToken);
+        // Ensure the decoded token maps to UserDTO structure
+        const user: UserDTO = {
+          userId: decodedToken.userId,
+          username: decodedToken.username,
+          role: decodedToken.role as UserRole
+        };
+        this.currentUserSubject.next(user);
       })
     );
   }
@@ -40,11 +47,26 @@ export class AuthService {
     return token != null && !this.jwtHelper.isTokenExpired(token);
   }
 
+  hasRole(role: UserRole): boolean {
+    const currentUser = this.currentUserSubject.value;
+    return currentUser?.role === role;
+  }
+
   private loadStoredUser(): void {
     const token = localStorage.getItem('token');
     if (token && !this.jwtHelper.isTokenExpired(token)) {
       const decodedToken = this.jwtHelper.decodeToken(token);
-      this.currentUserSubject.next(decodedToken);
+      // Ensure the decoded token maps to UserDTO structure
+      const user: UserDTO = {
+        userId: decodedToken.userId,
+        username: decodedToken.username,
+        role: decodedToken.role as UserRole
+      };
+      this.currentUserSubject.next(user);
     }
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
   }
 }
