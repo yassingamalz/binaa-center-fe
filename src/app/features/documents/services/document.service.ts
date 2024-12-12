@@ -1,7 +1,8 @@
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { ApiService } from "../../../core/services/api.service";
-import { DocumentDTO } from "../../../core/models/document";
+
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { DocumentDTO, DocumentResponseDTO } from '../../../core/models/document';
+import { ApiService } from '../../../core/services/api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,27 +12,37 @@ export class DocumentService {
 
   constructor(private apiService: ApiService) {}
 
-  createDocument(data: Omit<DocumentDTO, 'documentId'>): Observable<DocumentDTO> {
-    return this.apiService.post<DocumentDTO>(this.endpoint, data);
+  getAllDocuments(): Observable<DocumentResponseDTO[]> {
+    return this.apiService.get<DocumentResponseDTO[]>(this.endpoint);
   }
 
-  getDocumentById(id: number): Observable<DocumentDTO> {
-    return this.apiService.get<DocumentDTO>(`${this.endpoint}/${id}`);
+  getDocumentById(id: number): Observable<DocumentResponseDTO> {
+    return this.apiService.get<DocumentResponseDTO>(`${this.endpoint}/${id}`);
   }
 
-  getDocumentsByCase(caseId: number): Observable<DocumentDTO[]> {
-    return this.apiService.get<DocumentDTO[]>(`${this.endpoint}/case/${caseId}`);
+  uploadDocument(formData: FormData): Observable<DocumentResponseDTO> {
+    return this.apiService.post<DocumentResponseDTO>(`${this.endpoint}/upload`, formData);
   }
 
-  getDocumentsByType(type: DocumentType): Observable<DocumentDTO[]> {
-    return this.apiService.get<DocumentDTO[]>(`${this.endpoint}/type/${type}`);
+  downloadDocument(id: number): Observable<Blob> {
+    return this.apiService.get<Blob>(`${this.endpoint}/${id}/download`, {
+      responseType: 'blob' as 'json'
+    });
   }
 
-  updateDocument(id: number, data: Partial<DocumentDTO>): Observable<DocumentDTO> {
-    return this.apiService.put<DocumentDTO>(`${this.endpoint}/${id}`, data);
+  updateDocument(id: number, data: Partial<DocumentResponseDTO>): Observable<DocumentResponseDTO> {
+    return this.apiService.put<DocumentResponseDTO>(`${this.endpoint}/${id}`, data);
   }
 
   deleteDocument(id: number): Observable<void> {
     return this.apiService.delete<void>(`${this.endpoint}/${id}`);
+  }
+
+  getDocumentsByCase(caseId: number): Observable<DocumentResponseDTO[]> {
+    return this.apiService.get<DocumentResponseDTO[]>(`${this.endpoint}/case/${caseId}`);
+  }
+
+  getDocumentsByType(type: string): Observable<DocumentResponseDTO[]> {
+    return this.apiService.get<DocumentResponseDTO[]>(`${this.endpoint}/type/${type}`);
   }
 }

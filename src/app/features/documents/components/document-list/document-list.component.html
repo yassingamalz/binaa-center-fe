@@ -1,1 +1,86 @@
-<p>document-list works!</p>
+<!-- src\app\features\documents\components\document-list\document-list.component.html -->
+<div class="documents-container">
+    <!-- Header -->
+    <div class="page-header">
+        <div class="header-title">
+            <h1>المستندات</h1>
+            <span class="document-count" *ngIf="filteredDocuments.length">
+                {{filteredDocuments.length}} مستند
+            </span>
+        </div>
+
+        <button class="btn-primary" (click)="uploadDocument()">
+            <i class="fas fa-upload"></i>
+            <span>رفع مستند</span>
+        </button>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-section">
+        <form [formGroup]="searchForm" class="search-form">
+            <div class="search-input">
+                <i class="fas fa-search"></i>
+                <input type="text" formControlName="searchTerm" placeholder="بحث بإسم الملف أو رقم الحالة...">
+            </div>
+        </form>
+
+        <div class="type-filters">
+            <button *ngFor="let type of documentTypes" class="filter-btn" [class.active]="selectedType === type.value"
+                (click)="onTypeChange(type.value)">
+                {{type.label}}
+            </button>
+        </div>
+    </div>
+
+    <!-- Documents Grid -->
+    <div class="documents-grid" [class.loading]="isLoading">
+        <div class="document-card" *ngFor="let document of filteredDocuments">
+            <div class="document-icon" [ngClass]="document.type.toLowerCase()">
+                <i class="fas" [class.fa-file-medical]="document.type === 'MEDICAL'"
+                    [class.fa-file-alt]="document.type === 'ASSESSMENT'"
+                    [class.fa-file-chart-line]="document.type === 'PROGRESS_REPORT'"></i>
+            </div>
+
+            <div class="document-info">
+                <h3>{{document.fileName}}</h3>
+
+                <div class="document-meta">
+                    <span class="document-type">
+                        {{getDocumentTypeLabel(document.type)}}
+                    </span>
+                    <span class="upload-date">
+                        <i class="far fa-calendar-alt"></i>
+                        {{document.uploadDate | date:'mediumDate'}}
+                    </span>
+                    <span class="file-size">
+                        <i class="fas fa-hdd"></i>
+                        {{formatFileSize(document.size)}}
+                    </span>
+                </div>
+
+                <div class="document-case" *ngIf="document.caseId">
+                    <i class="fas fa-user"></i>
+                    حالة رقم: {{document.caseId}}
+                </div>
+            </div>
+
+            <div class="document-actions">
+                <button class="btn-icon" (click)="downloadDocument(document)" title="تحميل">
+                    <i class="fas fa-download"></i>
+                </button>
+                <button class="btn-icon danger" (click)="deleteDocument(document, $event)" title="حذف">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="!isLoading && filteredDocuments.length === 0">
+            <i class="far fa-folder-open"></i>
+            <p>لا توجد مستندات</p>
+            <button class="btn-secondary" (click)="uploadDocument()">
+                رفع مستند جديد
+            </button>
+        </div>
+    </div>
+</div>
