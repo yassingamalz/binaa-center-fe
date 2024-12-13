@@ -1,1 +1,185 @@
-<p>session-details works!</p>
+<!-- src/app/features/sessions/components/session-details/session-details.component.html -->
+<div class="page-container" [class.loading]="isLoading">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+      <a [routerLink]="['/sessions']">الجلسات</a>
+      <i class="fas fa-chevron-left"></i>
+      <span *ngIf="session">{{session.purpose}}</span>
+    </nav>
+  
+    <!-- Header Section -->
+    <div class="page-header">
+      <div class="header-content">
+        <div class="session-info" *ngIf="session">
+          <div class="session-title">
+            <h1>{{session.purpose}}</h1>
+            <div class="session-type" [class]="session.sessionType.toLowerCase()">
+              {{session.typeLabel}}
+            </div>
+          </div>
+          <div class="session-meta">
+            <span class="status-badge" [class]="getStatusClass()">
+              {{session.statusLabel}}
+            </span>
+            <span class="meta-item">
+              <i class="far fa-calendar"></i>
+              {{session.sessionDate | date:'mediumDate'}}
+            </span>
+            <span class="meta-item">
+              <i class="far fa-clock"></i>
+              {{session.sessionTime}}
+            </span>
+            <span class="meta-item">
+              <i class="fas fa-hourglass-half"></i>
+              {{session.duration}} دقيقة
+            </span>
+          </div>
+        </div>
+        <div class="header-actions" *ngIf="session">
+          <button class="btn-secondary" (click)="toggleAttendance()">
+            <i class="fas" [class.fa-check-circle]="session.attendanceStatus === 'PRESENT'" 
+               [class.fa-times-circle]="session.attendanceStatus === 'ABSENT'"></i>
+            {{session.attendanceStatus === 'PRESENT' ? 'تسجيل غياب' : 'تسجيل حضور'}}
+          </button>
+          <button class="btn-primary" (click)="editSession()">
+            <i class="fas fa-edit"></i>
+            تعديل البيانات
+          </button>
+          <button class="btn-danger" (click)="deleteSession()">
+            <i class="fas fa-trash"></i>
+            حذف الجلسة
+          </button>
+        </div>
+      </div>
+  
+      <!-- Tabs Navigation -->
+      <div class="tabs-navigation">
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'info'"
+          (click)="switchTab('info')">
+          <i class="fas fa-info-circle"></i>
+          <span>المعلومات الأساسية</span>
+        </button>
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'notes'"
+          (click)="switchTab('notes')">
+          <i class="fas fa-sticky-note"></i>
+          <span>الملاحظات</span>
+        </button>
+        <button 
+          class="tab-btn" 
+          [class.active]="activeTab === 'attachments'"
+          (click)="switchTab('attachments')">
+          <i class="fas fa-paperclip"></i>
+          <span>المرفقات</span>
+        </button>
+      </div>
+    </div>
+  
+    <!-- Main Content Area -->
+    <div class="page-content" *ngIf="session">
+      <div [ngSwitch]="activeTab">
+        <!-- Basic Information Tab -->
+        <div *ngSwitchCase="'info'" class="info-tab">
+          <div class="grid-layout">
+            <!-- Session Details -->
+            <div class="info-card">
+              <div class="card-header">
+                <h3>
+                  <i class="fas fa-info-circle"></i>
+                  معلومات الجلسة
+                </h3>
+              </div>
+              <div class="card-body">
+                <div class="info-grid">
+                  <div class="info-item">
+                    <label>الحالة</label>
+                    <p>{{session.caseName}}</p>
+                  </div>
+                  <div class="info-item">
+                    <label>المعالج</label>
+                    <p>{{session.staffName}}</p>
+                  </div>
+                  <div class="info-item">
+                    <label>الوقت</label>
+                    <p>{{session.sessionTime}}</p>
+                  </div>
+                  <div class="info-item">
+                    <label>المدة</label>
+                    <p>{{session.duration}} دقيقة</p>
+                  </div>
+                  <div class="info-item full-width">
+                    <label>الهدف</label>
+                    <p>{{session.purpose}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <!-- Goals and Progress -->
+            <div class="info-card">
+              <div class="card-header">
+                <h3>
+                  <i class="fas fa-bullseye"></i>
+                  الأهداف والتقدم
+                </h3>
+              </div>
+              <div class="card-body">
+                <div class="info-grid">
+                  <div class="info-item full-width">
+                    <label>الأهداف المحققة</label>
+                    <p>{{session.goalsAchieved || 'لا يوجد'}}</p>
+                  </div>
+                  <div class="info-item full-width">
+                    <label>خطة الجلسة القادمة</label>
+                    <p>{{session.nextSessionPlan || 'لا يوجد'}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Notes Tab -->
+        <div *ngSwitchCase="'notes'" class="notes-tab">
+          <div class="info-card">
+            <div class="card-header">
+              <h3>
+                <i class="fas fa-sticky-note"></i>
+                ملاحظات الجلسة
+              </h3>
+            </div>
+            <div class="card-body">
+              <p *ngIf="session.notes">{{session.notes}}</p>
+              <p *ngIf="!session.notes" class="no-content">لا توجد ملاحظات</p>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Attachments Tab -->
+        <div *ngSwitchCase="'attachments'" class="attachments-tab">
+          <div class="info-card">
+            <div class="card-header">
+              <h3>
+                <i class="fas fa-paperclip"></i>
+                المرفقات
+              </h3>
+            </div>
+            <div class="card-body">
+              <div *ngIf="session.attachments" class="attachments-list">
+                <!-- Attachments will be listed here -->
+              </div>
+              <p *ngIf="!session.attachments" class="no-content">لا توجد مرفقات</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" *ngIf="isLoading">
+      <div class="loading-spinner"></div>
+    </div>
+  </div>
