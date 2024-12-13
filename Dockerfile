@@ -5,19 +5,22 @@ FROM node:18 AS build
 WORKDIR /app
 
 # Copy the package.json and package-lock.json files
-COPY package*.json ./
+COPY package*.json ./ 
 
 # Install dependencies
 RUN npm install
 
 # Copy the Angular app source code
-COPY . .
+COPY . . 
 
 # Build the Angular app
 RUN npm run build --prod
 
 # Step 2: Serve the Angular app using Nginx
 FROM nginx:alpine
+
+# Copy the custom nginx.conf to configure Nginx to listen on port 3200
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy the build output to the Nginx container's web directory
 COPY --from=build /app/dist/binaa-center-fe /usr/share/nginx/html
