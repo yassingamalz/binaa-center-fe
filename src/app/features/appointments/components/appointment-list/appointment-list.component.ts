@@ -1,3 +1,4 @@
+//src\app\features\appointments\components\appointment-list\appointment-list.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -16,9 +17,9 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
   appointments: AppointmentListDTO[] = [];
   filteredAppointments: AppointmentListDTO[] = [];
   isLoading = true;
-  
+
   // Filters
-  selectedDate = new Date();
+  selectedDate: Date | null = null;
   selectedStatus: AppointmentStatus | 'all' = 'all';
   searchTerm = '';
 
@@ -28,7 +29,7 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
     { value: AppointmentStatus.COMPLETED, label: 'مكتمل' },
     { value: AppointmentStatus.CANCELLED, label: 'ملغي' }
   ];
-  
+
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -39,12 +40,30 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.loadAppointments();
+    this.loadAllAppointments();
   }
 
-  loadAppointments(): void {
+  loadAllAppointments(): void {
     this.isLoading = true;
-    this.appointmentService.getAppointmentsByDateTime(this.selectedDate)
+    this.appointmentService.getAllAppointments()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (appointments) => {
+          this.appointments = appointments;
+          this.filterAppointments();
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error loading appointments:', error);
+          this.toastr.error('حدث خطأ أثناء تحميل المواعيد');
+          this.isLoading = false;
+        }
+      });
+  }
+
+  loadAppointmentsByDate(date: Date): void {
+    this.isLoading = true;
+    this.appointmentService.getAppointmentsByDateTime(date)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (appointments) => {
@@ -63,12 +82,10 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
   filterAppointments(): void {
     let filtered = [...this.appointments];
 
-    // Status filter
     if (this.selectedStatus !== 'all') {
       filtered = filtered.filter(app => app.status === this.selectedStatus);
     }
 
-    // Search filter
     if (this.searchTerm.trim()) {
       const term = this.searchTerm.toLowerCase();
       filtered = filtered.filter(app => 
@@ -81,9 +98,13 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
     this.filteredAppointments = filtered;
   }
 
-  onDateChange(date: Date): void {
+  onDateChange(date: Date | null): void {
     this.selectedDate = date;
-    this.loadAppointments();
+    if (date) {
+      this.loadAppointmentsByDate(date);
+    } else {
+      this.loadAllAppointments();
+    }
   }
 
   onStatusChange(status: AppointmentStatus | 'all'): void {
@@ -106,11 +127,11 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
     modalRef.result.then(
       (result: AppointmentDTO) => {
         if (result) {
-          this.loadAppointments();
+          this.loadAllAppointments();
           this.toastr.success('تم إنشاء الموعد بنجاح');
         }
       },
-      () => {} // Modal dismissed
+      () => {}
     );
   }
 
@@ -120,7 +141,6 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
       backdrop: 'static'
     });
 
-    // Convert to base DTO for form
     const appointmentData: AppointmentDTO = {
       appointmentId: appointment.appointmentId,
       caseId: appointment.caseId,
@@ -136,11 +156,11 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
     modalRef.result.then(
       (result: AppointmentDTO) => {
         if (result) {
-          this.loadAppointments();
+          this.loadAllAppointments();
           this.toastr.success('تم تحديث الموعد بنجاح');
         }
       },
-      () => {} // Modal dismissed
+      () => {}
     );
   }
 
@@ -151,7 +171,7 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
         { status: AppointmentStatus.CANCELLED }
       ).subscribe({
         next: () => {
-          this.loadAppointments();
+          this.loadAllAppointments();
           this.toastr.success('تم إلغاء الموعد بنجاح');
         },
         error: (error) => {
@@ -189,3 +209,4 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 }
+

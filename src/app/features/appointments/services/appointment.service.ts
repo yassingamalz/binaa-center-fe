@@ -9,10 +9,14 @@ import { AppointmentDTO, AppointmentListDTO, AppointmentStatus } from "../../../
 export class AppointmentService {
   private endpoint = 'appointments';
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService) { }
 
   createAppointment(data: Omit<AppointmentDTO, 'appointmentId'>): Observable<AppointmentDTO> {
     return this.apiService.post<AppointmentDTO>(this.endpoint, data);
+  }
+
+  getAllAppointments(): Observable<AppointmentListDTO[]> {
+    return this.apiService.get<AppointmentListDTO[]>(`${this.endpoint}`);
   }
 
   getAppointmentsByDateTime(date: Date): Observable<AppointmentListDTO[]> {
