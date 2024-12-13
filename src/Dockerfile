@@ -22,7 +22,7 @@ FROM nginx:alpine
 # Copy the build output to the Nginx container's web directory
 COPY --from=build /app/dist/binaa-center-fe /usr/share/nginx/html
 
-# Expose port 80 for the web server
+# Expose port 3200 for the web server
 EXPOSE 3200
 
 # Start Nginx when the container runs
