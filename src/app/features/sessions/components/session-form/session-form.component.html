@@ -1,1 +1,176 @@
-<p>session-form works!</p>
+<div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">{{ session ? 'تعديل جلسة' : 'إنشاء جلسة جديدة' }}</h4>
+      <button type="button" class="close" (click)="dismiss()">
+        <span>&times;</span>
+      </button>
+    </div>
+  
+    <form [formGroup]="sessionForm" (ngSubmit)="onSubmit()">
+      <div class="modal-body">
+        <!-- Basic Info Section -->
+        <div class="form-section">
+          <h5>المعلومات الأساسية</h5>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>الحالة</label>
+                <select 
+                  class="form-control" 
+                  formControlName="caseId"
+                  [class.is-invalid]="isFieldInvalid('caseId')">
+                  <option value="">اختر الحالة</option>
+                  <!-- Cases will be populated dynamically -->
+                </select>
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('caseId')">
+                  {{ getFieldError('caseId') }}
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>المعالج</label>
+                <select 
+                  class="form-control" 
+                  formControlName="staffId"
+                  [class.is-invalid]="isFieldInvalid('staffId')">
+                  <option value="">اختر المعالج</option>
+                  <!-- Staff will be populated dynamically -->
+                </select>
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('staffId')">
+                  {{ getFieldError('staffId') }}
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>الهدف</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  formControlName="purpose"
+                  [class.is-invalid]="isFieldInvalid('purpose')">
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('purpose')">
+                  {{ getFieldError('purpose') }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Session Details Section -->
+        <div class="form-section">
+          <h5>تفاصيل الجلسة</h5>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>التاريخ والوقت</label>
+                <input 
+                  type="datetime-local" 
+                  class="form-control" 
+                  formControlName="sessionDate"
+                  [class.is-invalid]="isFieldInvalid('sessionDate')">
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('sessionDate')">
+                  {{ getFieldError('sessionDate') }}
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>المدة (بالدقائق)</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  formControlName="duration"
+                  [class.is-invalid]="isFieldInvalid('duration')">
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('duration')">
+                  {{ getFieldError('duration') }}
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>نوع الجلسة</label>
+                <select 
+                  class="form-control" 
+                  formControlName="sessionType"
+                  [class.is-invalid]="isFieldInvalid('sessionType')">
+                  <option *ngFor="let type of sessionTypes" [value]="type.value">
+                    {{type.label}}
+                  </option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>حالة الحضور</label>
+                <select 
+                  class="form-control" 
+                  formControlName="attendanceStatus"
+                  [class.is-invalid]="isFieldInvalid('attendanceStatus')">
+                  <option *ngFor="let status of attendanceStatuses" [value]="status.value">
+                    {{status.label}}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Notes and Plans Section -->
+        <div class="form-section">
+          <h5>الملاحظات والخطط</h5>
+          <div class="form-group">
+            <label>ملاحظات الجلسة</label>
+            <textarea 
+              class="form-control" 
+              formControlName="notes"
+              rows="3">
+            </textarea>
+          </div>
+  
+          <div class="form-group">
+            <label>الأهداف المحققة</label>
+            <textarea 
+              class="form-control" 
+              formControlName="goalsAchieved"
+              rows="3">
+            </textarea>
+          </div>
+  
+          <div class="form-group">
+            <label>خطة الجلسة القادمة</label>
+            <textarea 
+              class="form-control" 
+              formControlName="nextSessionPlan"
+              rows="3">
+            </textarea>
+          </div>
+        </div>
+      </div>
+  
+      <div class="modal-footer">
+        <button 
+          type="button" 
+          class="btn btn-secondary" 
+          (click)="dismiss()">
+          إلغاء
+        </button>
+        <button 
+          type="submit" 
+          class="btn btn-primary"
+          [disabled]="isSubmitting">
+          {{ isSubmitting ? 'جاري الحفظ...' : (session ? 'تحديث' : 'حفظ') }}
+        </button>
+      </div>
+    </form>
+  </div>
