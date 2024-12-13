@@ -17,7 +17,7 @@ export class CaseFormComponent implements OnInit {
   caseForm: FormGroup;
   isLoading = false;
   isSubmitting = false;
-  
+  CaseStatus = CaseStatus;
   constructor(
     private fb: FormBuilder,
     private activeModal: NgbActiveModal,
@@ -35,12 +35,30 @@ export class CaseFormComponent implements OnInit {
 
   private createForm(): FormGroup {
     return this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      age: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
-      guardianName: ['', [Validators.required]],
-      contactNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{11}$/)]],
+      name: ['', [
+        Validators.required, 
+        Validators.minLength(3),
+        Validators.pattern(/^[\u0600-\u06FFa-zA-Z\s]+$/) // Arabic and English letters
+      ]],
+      age: ['', [
+        Validators.required, 
+        Validators.min(0), 
+        Validators.max(100)
+      ]],
+      guardianName: ['', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.pattern(/^[\u0600-\u06FFa-zA-Z\s]+$/) // Arabic and English letters
+      ]],
+      contactNumber: ['', [
+        Validators.required, 
+        Validators.pattern(/^(01)[0-25][0-9]{8}$/) // Egyptian phone format
+      ]],
+      emergencyContact: ['', [
+        Validators.required,
+        Validators.pattern(/^(01)[0-25][0-9]{8}$/) // Egyptian phone format
+      ]],
       specialNeeds: [''],
-      emergencyContact: ['', [Validators.required]],
       medicalHistory: [''],
       currentMedications: [''],
       allergies: [''],
@@ -90,7 +108,6 @@ export class CaseFormComponent implements OnInit {
     this.activeModal.dismiss();
   }
 
-  // Helper methods for template
   isFieldInvalid(fieldName: string): boolean {
     const field = this.caseForm.get(fieldName);
     return field ? (field.invalid && (field.dirty || field.touched)) : false;
@@ -100,12 +117,35 @@ export class CaseFormComponent implements OnInit {
     const control = this.caseForm.get(fieldName);
     if (control?.errors) {
       if (control.errors['required']) return 'هذا الحقل مطلوب';
-      if (control.errors['minlength']) return 'هذا الحقل قصير جداً';
-      if (control.errors['pattern']) return 'هذا الرقم غير صحيح';
+      if (control.errors['minlength']) {
+        const requiredLength = control.errors['minlength'].requiredLength;
+        return `يجب أن يحتوي على ${requiredLength} أحرف على الأقل`;
+      }
+      if (control.errors['pattern']) {
+        switch (fieldName) {
+          case 'contactNumber':
+          case 'emergencyContact':
+            return 'رقم هاتف غير صحيح';
+          case 'name':
+          case 'guardianName':
+            return 'يجب أن يحتوي على أحرف فقط';
+          default:
+            return 'قيمة غير صحيحة';
+        }
+      }
       if (control.errors['min']) return 'القيمة أقل من المسموح';
       if (control.errors['max']) return 'القيمة أكبر من المسموح';
     }
     return '';
   }
-}
 
+  // Track form validity changes for debugging
+  trackFormValidity(): void {
+    console.log('Form validity:', {
+      valid: this.caseForm.valid,
+      errors: this.caseForm.errors,
+      dirtyFields: Object.keys(this.caseForm.controls)
+        .filter(key => this.caseForm.get(key)?.dirty)
+    });
+  }
+}

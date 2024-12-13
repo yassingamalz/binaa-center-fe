@@ -16,27 +16,19 @@
           <div class="col-md-6">
             <div class="form-group">
               <label>الاسم</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                formControlName="name"
-                [class.is-invalid]="isFieldInvalid('name')"
-              >
+              <input type="text" class="form-control" formControlName="name"
+                [class.is-invalid]="isFieldInvalid('name')">
               <div class="invalid-feedback" *ngIf="isFieldInvalid('name')">
                 {{ getFieldError('name') }}
               </div>
             </div>
           </div>
-          
+
           <div class="col-md-6">
             <div class="form-group">
               <label>العمر</label>
-              <input 
-                type="number" 
-                class="form-control" 
-                formControlName="age"
-                [class.is-invalid]="isFieldInvalid('age')"
-              >
+              <input type="number" class="form-control" formControlName="age"
+                [class.is-invalid]="isFieldInvalid('age')">
               <div class="invalid-feedback" *ngIf="isFieldInvalid('age')">
                 {{ getFieldError('age') }}
               </div>
@@ -48,30 +40,42 @@
           <div class="col-md-6">
             <div class="form-group">
               <label>اسم ولي الأمر</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                formControlName="guardianName"
-                [class.is-invalid]="isFieldInvalid('guardianName')"
-              >
+              <input type="text" class="form-control" formControlName="guardianName"
+                [class.is-invalid]="isFieldInvalid('guardianName')">
               <div class="invalid-feedback" *ngIf="isFieldInvalid('guardianName')">
                 {{ getFieldError('guardianName') }}
               </div>
             </div>
           </div>
-          
+
           <div class="col-md-6">
             <div class="form-group">
               <label>رقم الهاتف</label>
-              <input 
-                type="tel" 
-                class="form-control" 
-                formControlName="contactNumber"
-                [class.is-invalid]="isFieldInvalid('contactNumber')"
-              >
+              <input type="tel" class="form-control" formControlName="contactNumber"
+                [class.is-invalid]="isFieldInvalid('contactNumber')">
               <div class="invalid-feedback" *ngIf="isFieldInvalid('contactNumber')">
                 {{ getFieldError('contactNumber') }}
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>رقم الطوارئ</label>
+              <input type="tel" class="form-control" formControlName="emergencyContact"
+                [class.is-invalid]="isFieldInvalid('emergencyContact')">
+              <div class="invalid-feedback" *ngIf="isFieldInvalid('emergencyContact')">
+                {{ getFieldError('emergencyContact') }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>معلومات التأمين</label>
+              <input type="text" class="form-control" formControlName="insuranceInfo">
             </div>
           </div>
         </div>
@@ -84,11 +88,7 @@
           <div class="col-md-12">
             <div class="form-group">
               <label>الاحتياجات الخاصة</label>
-              <textarea 
-                class="form-control" 
-                formControlName="specialNeeds"
-                rows="3"
-              ></textarea>
+              <textarea class="form-control" formControlName="specialNeeds" rows="3"></textarea>
             </div>
           </div>
         </div>
@@ -97,22 +97,14 @@
           <div class="col-md-6">
             <div class="form-group">
               <label>التشخيص الأولي</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                formControlName="primaryDiagnosis"
-              >
+              <input type="text" class="form-control" formControlName="primaryDiagnosis">
             </div>
           </div>
-          
+
           <div class="col-md-6">
             <div class="form-group">
               <label>التشخيص الثانوي</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                formControlName="secondaryDiagnosis"
-              >
+              <input type="text" class="form-control" formControlName="secondaryDiagnosis">
             </div>
           </div>
         </div>
@@ -121,11 +113,7 @@
           <div class="col-md-12">
             <div class="form-group">
               <label>التاريخ الطبي</label>
-              <textarea 
-                class="form-control" 
-                formControlName="medicalHistory"
-                rows="3"
-              ></textarea>
+              <textarea class="form-control" formControlName="medicalHistory" rows="3"></textarea>
             </div>
           </div>
         </div>
@@ -134,22 +122,14 @@
           <div class="col-md-6">
             <div class="form-group">
               <label>الأدوية الحالية</label>
-              <textarea 
-                class="form-control" 
-                formControlName="currentMedications"
-                rows="2"
-              ></textarea>
+              <textarea class="form-control" formControlName="currentMedications" rows="2"></textarea>
             </div>
           </div>
-          
+
           <div class="col-md-6">
             <div class="form-group">
               <label>الحساسية</label>
-              <textarea 
-                class="form-control" 
-                formControlName="allergies"
-                rows="2"
-              ></textarea>
+              <textarea class="form-control" formControlName="allergies" rows="2"></textarea>
             </div>
           </div>
         </div>
@@ -162,22 +142,26 @@
           <div class="col-md-6">
             <div class="form-group">
               <label>اسم المدرسة</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                formControlName="schoolName"
-              >
+              <input type="text" class="form-control" formControlName="schoolName">
             </div>
           </div>
-          
+
           <div class="col-md-6">
             <div class="form-group">
               <label>المرحلة الدراسية</label>
-              <input 
-                type="text" 
-                class="form-control" 
-                formControlName="gradeLevel"
-              >
+              <input type="text" class="form-control" formControlName="gradeLevel">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>حالة القبول</label>
+              <select class="form-control" formControlName="status" [class.is-invalid]="isFieldInvalid('status')">
+                <option [value]="CaseStatus.ACTIVE">نشط</option>
+                <option [value]="CaseStatus.INACTIVE">غير نشط</option>
+              </select>
             </div>
           </div>
         </div>
@@ -185,16 +169,10 @@
     </div>
 
     <div class="modal-footer">
-      <button 
-        type="button" 
-        class="btn btn-secondary" 
-        (click)="dismiss()">
+      <button type="button" class="btn btn-secondary" (click)="dismiss()">
         إلغاء
       </button>
-      <button 
-        type="submit" 
-        class="btn btn-primary"
-        [disabled]="isSubmitting">
+      <button type="submit" class="btn btn-primary" [disabled]="caseForm.invalid || isSubmitting">
         {{ isSubmitting ? 'جاري الحفظ...' : (case ? 'تحديث' : 'حفظ') }}
       </button>
     </div>
