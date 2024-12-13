@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DocumentDTO, DocumentResponseDTO } from '../../../core/models/document';
 import { ApiService } from '../../../core/services/api.service';
+import { HttpResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -24,10 +25,8 @@ export class DocumentService {
     return this.apiService.post<DocumentResponseDTO>(`${this.endpoint}/upload`, formData);
   }
 
-  downloadDocument(id: number): Observable<Blob> {
-    return this.apiService.get<Blob>(`${this.endpoint}/${id}/download`, {
-      responseType: 'blob' as 'json'
-    });
+  downloadDocument(id: number): Observable<HttpResponse<Blob>> {
+    return this.apiService.getBlob(`${this.endpoint}/download/${id}`);
   }
 
   updateDocument(id: number, data: Partial<DocumentResponseDTO>): Observable<DocumentResponseDTO> {

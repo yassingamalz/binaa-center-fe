@@ -1,10 +1,9 @@
-
 // document-list.component.scss
 @import 'styles/main';
 
 .documents-container {
   padding: $spacing-lg;
-  
+
   @media (max-width: $breakpoint-md) {
     padding: $spacing-md;
   }
@@ -37,7 +36,7 @@
     background: $color-primary;
     color: $color-white;
     gap: $spacing-sm;
-    
+
     @media (max-width: $breakpoint-sm) {
       span {
         display: none;
@@ -50,7 +49,7 @@
   @include flex-between;
   margin-bottom: $spacing-lg;
   gap: $spacing-md;
-  
+
   @media (max-width: $breakpoint-md) {
     flex-direction: column;
   }
@@ -58,19 +57,19 @@
   .search-form {
     flex: 1;
     max-width: 400px;
-    
+
     @media (max-width: $breakpoint-md) {
       max-width: 100%;
     }
 
     .search-input {
       position: relative;
-      
+
       input {
         @include input-base;
         padding-right: $spacing-xl;
       }
-      
+
       i {
         position: absolute;
         right: $spacing-sm;
@@ -85,12 +84,12 @@
     @include flex-center;
     gap: $spacing-sm;
     flex-wrap: wrap;
-    
+
     .filter-btn {
       @include button-base;
       background: $color-gray-100;
       color: $color-gray-700;
-      
+
       &.active {
         background: $color-primary;
         color: $color-white;
@@ -103,7 +102,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: $spacing-lg;
-  
+
   &.loading {
     opacity: 0.7;
     pointer-events: none;
@@ -116,24 +115,24 @@
   grid-template-columns: auto 1fr auto;
   gap: $spacing-lg;
   padding: $spacing-lg;
-  
+
   .document-icon {
     width: 48px;
     height: 48px;
     @include flex-center;
     border-radius: $border-radius-lg;
     font-size: $font-size-xl;
-    
+
     &.medical {
       background: rgba($color-error, 0.1);
       color: $color-error;
     }
-    
+
     &.assessment {
       background: rgba($color-primary, 0.1);
       color: $color-primary;
     }
-    
+
     &.progress_report {
       background: rgba($color-success, 0.1);
       color: $color-success;
@@ -167,7 +166,7 @@
     .document-case {
       font-size: $font-size-sm;
       color: $color-gray-700;
-      
+
       i {
         margin-left: $spacing-xs;
         color: $color-gray-500;
@@ -186,12 +185,12 @@
       padding: 0;
       background: $color-gray-100;
       color: $color-gray-600;
-      
+
       &:hover {
         background: rgba($color-primary, 0.1);
         color: $color-primary;
       }
-      
+
       &.danger:hover {
         background: rgba($color-error, 0.1);
         color: $color-error;
@@ -209,23 +208,23 @@
   background: $color-white;
   border-radius: $border-radius-lg;
   box-shadow: $shadow-sm;
-  
+
   i {
     font-size: $font-size-4xl;
     color: $color-gray-400;
     margin-bottom: $spacing-lg;
   }
-  
+
   p {
     color: $color-gray-600;
     margin-bottom: $spacing-lg;
   }
-  
+
   .btn-secondary {
     @include button-base;
     background: $color-gray-100;
     color: $color-gray-700;
-    
+
     &:hover {
       background: $color-gray-200;
     }
@@ -234,6 +233,7 @@
 
 // Print styles
 @media print {
+
   .page-header button,
   .filters-section,
   .document-actions {
@@ -253,11 +253,11 @@
   .document-card {
     border: 1px solid currentColor;
   }
-  
+
   .document-icon {
     border: 1px solid currentColor;
   }
-  
+
   .filter-btn.active {
     outline: 2px solid currentColor;
   }

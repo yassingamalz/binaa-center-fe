@@ -79,18 +79,18 @@ export class DocumentListComponent implements OnInit, OnDestroy {
   filterDocuments(): void {
     let filtered = [...this.documents];
     const searchTerm = this.searchForm.get('searchTerm')?.value?.toLowerCase();
-
+  
     if (searchTerm) {
       filtered = filtered.filter(doc =>
-        doc.filePath.toLowerCase().includes(searchTerm) ||
+        doc.fileName.toLowerCase().includes(searchTerm) ||
         doc.caseId?.toString().includes(searchTerm)
       );
     }
-
+  
     if (this.selectedType !== 'all') {
       filtered = filtered.filter(doc => doc.type === this.selectedType);
     }
-
+  
     this.filteredDocuments = filtered;
   }
 
@@ -114,13 +114,16 @@ export class DocumentListComponent implements OnInit, OnDestroy {
   downloadDocument(document: DocumentDTO): void {
     this.documentService.downloadDocument(document.documentId)
       .subscribe({
-        next: (blob) => {
-          const url = window.URL.createObjectURL(blob);
-          const link = window.document.createElement('a');
-          link.href = url;
-          link.download = document.filePath;
-          link.click();
-          window.URL.revokeObjectURL(url);
+        next: (response) => {
+          const blob = response.body;
+          if (blob) {
+            const url = window.URL.createObjectURL(blob);
+            const link = window.document.createElement('a');
+            link.href = url;
+            link.download = document.filePath;
+            link.click();
+            window.URL.revokeObjectURL(url);
+          }
         },
         error: (error) => {
           console.error('Error downloading document:', error);
