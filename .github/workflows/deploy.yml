@@ -31,7 +31,7 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t yassingmalaz/binaa-center-fe:latest .
+          docker build -t yassingamalz/binaa-center-fe:latest .
           docker push yassingamalz/binaa-center-fe:latest
 
   deploy:
