@@ -50,4 +50,9 @@ jobs:
             docker pull yassingamalz/binaa-center-fe:latest
             docker stop binaa-center-fe || true
             docker rm binaa-center-fe || true
-            docker run -d -p 3200:3200 --name binaa-center-fe yassingamalz/binaa-center-fe:latest
+            docker network inspect binaa-network || docker network create binaa-network
+            docker run -d \
+              -p 3200:3200 \
+              --name binaa-center-fe \
+              --network binaa-network \
+              yassingamalz/binaa-center-fe:latest
