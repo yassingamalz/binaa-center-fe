@@ -23,6 +23,10 @@ export class StaffService {
     return this.apiService.get<StaffDTO[]>(this.endpoint);
   }
 
+  getStaff(): Observable<StaffDTO[]> {
+    return this.apiService.get<StaffDTO[]>(`${this.endpoint}/lookup/staff`);
+  }
+
   getStaffByRole(role: string): Observable<StaffDTO[]> {
     return this.apiService.get<StaffDTO[]>(`${this.endpoint}/role/${role}`);
   }

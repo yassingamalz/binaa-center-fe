@@ -4,6 +4,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { AppointmentService } from '../../services/appointment.service';
 import { ToastrService } from 'ngx-toastr';
+import { CaseService } from '../../../cases/services/case.service';
+import { StaffService } from '../../../staff/services/staff.service';
+import { forkJoin } from 'rxjs';
 import { AppointmentDTO, AppointmentType, AppointmentStatus } from '../../../../core/models/appointment';
 
 @Component({
@@ -13,9 +16,12 @@ import { AppointmentDTO, AppointmentType, AppointmentStatus } from '../../../../
 })
 export class AppointmentFormComponent implements OnInit {
   @Input() appointment?: AppointmentDTO;
-
+  
+  cases: any[] = [];
+  staff: any[] = [];
   appointmentForm: FormGroup;
   isSubmitting = false;
+  isLoading = true;
 
   readonly appointmentTypes = [
     { value: AppointmentType.ASSESSMENT, label: 'تقييم' },
@@ -32,32 +38,70 @@ export class AppointmentFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private activeModal: NgbActiveModal,
+    private caseService: CaseService,
     private appointmentService: AppointmentService,
+    private staffService: StaffService,
     private toastr: ToastrService
   ) {
     this.appointmentForm = this.createForm();
   }
 
   ngOnInit(): void {
-    if (this.appointment) {
-      // Convert datetime string to Date object for form
-      const appointmentData = {
-        ...this.appointment,
-        dateTime: new Date(this.appointment.dateTime)
-      };
-      this.appointmentForm.patchValue(appointmentData);
-    }
+    this.loadCasesAndStaff();
   }
 
   private createForm(): FormGroup {
     return this.fb.group({
-      caseId: ['', [Validators.required]],
-      staffId: ['', [Validators.required]],
-      dateTime: [new Date(), [Validators.required]],
+      caseId: [null, [Validators.required]],
+      staffId: [null, [Validators.required]],
+      dateTime: [this.formatDateForInput(new Date()), [Validators.required]],
       type: [AppointmentType.THERAPY, [Validators.required]],
       status: [AppointmentStatus.SCHEDULED, [Validators.required]],
       notes: ['']
     });
+  }
+
+  private loadCasesAndStaff(): void {
+    this.isLoading = true;
+    forkJoin({
+      cases: this.caseService.getAllActiveCases(),
+      staff: this.staffService.getAllStaff()
+    }).subscribe({
+      next: (result) => {
+        this.cases = result.cases;
+        this.staff = result.staff;
+        
+        if (this.appointment) {
+          this.patchAppointmentForm();
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading data:', error);
+        this.toastr.error('حدث خطأ أثناء تحميل البيانات');
+        this.isLoading = false;
+      }
+    });
+  }
+
+  private patchAppointmentForm(): void {
+    if (!this.appointment) return;
+
+    const formData = {
+      ...this.appointment,
+      dateTime: this.formatDateForInput(new Date(this.appointment.dateTime)),
+      caseId: Number(this.appointment.caseId),
+      staffId: Number(this.appointment.staffId)
+    };
+
+    console.log('Patching form with:', formData); // Debug log
+    this.appointmentForm.patchValue(formData);
+  }
+
+  private formatDateForInput(date: Date): string {
+    const d = new Date(date);
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().slice(0, 16);
   }
 
   onSubmit(): void {
@@ -72,17 +116,20 @@ export class AppointmentFormComponent implements OnInit {
     }
 
     this.isSubmitting = true;
-    const appointmentData = this.appointmentForm.value;
-
-    // Format date properly
-    appointmentData.dateTime = new Date(appointmentData.dateTime);
+    const formData = {
+      ...this.appointmentForm.value,
+      dateTime: new Date(this.appointmentForm.value.dateTime)
+    };
 
     const operation = this.appointment
-      ? this.appointmentService.updateAppointment(this.appointment.appointmentId, appointmentData)
-      : this.appointmentService.createAppointment(appointmentData);
+      ? this.appointmentService.updateAppointment(this.appointment.appointmentId, formData)
+      : this.appointmentService.createAppointment(formData);
 
     operation.subscribe({
       next: (result) => {
+        this.toastr.success(
+          this.appointment ? 'تم تحديث الموعد بنجاح' : 'تم إنشاء الموعد بنجاح'
+        );
         this.activeModal.close(result);
       },
       error: (error) => {
@@ -97,7 +144,6 @@ export class AppointmentFormComponent implements OnInit {
     this.activeModal.dismiss();
   }
 
-  // Helper methods for template
   isFieldInvalid(fieldName: string): boolean {
     const field = this.appointmentForm.get(fieldName);
     return field ? (field.invalid && (field.dirty || field.touched)) : false;

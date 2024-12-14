@@ -1,5 +1,4 @@
-
-  <!-- src\app\features\appointments\components\appointment-list\appointment-list.component.html -->
+<!-- src\app\features\appointments\components\appointment-list\appointment-list.component.html -->
 
 <div class="appointments-container">
   <!-- Header -->
@@ -10,7 +9,7 @@
         {{filteredAppointments.length}} موعد
       </span>
     </div>
-    
+
     <button class="btn-primary" (click)="createAppointment()">
       <i class="fas fa-plus"></i>
       <span>موعد جديد</span>
@@ -21,25 +20,15 @@
   <div class="filters-section">
     <div class="search-box">
       <i class="fas fa-search"></i>
-      <input 
-      type="text" 
-      placeholder="بحث..."
-      [(ngModel)]="searchTerm"
-      (input)="onSearch($event)">
+      <input type="text" placeholder="بحث..." [(ngModel)]="searchTerm" (input)="onSearch($event)">
     </div>
 
     <div class="date-filter">
-      <input 
-        type="date" 
-        [ngModel]="selectedDate | date:'yyyy-MM-dd'"
-        (ngModelChange)="onDateChange($event)">
+      <input type="date" [ngModel]="selectedDate" (ngModelChange)="onDateChange($event)" class="form-control">
     </div>
 
     <div class="status-filter">
-      <button 
-        *ngFor="let status of statusOptions"
-        class="filter-btn"
-        [class.active]="selectedStatus === status.value"
+      <button *ngFor="let status of statusOptions" class="filter-btn" [class.active]="selectedStatus === status.value"
         (click)="onStatusChange(status.value)">
         {{status.label}}
       </button>
@@ -48,9 +37,7 @@
 
   <!-- Appointments List -->
   <div class="appointments-list" [class.loading]="isLoading">
-    <div class="appointment-card" 
-         *ngFor="let appointment of filteredAppointments"
-         [appShimmer]="isLoading">
+    <div class="appointment-card" *ngFor="let appointment of filteredAppointments" [appShimmer]="isLoading">
       <div class="appointment-time">
         <span class="time">{{appointment.dateTime | date:'shortTime'}}</span>
         <span class="date">{{appointment.dateTime | date:'shortDate'}}</span>
@@ -84,9 +71,7 @@
         <button class="btn-icon" (click)="editAppointment(appointment)">
           <i class="fas fa-edit"></i>
         </button>
-        <button 
-          class="btn-icon danger" 
-          (click)="cancelAppointment(appointment)"
+        <button class="btn-icon danger" (click)="cancelAppointment(appointment)"
           *ngIf="appointment.status === 'SCHEDULED'">
           <i class="fas fa-times"></i>
         </button>

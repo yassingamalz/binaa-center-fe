@@ -23,7 +23,7 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
   selectedStatus: AppointmentStatus | 'all' = 'all';
   searchTerm = '';
 
-  readonly statusOptions: Array<{value: AppointmentStatus | 'all', label: string}> = [
+  readonly statusOptions: Array<{ value: AppointmentStatus | 'all', label: string }> = [
     { value: 'all' as const, label: 'الكل' },
     { value: AppointmentStatus.SCHEDULED, label: 'مجدول' },
     { value: AppointmentStatus.COMPLETED, label: 'مكتمل' },
@@ -37,7 +37,7 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private toastr: ToastrService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadAllAppointments();
@@ -82,16 +82,29 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
   filterAppointments(): void {
     let filtered = [...this.appointments];
 
+    // Date filter
+    if (this.selectedDate) {
+      const selectedDate = new Date(this.selectedDate);
+      filtered = filtered.filter(app => {
+        const appDate = new Date(app.dateTime);
+        return appDate.toDateString() === selectedDate.toDateString();
+      });
+    }
+
+    // Status filter
     if (this.selectedStatus !== 'all') {
       filtered = filtered.filter(app => app.status === this.selectedStatus);
     }
 
+    // Search filter
     if (this.searchTerm.trim()) {
       const term = this.searchTerm.toLowerCase();
-      filtered = filtered.filter(app => 
-        app.caseName.toLowerCase().includes(term) ||
-        app.staffName.toLowerCase().includes(term) ||
-        app.type.toLowerCase().includes(term)
+      filtered = filtered.filter(app =>
+        app.caseName?.toLowerCase().includes(term) ||
+        app.staffName?.toLowerCase().includes(term) ||
+        this.getTypeLabel(app.type).toLowerCase().includes(term) ||
+        this.getStatusLabel(app.status).toLowerCase().includes(term) ||
+        app.notes?.toLowerCase().includes(term)
       );
     }
 
@@ -100,21 +113,16 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
 
   onDateChange(date: Date | null): void {
     this.selectedDate = date;
-    if (date) {
-      this.loadAppointmentsByDate(date);
-    } else {
-      this.loadAllAppointments();
-    }
+    this.filterAppointments(); // Just apply filters instead of making a new API call
+  }
+
+  onSearch(event: Event): void {
+    this.searchTerm = (event.target as HTMLInputElement).value;
+    this.filterAppointments();
   }
 
   onStatusChange(status: AppointmentStatus | 'all'): void {
     this.selectedStatus = status;
-    this.filterAppointments();
-  }
-
-  onSearch(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.searchTerm = target.value;
     this.filterAppointments();
   }
 
@@ -131,7 +139,7 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
           this.toastr.success('تم إنشاء الموعد بنجاح');
         }
       },
-      () => {}
+      () => { }
     );
   }
 
@@ -160,15 +168,14 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
           this.toastr.success('تم تحديث الموعد بنجاح');
         }
       },
-      () => {}
+      () => { }
     );
   }
 
   cancelAppointment(appointment: AppointmentListDTO): void {
     if (confirm('هل أنت متأكد من إلغاء هذا الموعد؟')) {
-      this.appointmentService.updateAppointment(
+      this.appointmentService.deleteAppointment(
         appointment.appointmentId,
-        { status: AppointmentStatus.CANCELLED }
       ).subscribe({
         next: () => {
           this.loadAllAppointments();

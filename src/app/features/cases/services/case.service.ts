@@ -11,6 +11,7 @@ import { CaseDTO } from '../../../core/models/case';
   providedIn: 'root'
 })
 export class CaseService {
+
   private endpoint = 'cases';
 
   constructor(private apiService: ApiService) {}
@@ -25,6 +26,10 @@ export class CaseService {
 
   getCaseById(id: number): Observable<CaseDTO> {
     return this.apiService.get<CaseDTO>(`${this.endpoint}/${id}`);
+  }
+
+  getCases(): Observable<CaseDTO[]> {
+    return this.apiService.get<CaseDTO[]>(`${this.endpoint}/lookup/cases`);
   }
 
   createCase(caseData: Omit<CaseDTO, 'caseId'>): Observable<CaseDTO> {
