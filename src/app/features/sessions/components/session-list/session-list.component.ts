@@ -93,18 +93,24 @@ export class SessionListComponent implements OnInit, OnDestroy {
     let filtered = [...this.sessions];
     const searchTerm = this.searchForm.get('searchTerm')?.value?.toLowerCase();
 
+    // Search filter
     if (searchTerm) {
       filtered = filtered.filter(session =>
         session.caseName?.toLowerCase().includes(searchTerm) ||
         session.staffName?.toLowerCase().includes(searchTerm) ||
-        session.purpose?.toLowerCase().includes(searchTerm)
+        session.purpose?.toLowerCase().includes(searchTerm) ||
+        (session.notes?.toLowerCase().includes(searchTerm)) ||
+        (session.sessionType === SessionType.INDIVIDUAL ? 'فردي' : 'جماعي').toLowerCase().includes(searchTerm) ||
+        (session.attendanceStatus === AttendanceStatus.PRESENT ? 'حضر' : 'غائب').toLowerCase().includes(searchTerm)
       );
     }
 
+    // Type filter
     if (this.selectedType !== 'all') {
       filtered = filtered.filter(session => session.sessionType === this.selectedType);
     }
 
+    // Status filter
     if (this.selectedStatus !== 'all') {
       filtered = filtered.filter(session => session.attendanceStatus === this.selectedStatus);
     }
