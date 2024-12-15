@@ -1,31 +1,44 @@
-<!-- src\app\features\dashboard\components\monthly-income-chart\monthly-income-chart.component.html -->
-<div class="chart-card">
+<!-- src/app/features/dashboard/components/monthly-income-chart/monthly-income-chart.component.html -->
+<div class="chart-card" [class.loading]="isLoading">
   <div class="chart-header">
     <h3>تحليل الدخل الشهري</h3>
     <div class="chart-actions">
-      <select [(ngModel)]="selectedPeriod" (change)="updateChart()">
-        <option value="week">أسبوع</option>
-        <option value="month">شهر</option>
+      <select 
+        [(ngModel)]="selectedPeriod" 
+        (change)="updateChart()"
+        class="period-select">
+        <option value="overall">كل الفترة</option>
+        <option value="year">سنة</option>
         <option value="quarter">ربع سنوي</option>
+        <option value="month">شهر</option>
+        <option value="week">أسبوع</option>
       </select>
     </div>
   </div>
-  <div class="chart-content" #chartContainer>
+
+  <div class="chart-wrapper" #chartContainer>
     <ngx-charts-line-chart
       [view]="view"
       [results]="chartData"
       [xAxis]="true"
       [yAxis]="true"
       [legend]="true"
+      [legendTitle]="''"
+      [legendPosition]="LegendPosition.Below"
       [showXAxisLabel]="true"
       [showYAxisLabel]="true"
       [xAxisLabel]="xAxisLabel"
       [yAxisLabel]="yAxisLabel"
       [autoScale]="true"
       [scheme]="colorScheme"
-      [timeline]="true"
-      [gradient]="false"
+      [timeline]="false"
+      [animations]="true"
+      [showGridLines]="true"
       (select)="onSelect($event)">
     </ngx-charts-line-chart>
+  </div>
+
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
   </div>
 </div>

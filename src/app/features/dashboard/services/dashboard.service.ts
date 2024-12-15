@@ -13,7 +13,7 @@ import { SessionType } from '../../../core/models/session';
 import { PaymentDTO } from '../../../core/models/payment';
 import { ExpenseDTO } from '../../../core/models/expense';
 
-interface DashboardStats {
+export interface DashboardStats {
  activeCases: CaseDTO[];
  todaysSessions: {
    totalSessions: number;
@@ -26,21 +26,21 @@ interface DashboardStats {
  upcomingAppointments: AppointmentDTO[];
 }
 
-interface Activity {
+export interface Activity {
  type: 'appointment' | 'assessment';
  date: Date;
  details: AppointmentListDTO | AssessmentResponseDTO;
 }
 
-interface PaymentWithDate extends PaymentDTO {
+export interface PaymentWithDate extends PaymentDTO {
  paymentDate: Date;
 }
 
-interface ExpenseWithDate extends ExpenseDTO {
+export interface ExpenseWithDate extends ExpenseDTO {
  date: Date;
 }
 
-interface FinancialSummary {
+export interface FinancialSummary {
  totalIncome: number;
  totalExpenses: number;
  netIncome: number;

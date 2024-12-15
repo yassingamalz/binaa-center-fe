@@ -1,37 +1,48 @@
 // src/app/features/dashboard/components/monthly-income-chart/monthly-income-chart.component.ts
-import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, OnDestroy, AfterViewInit, HostListener } from '@angular/core';
 import { DashboardService } from '../../services/dashboard.service';
-import { Color, ScaleType } from '@swimlane/ngx-charts';
+import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
 import { Subject, takeUntil } from 'rxjs';
-
+import { FinancialSummary, PaymentWithDate } from '../../services/dashboard.service'; 
 type PeriodType = 'week' | 'month' | 'quarter' | 'year' | 'overall';
+
+interface ChartData {
+  name: string;
+  series: Array<{
+    name: string;
+    value: number;
+    min: number;
+  }>;
+}
 
 @Component({
   selector: 'app-monthly-income-chart',
   templateUrl: './monthly-income-chart.component.html',
   styleUrls: ['./monthly-income-chart.component.scss']
 })
-export class MonthlyIncomeChartComponent implements OnInit, OnDestroy {
+export class MonthlyIncomeChartComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('chartContainer') chartContainer!: ElementRef;
 
+  // Chart properties
+  LegendPosition = LegendPosition;
   selectedPeriod: PeriodType = 'month';
-  chartData: any[] = [];
+  chartData: ChartData[] = [];
   view: [number, number] = [700, 300];
   isLoading = false;
 
-  private destroy$ = new Subject<void>();
-
-  // Chart options
+  // Color scheme configuration
   colorScheme: Color = {
     name: 'custom',
     selectable: true,
     group: ScaleType.Ordinal,
-    domain: ['#800080', '#FF69B4', '#FFA500']
+    domain: ['#800080'] // Single purple color for income line
   };
 
-  // Labels
+  // Chart labels
   xAxisLabel: string = 'التاريخ';
   yAxisLabel: string = 'المبلغ (جنيه)';
+
+  private destroy$ = new Subject<void>();
 
   constructor(private dashboardService: DashboardService) {}
 
@@ -41,14 +52,17 @@ export class MonthlyIncomeChartComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.updateChartDimensions();
-    const resizeObserver = new ResizeObserver(() => this.updateChartDimensions());
-    resizeObserver.observe(this.chartContainer.nativeElement);
   }
 
-  updateChartDimensions(): void {
+  @HostListener('window:resize')
+  onResize(): void {
+    this.updateChartDimensions();
+  }
+
+  private updateChartDimensions(): void {
     if (this.chartContainer) {
       const containerWidth = this.chartContainer.nativeElement.offsetWidth;
-      const containerHeight = Math.max(300, window.innerHeight * 0.4);
+      const containerHeight = Math.max(250, window.innerHeight * 0.3);
       this.view = [containerWidth, containerHeight];
     }
   }
@@ -58,7 +72,6 @@ export class MonthlyIncomeChartComponent implements OnInit, OnDestroy {
     const endDate = new Date();
     let startDate = new Date();
 
-    // Calculate start date based on selected period
     switch (this.selectedPeriod) {
       case 'week':
         startDate.setDate(endDate.getDate() - 7);
@@ -80,8 +93,8 @@ export class MonthlyIncomeChartComponent implements OnInit, OnDestroy {
     this.dashboardService.getFinancialOverview(startDate, endDate)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (data) => {
-          this.chartData = this.formatChartData(data, this.selectedPeriod);
+        next: (financialSummary) => {
+          this.chartData = this.formatChartData(financialSummary, this.selectedPeriod);
           this.isLoading = false;
         },
         error: (error) => {
@@ -91,48 +104,41 @@ export class MonthlyIncomeChartComponent implements OnInit, OnDestroy {
       });
   }
 
-  private formatChartData(data: any, period: PeriodType): any[] {
-    const dateFormat: Intl.DateTimeFormatOptions = this.getDateFormat(period);
+  private getDateFormat(period: PeriodType): Intl.DateTimeFormatOptions {
+    const formats: Record<PeriodType, Intl.DateTimeFormatOptions> = {
+      week: { weekday: 'short', day: 'numeric' },
+      month: { day: 'numeric', month: 'short' },
+      quarter: { month: 'short' },
+      year: { month: 'short', year: 'numeric' },
+      overall: { month: 'short', year: 'numeric' }
+    };
+    return formats[period];
+  }
+
+  private formatChartData(financialSummary: FinancialSummary, period: PeriodType): ChartData[] {
+    const dateFormat = this.getDateFormat(period);
     
-    const groupedData = data.payments.reduce((acc: any, payment: any) => {
-      const date = new Date(payment.paymentDate).toLocaleDateString('ar-EG', dateFormat);
-      
-      if (!acc[date]) {
-        acc[date] = 0;
-      }
-      acc[date] += payment.amount;
+    // Group payments by date
+    const groupedData = financialSummary.payments.reduce<Record<string, number>>((acc: Record<string, number>, payment: PaymentWithDate) => {
+      const date = payment.paymentDate.toLocaleDateString('ar-EG', dateFormat);
+      acc[date] = (acc[date] || 0) + payment.amount;
       return acc;
     }, {});
-
-    // Sort dates
+  
+    // Sort dates and create series data
     const sortedDates = Object.entries(groupedData)
-      .sort((a, b) => new Date(b[0]).getTime() - new Date(a[0]).getTime());
-
+      .sort(([dateA], [dateB]) => {
+        return new Date(dateB).getTime() - new Date(dateA).getTime();
+      });
+  
     return [{
       name: 'الدخل',
       series: sortedDates.map(([date, value]) => ({
         name: date,
-        value: value,
-        min: 0 // Ensures chart starts from 0
+        value: Number(value), // Ensure value is a number
+        min: 0
       }))
     }];
-  }
-
-  private getDateFormat(period: PeriodType): Intl.DateTimeFormatOptions {
-    switch (period) {
-      case 'week':
-        return { weekday: 'short', day: 'numeric' };
-      case 'month':
-        return { day: 'numeric', month: 'short' };
-      case 'quarter':
-        return { month: 'short' };
-      case 'year':
-        return { month: 'short', year: 'numeric' };
-      case 'overall':
-        return { month: 'short', year: 'numeric' };
-      default:
-        return { month: 'short', day: 'numeric' };
-    }
   }
 
   onSelect(event: any): void {

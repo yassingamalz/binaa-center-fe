@@ -6,31 +6,36 @@
   padding: $spacing-lg;
   min-height: 400px;
   position: relative;
+  background: $color-white;
+  display: flex;
+  flex-direction: column;
   
   @media (max-width: $breakpoint-md) {
     padding: $spacing-md;
-    min-height: 300px;
+    min-height: 350px;
   }
 }
 
 .chart-header {
   @include flex-between;
-  margin-bottom: $spacing-lg;
-  flex-wrap: wrap;
-  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+  padding-bottom: $spacing-sm;
+  border-bottom: 1px solid $color-gray-200;
   
   @media (max-width: $breakpoint-sm) {
     flex-direction: column;
+    gap: $spacing-md;
     align-items: stretch;
   }
   
   h3 {
     margin: 0;
     font-size: $font-size-lg;
+    font-weight: 600;
     color: $color-gray-900;
     
     @media (max-width: $breakpoint-sm) {
-      text-align: center;
+      text-align: right;
     }
   }
 }
@@ -38,56 +43,52 @@
 .chart-actions {
   .period-select {
     @include input-base;
-    width: auto;
-    min-width: 120px;
-    padding-right: $spacing-lg;
-    padding-left: $spacing-md;
-    background-position: left $spacing-sm center;
-    
-    @media (max-width: $breakpoint-sm) {
-      width: 100%;
-    }
-    
-    &:focus {
-      border-color: $color-primary;
-      box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
-    }
+    min-width: 140px;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $border-radius-md;
+    border: 1px solid $color-gray-300;
+    background-color: $color-white;
+    color: $color-gray-700;
+    font-size: $font-size-sm;
+    text-align: right;
   }
 }
 
-.chart-content {
-  height: calc(100% - 60px);
-  min-height: 300px;
-  direction: ltr; // For correct chart rendering
+.chart-wrapper {
+  flex: 1;
+  min-height: 0;
+  direction: ltr;
+  margin-bottom: $spacing-lg; // Add space for legend
   
   ::ng-deep {
     .ngx-charts {
-      float: none;
-      
-      .line-chart {
-        .line-series {
-          .line {
-            stroke-width: 3;
-          }
-        }
+      .chart-legend {
+        padding: $spacing-md 0;
         
-        .circle-series {
-          .circle {
-            fill: $color-white;
-            stroke-width: 2;
+        .legend-labels {
+          background: transparent !important;
+          margin: 8px 0;
+          
+          .legend-label {
+            margin: 8px;
+            
+            .legend-label-text {
+              font-size: $font-size-sm !important;
+              color: $color-gray-700 !important;
+            }
           }
         }
       }
       
-      .gridline-path {
-        stroke: rgba($color-gray-400, 0.2);
+      .line-series {
+        .line {
+          stroke-width: 2;
+        }
       }
       
-      .tick {
-        text {
-          fill: $color-gray-600;
-          font-size: $font-size-sm;
-        }
+      .circle {
+        fill: $color-white;
+        stroke-width: 2;
       }
     }
   }
@@ -101,6 +102,7 @@
   backdrop-filter: blur(4px);
   @include flex-center;
   z-index: 10;
+  border-radius: $border-radius-lg;
 }
 
 .loading-spinner {
@@ -115,34 +117,4 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-
-// Print Styles
-@media print {
-  .chart-actions {
-    display: none;
-  }
-  
-  .chart-card {
-    box-shadow: none;
-    border: 1px solid $color-gray-200;
-  }
-}
-
-// High Contrast Mode
-@media (forced-colors: active) {
-  .chart-card {
-    border: 1px solid currentColor;
-  }
-  
-  .period-select {
-    border: 1px solid currentColor;
-  }
-}
-
-// Reduced Motion
-@media (prefers-reduced-motion: reduce) {
-  .loading-spinner {
-    animation-duration: 1.5s;
-  }
 }
