@@ -2,7 +2,7 @@
 @import 'styles/main';
 
 .dashboard-container {
-  padding: $spacing-md;
+  padding: $spacing-sm;
   height: 100%;
   min-height: calc(100vh - #{$layout-header-height});
   background-color: $color-gray-100;
@@ -14,65 +14,121 @@
 
 // Main Content Area
 .main-content {
-  margin-top: $spacing-lg;
+  margin-top: $spacing-md;
   display: grid;
-  gap: $spacing-lg;
-  grid-template-columns: 2fr 1fr;
+  gap: $spacing-md;
+  grid-template-columns: 1fr; // Default to single column for mobile
 
-  @media (max-width: $breakpoint-lg) {
-    grid-template-columns: 1fr;
+  @media (min-width: $breakpoint-lg) {
+    grid-template-columns: 2fr 1fr;
+    gap: $spacing-lg;
+    margin-top: $spacing-lg;
   }
 
-  // Left Column (Charts)
+  // Charts Column
   .charts-column {
     display: flex;
     flex-direction: column;
-    gap: $spacing-lg;
+    gap: $spacing-md;
+
+    @media (min-width: $breakpoint-md) {
+      gap: $spacing-lg;
+    }
 
     .chart-card {
       @include card;
-      padding: $spacing-lg;
+      padding: $spacing-sm;
       background: $color-white;
-      min-height: 400px;
+      min-height: 300px; // Reduced height for mobile
+      width: 100%;
+      overflow: hidden;
+
+      @media (min-width: $breakpoint-md) {
+        padding: $spacing-lg;
+        min-height: 400px;
+      }
 
       .chart-header {
         @include flex-between;
-        margin-bottom: $spacing-lg;
+        margin-bottom: $spacing-md;
+        flex-wrap: wrap;
+        gap: $spacing-sm;
+
+        @media (min-width: $breakpoint-md) {
+          margin-bottom: $spacing-lg;
+          gap: $spacing-md;
+        }
 
         h3 {
           margin: 0;
-          font-size: $font-size-lg;
+          font-size: $font-size-base;
+          width: 100%; // Full width on mobile
+
+          @media (min-width: $breakpoint-md) {
+            font-size: $font-size-lg;
+            width: auto;
+          }
         }
 
         .chart-actions {
+          width: 100%; // Full width on mobile
+
+          @media (min-width: $breakpoint-md) {
+            width: auto;
+          }
+
           select {
             @include input-base;
-            width: auto;
+            width: 100%;
             min-width: 120px;
+
+            @media (min-width: $breakpoint-md) {
+              width: auto;
+            }
           }
         }
       }
     }
   }
 
-  // Right Column (Actions & Lists)
+  // Widgets Column
   .widgets-column {
     display: flex;
     flex-direction: column;
-    gap: $spacing-lg;
+    gap: $spacing-md;
+
+    @media (min-width: $breakpoint-md) {
+      gap: $spacing-lg;
+    }
 
     .widget-card {
       @include card;
-      padding: $spacing-lg;
+      padding: $spacing-sm;
       background: $color-white;
+
+      @media (min-width: $breakpoint-md) {
+        padding: $spacing-lg;
+      }
 
       .widget-header {
         @include flex-between;
-        margin-bottom: $spacing-lg;
+        margin-bottom: $spacing-md;
+        flex-wrap: wrap;
+        gap: $spacing-sm;
+
+        @media (min-width: $breakpoint-md) {
+          margin-bottom: $spacing-lg;
+          gap: 0;
+          flex-wrap: nowrap;
+        }
 
         h3 {
           margin: 0;
-          font-size: $font-size-lg;
+          font-size: $font-size-base;
+
+          @media (min-width: $breakpoint-md) {
+            font-size: $font-size-lg;
+          }
         }
       }
     }
@@ -108,48 +164,44 @@
 // Session Overview Section
 .session-overview {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: $spacing-md;
-  margin-bottom: $spacing-lg;
+  grid-template-columns: 1fr;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
 
-  @media (max-width: $breakpoint-md) {
-    grid-template-columns: 1fr;
+  @media (min-width: $breakpoint-sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: $breakpoint-md) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: $spacing-md;
+    margin-bottom: $spacing-lg;
   }
 
   .overview-card {
     @include card;
     text-align: center;
-    padding: $spacing-md;
+    padding: $spacing-sm;
+
+    @media (min-width: $breakpoint-md) {
+      padding: $spacing-md;
+    }
 
     .overview-value {
-      font-size: $font-size-2xl;
+      font-size: $font-size-xl;
       font-weight: bold;
       color: $color-primary;
-      margin: $spacing-sm 0;
+      margin: $spacing-xs 0;
+
+      @media (min-width: $breakpoint-md) {
+        font-size: $font-size-2xl;
+        margin: $spacing-sm 0;
+      }
     }
 
     .overview-label {
       color: $color-gray-600;
       font-size: $font-size-sm;
     }
-  }
-}
-
-// Animations
-@keyframes loading {
-  0% { background-position: 100% 50%; }
-  100% { background-position: 0 50%; }
-}
-
-// Print Styles
-@media print {
-  .dashboard-container {
-    padding: 0;
-  }
-
-  .widget-card {
-    break-inside: avoid;
-    page-break-inside: avoid;
-    box-shadow: none;
   }
 }

@@ -1,32 +1,148 @@
+// src/app/features/dashboard/components/monthly-income-chart/monthly-income-chart.component.scss
+@import 'styles/main';
 
+.chart-card {
+  @include card;
+  padding: $spacing-lg;
+  min-height: 400px;
+  position: relative;
   
-  // src/app/features/dashboard/components/monthly-income-chart/monthly-income-chart.component.scss
-  @import 'styles/main';
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-md;
+    min-height: 300px;
+  }
+}
 
-  .chart-card {
-    @include card;
-    padding: $spacing-lg;
-    height: 400px;
+.chart-header {
+  @include flex-between;
+  margin-bottom: $spacing-lg;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+  
+  @media (max-width: $breakpoint-sm) {
+    flex-direction: column;
+    align-items: stretch;
   }
   
-  .chart-header {
-    @include flex-between;
-    margin-bottom: $spacing-lg;
+  h3 {
+    margin: 0;
+    font-size: $font-size-lg;
+    color: $color-gray-900;
     
-    h3 {
-      margin: 0;
+    @media (max-width: $breakpoint-sm) {
+      text-align: center;
     }
   }
+}
+
+.chart-actions {
+  .period-select {
+    @include input-base;
+    width: auto;
+    min-width: 120px;
+    padding-right: $spacing-lg;
+    padding-left: $spacing-md;
+    background-position: left $spacing-sm center;
+    
+    @media (max-width: $breakpoint-sm) {
+      width: 100%;
+    }
+    
+    &:focus {
+      border-color: $color-primary;
+      box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+    }
+  }
+}
+
+.chart-content {
+  height: calc(100% - 60px);
+  min-height: 300px;
+  direction: ltr; // For correct chart rendering
   
+  ::ng-deep {
+    .ngx-charts {
+      float: none;
+      
+      .line-chart {
+        .line-series {
+          .line {
+            stroke-width: 3;
+          }
+        }
+        
+        .circle-series {
+          .circle {
+            fill: $color-white;
+            stroke-width: 2;
+          }
+        }
+      }
+      
+      .gridline-path {
+        stroke: rgba($color-gray-400, 0.2);
+      }
+      
+      .tick {
+        text {
+          fill: $color-gray-600;
+          font-size: $font-size-sm;
+        }
+      }
+    }
+  }
+}
+
+// Loading States
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba($color-white, 0.7);
+  backdrop-filter: blur(4px);
+  @include flex-center;
+  z-index: 10;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba($color-primary, 0.1);
+  border-radius: 50%;
+  border-top-color: $color-primary;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Print Styles
+@media print {
   .chart-actions {
-    select {
-      @include input-base;
-      width: auto;
-      min-width: 120px;
-    }
+    display: none;
   }
   
-  .chart-content {
-    height: calc(100% - 60px);
+  .chart-card {
+    box-shadow: none;
+    border: 1px solid $color-gray-200;
+  }
+}
+
+// High Contrast Mode
+@media (forced-colors: active) {
+  .chart-card {
+    border: 1px solid currentColor;
   }
   
+  .period-select {
+    border: 1px solid currentColor;
+  }
+}
+
+// Reduced Motion
+@media (prefers-reduced-motion: reduce) {
+  .loading-spinner {
+    animation-duration: 1.5s;
+  }
+}
