@@ -1,1 +1,95 @@
-<p>staff-reports works!</p>
+<!-- src/app/features/reports/components/staff-reports/staff-reports.component.html -->
+<div class="staff-reports-container" [class.loading]="isLoading">
+  <!-- Filters Section -->
+  <div class="filters-section">
+    <form [formGroup]="filtersForm">
+      <div class="filters-grid">
+        <div class="form-group">
+          <label>الموظف</label>
+          <select class="form-control" formControlName="staffId">
+            <option value="">كل الموظفين</option>
+            <!-- Staff members will be populated dynamically -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>القسم</label>
+          <select class="form-control" formControlName="department">
+            <option value="all">كل الأقسام</option>
+            <option value="therapy">العلاج</option>
+            <option value="assessment">التقييم</option>
+            <option value="admin">الإدارة</option>
+          </select>
+        </div>
+
+        <div class="date-range">
+          <div class="form-group">
+            <label>من تاريخ</label>
+            <input type="date" class="form-control" formControlName="startDate">
+          </div>
+          <div class="form-group">
+            <label>إلى تاريخ</label>
+            <input type="date" class="form-control" formControlName="endDate">
+          </div>
+        </div>
+
+        <div class="quick-ranges">
+          <button 
+            *ngFor="let range of dateRanges"
+            class="btn-filter"
+            [class.active]="dateRange === range.value"
+            (click)="changeDateRange(range.value)">
+            {{ range.label }}
+          </button>
+        </div>
+      </div>
+
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" formControlName="includeInactive" id="includeInactive">
+        <label class="form-check-label" for="includeInactive">
+          تضمين الموظفين غير النشطين
+        </label>
+      </div>
+    </form>
+  </div>
+
+  <!-- Report Type Tabs -->
+  <div class="report-tabs">
+    <button 
+      *ngFor="let type of reportTypes"
+      class="tab-btn" 
+      [class.active]="activeReport === type.value"
+      (click)="switchReport(type.value)">
+      <i [class]="type.icon"></i>
+      <span>{{type.label}}</span>
+    </button>
+  </div>
+
+  <!-- Report Content -->
+  <div class="report-content">
+    <div class="report-actions">
+      <div class="action-group">
+        <button class="btn-secondary" (click)="printReport()">
+          <i class="fas fa-print"></i>
+          طباعة
+        </button>
+        <button class="btn-secondary" (click)="exportToExcel()">
+          <i class="fas fa-file-excel"></i>
+          تصدير Excel
+        </button>
+      </div>
+      <button class="btn-primary" (click)="downloadReport()">
+        <i class="fas fa-download"></i>
+        تحميل التقرير
+      </button>
+    </div>
+
+    <div class="report-data">
+      <!-- Report data will be displayed here based on activeReport -->
+      <div class="loading-overlay" *ngIf="isLoading">
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
+  </div>
+</div>
+

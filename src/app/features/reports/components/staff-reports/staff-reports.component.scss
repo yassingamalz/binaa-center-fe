@@ -1,0 +1,229 @@
+// src/app/features/reports/components/staff-reports/staff-reports.component.scss
+@import 'styles/main';
+
+.staff-reports-container {
+  position: relative;
+  min-height: 400px;
+}
+
+.filters-section {
+  margin-bottom: $spacing-lg;
+  padding: $spacing-lg;
+  background: $color-white;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-sm;
+
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-md;
+  }
+
+  .filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: $spacing-md;
+    margin-bottom: $spacing-md;
+
+    @media (max-width: $breakpoint-md) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .date-range {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $spacing-md;
+
+    @media (max-width: $breakpoint-sm) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .quick-ranges {
+    @include flex-center;
+    gap: $spacing-sm;
+    flex-wrap: wrap;
+
+    .btn-filter {
+      @include button-base;
+      background: $color-gray-100;
+      color: $color-gray-700;
+      
+      &.active {
+        background: $color-primary;
+        color: $color-white;
+      }
+    }
+  }
+
+  .form-group {
+    margin-bottom: $spacing-sm;
+
+    label {
+      display: block;
+      margin-bottom: $spacing-xs;
+      color: $color-gray-700;
+    }
+
+    .form-control {
+      @include input-base;
+    }
+  }
+
+  .form-check {
+    @include flex-center;
+    gap: $spacing-sm;
+    color: $color-gray-700;
+  }
+}
+
+.report-tabs {
+  @include flex-center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+  padding: $spacing-md;
+  background: $color-white;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-sm;
+  overflow-x: auto;
+  @include scrollable;
+
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-sm;
+  }
+
+  .tab-btn {
+    @include button-base;
+    @include flex-center;
+    gap: $spacing-sm;
+    background: transparent;
+    color: $color-gray-600;
+    white-space: nowrap;
+    
+    &:hover {
+      color: $color-primary;
+    }
+    
+    &.active {
+      color: $color-primary;
+      background: rgba($color-primary, 0.1);
+    }
+
+    @media (max-width: $breakpoint-sm) {
+      padding: $spacing-sm;
+      
+      span {
+        display: none;
+      }
+    }
+  }
+}
+
+.report-content {
+  background: $color-white;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-sm;
+  
+  .report-actions {
+    @include flex-between;
+    padding: $spacing-md;
+    border-bottom: 1px solid $color-gray-200;
+
+    @media (max-width: $breakpoint-sm) {
+      flex-direction: column;
+      gap: $spacing-sm;
+    }
+
+    .action-group {
+      @include flex-center;
+      gap: $spacing-sm;
+
+      @media (max-width: $breakpoint-sm) {
+        width: 100%;
+        
+        button {
+          flex: 1;
+        }
+      }
+    }
+
+    button {
+      @include flex-center;
+      gap: $spacing-sm;
+      
+      @media (max-width: $breakpoint-sm) {
+        width: 100%;
+      }
+    }
+
+    .btn-secondary {
+      @include button-base;
+      background: $color-gray-100;
+      color: $color-gray-700;
+    }
+
+    .btn-primary {
+      @include button-base;
+      background: $color-primary;
+      color: $color-white;
+    }
+  }
+
+  .report-data {
+    min-height: 300px;
+    padding: $spacing-lg;
+    
+    @media (max-width: $breakpoint-md) {
+      padding: $spacing-md;
+    }
+  }
+}
+
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba($color-white, 0.7);
+  backdrop-filter: blur(4px);
+  @include flex-center;
+  z-index: 10;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba($color-primary, 0.1);
+  border-radius: 50%;
+  border-top-color: $color-primary;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Print Styles
+@media print {
+  .filters-section,
+  .report-tabs,
+  .report-actions {
+    display: none !important;
+  }
+
+  .report-content {
+    box-shadow: none;
+  }
+}
+
+// High Contrast Mode
+@media (forced-colors: active) {
+  .tab-btn.active {
+    border: 2px solid currentColor;
+  }
+}
+
+// Reduced Motion
+@media (prefers-reduced-motion: reduce) {
+  .loading-spinner {
+    animation-duration: 2s;
+  }
+}
