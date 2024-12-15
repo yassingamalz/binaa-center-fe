@@ -13,20 +13,18 @@ RUN npm install
 # Copy the Angular app source code
 COPY . . 
 
-# Build the Angular app
-RUN npm run build --prod
+# Build with production configuration
+RUN npm run build:production
 
 # Step 2: Serve the Angular app using Nginx
 FROM nginx:alpine
 
-# Copy the custom nginx.conf to configure Nginx to listen on port 3200
+# Copy the custom nginx.conf
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy the build output to the Nginx container's web directory
 COPY --from=build /app/dist/binaa-center-fe /usr/share/nginx/html
 
-# Expose port 3200 for the web server
 EXPOSE 3200
 
-# Start Nginx when the container runs
 CMD ["nginx", "-g", "daemon off;"]
