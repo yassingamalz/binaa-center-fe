@@ -1,1 +1,95 @@
-<p>expense-list works!</p>
+<!-- src/app/features/finance/components/expense-list/expense-list.component.html -->
+<div class="expenses-container">
+    <!-- Header -->
+    <div class="page-header">
+      <div class="header-title">
+        <h1>المصروفات</h1>
+        <span class="expense-count" *ngIf="filteredExpenses.length">
+          {{filteredExpenses.length}} مصروف
+        </span>
+      </div>
+      
+      <button class="btn-primary" (click)="addExpense()">
+        <i class="fas fa-plus"></i>
+        <span>إضافة مصروف</span>
+      </button>
+    </div>
+  
+    <!-- Filters -->
+    <div class="filters-section">
+      <form [formGroup]="searchForm" class="search-form">
+        <div class="search-input">
+          <i class="fas fa-search"></i>
+          <input 
+            type="text"
+            formControlName="searchTerm"
+            placeholder="بحث بالوصف أو التصنيف..."
+          >
+        </div>
+      </form>
+  
+      <div class="category-filters">
+        <button 
+          *ngFor="let category of expenseCategories"
+          class="filter-btn"
+          [class.active]="selectedCategory === category.value"
+          (click)="onCategoryChange(category.value)">
+          {{category.label}}
+        </button>
+      </div>
+    </div>
+  
+    <!-- Expenses List -->
+    <div class="expenses-list" [class.loading]="isLoading">
+      <div class="expense-card" *ngFor="let expense of filteredExpenses">
+        <div class="expense-header">
+          <div class="expense-category">
+            <i [class]="getCategoryIcon(expense.category)"></i>
+            <span>{{getCategoryLabel(expense.category)}}</span>
+          </div>
+          <div class="expense-amount">
+            {{expense.amount | currency:'EGP':'symbol':'1.0-0'}}
+          </div>
+        </div>
+  
+        <div class="expense-content">
+          <div class="expense-details">
+            <div class="expense-date">
+              <i class="far fa-calendar"></i>
+              <span>{{expense.date | date:'mediumDate'}}</span>
+            </div>
+            <div class="expense-payment">
+              <i class="fas fa-money-bill"></i>
+              <span>{{expense.paymentMethod}}</span>
+            </div>
+          </div>
+  
+          <p class="expense-description">{{expense.description}}</p>
+        </div>
+  
+        <div class="expense-footer">
+          <div class="expense-info">
+            <span class="paid-by">دفع بواسطة: {{expense.paidBy}}</span>
+          </div>
+          
+          <div class="actions">
+            <button class="btn-icon" (click)="editExpense(expense)" title="تعديل">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn-icon danger" (click)="deleteExpense(expense)" title="حذف">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="!isLoading && filteredExpenses.length === 0">
+        <i class="fas fa-file-invoice-dollar"></i>
+        <p>لا توجد مصروفات مطابقة للبحث</p>
+        <button class="btn-secondary" (click)="addExpense()">
+          إضافة مصروف جديد
+        </button>
+      </div>
+    </div>
+  </div>
