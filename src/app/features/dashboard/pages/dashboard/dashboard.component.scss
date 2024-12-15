@@ -1,4 +1,5 @@
 // src/app/features/dashboard/pages/dashboard/dashboard.component.scss
+// src/app/features/dashboard/pages/dashboard/dashboard.component.scss
 @import 'styles/main';
 
 .dashboard-container {
@@ -6,128 +7,92 @@
   height: 100%;
   min-height: calc(100vh - #{$layout-header-height});
   background-color: $color-gray-100;
+  width: 100%;
+  overflow-x: hidden; // Prevent horizontal scroll
 
   @media (min-width: $breakpoint-md) {
     padding: $spacing-lg;
   }
 }
 
-// Main Content Area
+// Main Content Area - Mobile First
 .main-content {
   margin-top: $spacing-md;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: $spacing-md;
-  grid-template-columns: 1fr; // Default to single column for mobile
+  width: 100%;
 
   @media (min-width: $breakpoint-lg) {
+    display: grid;
     grid-template-columns: 2fr 1fr;
     gap: $spacing-lg;
     margin-top: $spacing-lg;
   }
+}
 
-  // Charts Column
-  .charts-column {
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-md;
+// Charts Column - Stack on mobile
+.charts-column {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  width: 100%;
 
-    @media (min-width: $breakpoint-md) {
-      gap: $spacing-lg;
-    }
-
-    .chart-card {
-      @include card;
-      padding: $spacing-sm;
-      background: $color-white;
-      min-height: 300px; // Reduced height for mobile
-      width: 100%;
-      overflow: hidden;
-
-      @media (min-width: $breakpoint-md) {
-        padding: $spacing-lg;
-        min-height: 400px;
-      }
-
-      .chart-header {
-        @include flex-between;
-        margin-bottom: $spacing-md;
-        flex-wrap: wrap;
-        gap: $spacing-sm;
-
-        @media (min-width: $breakpoint-md) {
-          margin-bottom: $spacing-lg;
-          gap: $spacing-md;
-        }
-
-        h3 {
-          margin: 0;
-          font-size: $font-size-base;
-          width: 100%; // Full width on mobile
-
-          @media (min-width: $breakpoint-md) {
-            font-size: $font-size-lg;
-            width: auto;
-          }
-        }
-
-        .chart-actions {
-          width: 100%; // Full width on mobile
-
-          @media (min-width: $breakpoint-md) {
-            width: auto;
-          }
-
-          select {
-            @include input-base;
-            width: 100%;
-            min-width: 120px;
-
-            @media (min-width: $breakpoint-md) {
-              width: auto;
-            }
-          }
-        }
-      }
-    }
+  @media (min-width: $breakpoint-md) {
+    gap: $spacing-lg;
   }
 
-  // Widgets Column
-  .widgets-column {
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-md;
+  .chart-card {
+    @include card;
+    padding: $spacing-sm;
+    background: $color-white;
+    min-height: 250px; // Smaller height for mobile
+    width: 100%;
+    overflow: hidden;
 
     @media (min-width: $breakpoint-md) {
-      gap: $spacing-lg;
+      padding: $spacing-lg;
+      min-height: 400px;
     }
 
-    .widget-card {
-      @include card;
-      padding: $spacing-sm;
-      background: $color-white;
+    .chart-header {
+      @include flex-between;
+      margin-bottom: $spacing-md;
+      flex-direction: column; // Stack on mobile
+      gap: $spacing-sm;
 
       @media (min-width: $breakpoint-md) {
-        padding: $spacing-lg;
+        flex-direction: row;
+        margin-bottom: $spacing-lg;
+        gap: $spacing-md;
       }
 
-      .widget-header {
-        @include flex-between;
-        margin-bottom: $spacing-md;
-        flex-wrap: wrap;
-        gap: $spacing-sm;
+      h3 {
+        margin: 0;
+        font-size: $font-size-base;
+        width: 100%;
+        text-align: right;
 
         @media (min-width: $breakpoint-md) {
-          margin-bottom: $spacing-lg;
-          gap: 0;
-          flex-wrap: nowrap;
+          font-size: $font-size-lg;
+          width: auto;
+        }
+      }
+
+      .chart-actions {
+        width: 100%;
+
+        @media (min-width: $breakpoint-md) {
+          width: auto;
         }
 
-        h3 {
-          margin: 0;
-          font-size: $font-size-base;
+        select {
+          @include input-base;
+          width: 100%;
+          min-width: 120px;
 
           @media (min-width: $breakpoint-md) {
-            font-size: $font-size-lg;
+            width: auto;
           }
         }
       }
@@ -135,38 +100,60 @@
   }
 }
 
-// Common Widget Card Styles
-.widget-card {
-  @include card;
-  background: $color-white;
-  overflow: hidden;
+// Widgets Column - Full width on mobile
+.widgets-column {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  width: 100%;
 
-  &.loading {
-    position: relative;
-    min-height: 200px;
-    
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        90deg,
-        $color-gray-200 25%,
-        $color-gray-300 37%,
-        $color-gray-200 63%
-      );
-      background-size: 400% 100%;
-      animation: loading 1.4s ease infinite;
+  @media (min-width: $breakpoint-md) {
+    gap: $spacing-lg;
+  }
+
+  .widget-card {
+    @include card;
+    padding: $spacing-md;
+    background: $color-white;
+    width: 100%;
+
+    @media (min-width: $breakpoint-md) {
+      padding: $spacing-lg;
+    }
+
+    .widget-header {
+      @include flex-between;
+      margin-bottom: $spacing-md;
+      flex-direction: column;
+      gap: $spacing-sm;
+
+      @media (min-width: $breakpoint-md) {
+        flex-direction: row;
+        margin-bottom: $spacing-lg;
+        gap: 0;
+      }
+
+      h3 {
+        margin: 0;
+        font-size: $font-size-base;
+        width: 100%;
+        text-align: right;
+
+        @media (min-width: $breakpoint-md) {
+          font-size: $font-size-lg;
+          width: auto;
+        }
+      }
     }
   }
 }
 
-// Session Overview Section
+// Session Overview Grid
 .session-overview {
   display: grid;
   grid-template-columns: 1fr;
   gap: $spacing-sm;
-  margin-bottom: $spacing-md;
+  width: 100%;
 
   @media (min-width: $breakpoint-sm) {
     grid-template-columns: repeat(2, 1fr);
@@ -175,26 +162,22 @@
   @media (min-width: $breakpoint-md) {
     grid-template-columns: repeat(3, 1fr);
     gap: $spacing-md;
-    margin-bottom: $spacing-lg;
   }
 
   .overview-card {
     @include card;
     text-align: center;
-    padding: $spacing-sm;
-
-    @media (min-width: $breakpoint-md) {
-      padding: $spacing-md;
-    }
+    padding: $spacing-md;
+    width: 100%;
 
     .overview-value {
-      font-size: $font-size-xl;
+      font-size: $font-size-lg;
       font-weight: bold;
       color: $color-primary;
       margin: $spacing-xs 0;
 
       @media (min-width: $breakpoint-md) {
-        font-size: $font-size-2xl;
+        font-size: $font-size-xl;
         margin: $spacing-sm 0;
       }
     }
