@@ -6,6 +6,7 @@ import { FinanceService } from '../../services/finance.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { ExpenseCategory, ExpenseDTO } from '../../../../core/models/expense';
+import { ExpenseFormComponent } from '../expense-form/expense-form.component';
 
 interface CategoryOption {
   value: ExpenseCategory | 'all';
@@ -90,8 +91,9 @@ export class ExpenseListComponent implements OnInit, OnDestroy {
 
     if (searchTerm) {
       filtered = filtered.filter(expense => 
-        expense.description.toLowerCase().includes(searchTerm) ||
-        this.getCategoryLabel(expense.category).toLowerCase().includes(searchTerm)
+        expense.description?.toLowerCase().includes(searchTerm) || 
+        this.getCategoryLabel(expense.category).toLowerCase().includes(searchTerm) || 
+        String(expense.amount).includes(searchTerm)
       );
     }
 

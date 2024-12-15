@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PaymentListComponent } from './components/payment-list/payment-list.component';
 import { ExpenseListComponent } from './components/expense-list/expense-list.component';
 import { InvoiceGeneratorComponent } from './components/invoice-generator/invoice-generator.component';
+import { ExpenseFormComponent } from './components/expense-form/expense-form.component';
 
 const routes: Routes = [
   {
@@ -35,7 +36,8 @@ const routes: Routes = [
   declarations: [
     PaymentListComponent,
     ExpenseListComponent,
-    InvoiceGeneratorComponent
+    InvoiceGeneratorComponent,
+    ExpenseFormComponent
   ],
   imports: [
     CommonModule,
