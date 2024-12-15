@@ -1,1 +1,101 @@
-<p>payment-list works!</p>
+<!-- src/app/features/finance/components/payment-list/payment-list.component.html -->
+<div class="payments-container">
+    <!-- Header -->
+    <div class="page-header">
+        <div class="header-title">
+            <h1>المدفوعات</h1>
+            <span class="payment-count" *ngIf="filteredPayments.length">
+                {{filteredPayments.length}} دفعة
+            </span>
+        </div>
+
+        <button class="btn-primary" (click)="recordPayment()">
+            <i class="fas fa-plus"></i>
+            <span>تسجيل دفعة</span>
+        </button>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-section">
+        <form [formGroup]="searchForm" class="search-form">
+            <div class="search-input">
+                <i class="fas fa-search"></i>
+                <input type="text" formControlName="searchTerm" placeholder="بحث برقم الفاتورة أو اسم الحالة...">
+            </div>
+        </form>
+
+        <div class="filters-group">
+            <div class="status-filters">
+                <button *ngFor="let status of paymentStatuses" class="filter-btn"
+                    [class.active]="selectedStatus === status.value" (click)="onStatusChange(status.value)">
+                    {{status.label}}
+                </button>
+            </div>
+
+            <div class="method-filters">
+                <button *ngFor="let method of paymentMethods" class="filter-btn"
+                    [class.active]="selectedMethod === method.value" (click)="onMethodChange(method.value)">
+                    {{method.label}}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payments List -->
+    <div class="payments-list" [class.loading]="isLoading">
+        <div class="payment-card" *ngFor="let payment of filteredPayments">
+            <div class="payment-header">
+                <div class="payment-info">
+                    <span class="invoice-number">#{{payment.invoiceNumber}}</span>
+                    <span class="payment-date">
+                        <i class="far fa-calendar"></i>
+                        {{payment.paymentDate | date:'mediumDate'}}
+                    </span>
+                </div>
+                <div class="payment-amount">
+                    {{payment.amount | currency:'EGP':'symbol':'1.0-0'}}
+                </div>
+            </div>
+
+            <div class="payment-content">
+                <div class="payment-details">
+                    <div class="case-info">
+                        <i class="fas fa-user"></i>
+                        <span>{{payment.caseName}}</span>
+                    </div>
+                    <div class="payment-method">
+                        <i [class]="getMethodIcon(payment.paymentMethod)"></i>
+                        <span>{{getMethodLabel(payment.paymentMethod)}}</span>
+                    </div>
+
+                    <p class="payment-description" *ngIf="payment.description">
+                        {{payment.description}}
+                    </p>
+                </div>
+
+                <div class="payment-footer">
+                    <span class="status-badge" [class]="getStatusClass(payment.paymentStatus)">
+                        {{getStatusLabel(payment.paymentStatus)}}
+                    </span>
+
+                    <div class="actions">
+                        <button class="btn-icon" (click)="editPayment(payment)" title="تعديل">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon" (click)="printReceipt(payment)" title="طباعة الإيصال">
+                            <i class="fas fa-print"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" *ngIf="!isLoading && filteredPayments.length === 0">
+                <i class="fas fa-money-bill-wave"></i>
+                <p>لا توجد مدفوعات مطابقة للبحث</p>
+                <button class="btn-secondary" (click)="recordPayment()">
+                    تسجيل دفعة جديدة
+                </button>
+            </div>
+        </div>
+    </div>

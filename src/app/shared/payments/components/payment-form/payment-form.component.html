@@ -41,7 +41,7 @@
       <div class="form-group">
         <label>تاريخ الدفع</label>
         <input 
-          type="date" 
+          type="datetime-local" 
           class="form-control" 
           formControlName="paymentDate"
           [class.is-invalid]="isFieldInvalid('paymentDate')"
@@ -64,7 +64,7 @@
         <label>الحالة</label>
         <select 
           class="form-control" 
-          formControlName="status"
+          formControlName="paymentStatus"
           [class.is-invalid]="isFieldInvalid('status')"
         >
           <option *ngFor="let status of paymentStatuses" [value]="status.value">

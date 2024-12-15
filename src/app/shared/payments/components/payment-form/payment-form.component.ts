@@ -50,7 +50,7 @@ export class PaymentFormComponent implements OnInit {
       paymentMethod: [PaymentMethod.CASH, Validators.required],
       paymentDate: [new Date(), Validators.required],
       description: [''],
-      status: [PaymentStatus.PAID, Validators.required],
+      paymentStatus: [PaymentStatus.PAID, Validators.required],
       invoiceNumber: ['', Validators.required]
     });
   }
