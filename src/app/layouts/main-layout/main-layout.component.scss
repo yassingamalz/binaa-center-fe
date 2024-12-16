@@ -1,3 +1,4 @@
+//src\app\layouts\main-layout\main-layout.component.scss
 @import 'styles/main';
 
 $layout-header-height: 64px;
@@ -7,222 +8,234 @@ $layout-sidebar-collapsed-width: 80px;
 $layout-content-padding: $spacing-lg;
 
 .main-layout {
- min-height: 100vh;
- width: 100%;
- direction: rtl;
- background-color: $color-gray-100;
- display: flex;
- overflow: hidden;
- position: relative;
+  min-height: 100vh;
+  width: 100%;
+  direction: rtl;
+  background-color: $color-gray-100;
+  display: flex;
+  overflow: hidden;
+  position: relative;
 
- &.sidebar-collapsed {
-   .sidebar-container {
-     width: $layout-sidebar-collapsed-width;
-   }
+  &.sidebar-collapsed {
+    .sidebar-container {
+      width: $layout-sidebar-collapsed-width;
+    }
 
-   .main-content {
-     margin-right: $layout-sidebar-collapsed-width;
-     
-     @media (max-width: $breakpoint-md) {
-       margin-right: 0;
-     }
-   }
- }
+    .main-content {
+      margin-right: $layout-sidebar-collapsed-width;
+      width: calc(100% - #{$layout-sidebar-collapsed-width});
+      
+      @media (max-width: $breakpoint-md) {
+        margin-right: 0;
+        width: 100%;
+      }
+    }
+  }
 }
 
 .sidebar-container {
- position: fixed;
- top: 0;
- right: 0;
- height: 100vh;
- width: $layout-sidebar-width;
- z-index: $z-index-fixed;
- background-color: $color-white;
- box-shadow: $shadow-rtl-md;
- transform-origin: right;
- will-change: transform, width;
- transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: $layout-sidebar-width;
+  z-index: $z-index-fixed;
+  background-color: $color-white;
+  box-shadow: $shadow-rtl-md;
+  transform-origin: right;
+  will-change: transform, width;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
- @media (max-width: $breakpoint-md) {
-   transform: translateX(100%);
-   width: min($layout-sidebar-width, 80vw);
+  @media (max-width: $breakpoint-md) {
+    transform: translateX(100%);
+    width: min($layout-sidebar-width, 80vw);
 
-   &.sidebar-visible {
-     transform: translateX(0);
-   }
- }
+    &.sidebar-visible {
+      transform: translateX(0);
+    }
+  }
 }
 
 .sidebar {
- height: 100%;
- width: $layout-sidebar-width;
- @include scrollable;
- transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
- overflow-x: hidden;
- 
- &.collapsed {
-   width: $layout-sidebar-collapsed-width;
- }
+  height: 100%;
+  width: $layout-sidebar-width;
+  @include scrollable;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-x: hidden;
+  
+  &.collapsed {
+    width: $layout-sidebar-collapsed-width;
+  }
 }
 
 .sidebar-overlay {
- display: none;
- 
- @media (max-width: $breakpoint-md) {
-   display: block;
-   position: fixed;
-   inset: 0;
-   background-color: rgba($color-black, 0.5);
-   z-index: ($z-index-fixed - 1);
-   opacity: 0;
-   pointer-events: none;
-   transition: opacity 0.3s ease;
-   backdrop-filter: blur(4px);
-   
-   &.visible {
-     opacity: 1;
-     pointer-events: auto;
-   }
- }
+  display: none;
+  
+  @media (max-width: $breakpoint-md) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background-color: rgba($color-black, 0.5);
+    z-index: ($z-index-fixed - 1);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(4px);
+    
+    &.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
 }
 
 .main-content {
- flex: 1;
- min-height: 100vh;
- margin-right: $layout-sidebar-width;
- transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
- @include scrollable;
- display: flex;
- flex-direction: column;
- overflow-x: hidden;
+  flex: 1;
+  min-height: 100vh;
+  margin-right: $layout-sidebar-width;
+  width: calc(100% - #{$layout-sidebar-width});
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  @include scrollable;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
 
- @media (max-width: $breakpoint-md) {
-   margin-right: 0;
-   width: 100%;
- }
+  @media (max-width: $breakpoint-md) {
+    margin-right: 0;
+    width: 100%;
+  }
 }
 
 .header-container {
- position: sticky;
- top: 0;
- height: $layout-header-height;
- z-index: $z-index-sticky;
- background-color: $color-white;
- transition: $transition-base;
+  position: sticky;
+  top: 0;
+  height: $layout-header-height;
+  z-index: $z-index-sticky;
+  background-color: $color-white;
+  transition: $transition-base;
+  width: 100%;
+  max-width: 100%;
 
- &.scrolled {
-   box-shadow: $shadow-rtl-md;
-   background-color: rgba($color-white, 0.95);
-   backdrop-filter: blur(8px);
-   -webkit-backdrop-filter: blur(8px);
- }
+  &.scrolled {
+    box-shadow: $shadow-rtl-md;
+    background-color: rgba($color-white, 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
 }
 
 .content-area {
- flex: 1;
- padding: $layout-content-padding;
- position: relative;
+  flex: 1;
+  padding: $layout-content-padding;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 
- @media (max-width: $breakpoint-md) {
-   padding: $spacing-md;
- }
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-md;
+  }
 
- &.loading {
-   opacity: 0.6;
-   pointer-events: none;
- }
+  &.loading {
+    opacity: 0.6;
+    pointer-events: none;
+  }
 
- .route-container {
-  
-   min-height: fit-content;
-   transition: $transition-base;
-   padding: $spacing-lg;
-   margin-bottom: $spacing-md;
+  .route-container {
+    min-height: fit-content;
+    transition: $transition-base;
+    padding: $spacing-lg;
+    margin-bottom: $spacing-md;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 
-   @media (max-width: $breakpoint-md) {
-     padding: $spacing-md;
-   }
- }
+    @media (max-width: $breakpoint-md) {
+      padding: $spacing-md;
+    }
+  }
 }
 
 .footer-container {
- width: 100%;
- background-color: $color-white;
- margin-top: auto;
- padding: 0;
- 
- @media (max-width: $breakpoint-md) {
-   padding-bottom: max($spacing-sm, env(safe-area-inset-bottom));
- }
+  width: 100%;
+  max-width: 100%;
+  background-color: $color-white;
+  margin-top: auto;
+  padding: 0;
+  
+  @media (max-width: $breakpoint-md) {
+    padding-bottom: max($spacing-sm, env(safe-area-inset-bottom));
+  }
 }
 
 .loading-overlay {
- position: fixed;
- inset: 0;
- background-color: rgba($color-white, 0.8);
- backdrop-filter: blur(4px);
- -webkit-backdrop-filter: blur(4px);
- z-index: $z-index-modal;
- @include flex-center;
- animation: fadeIn 0.2s ease-out;
+  position: fixed;
+  inset: 0;
+  background-color: rgba($color-white, 0.8);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: $z-index-modal;
+  @include flex-center;
+  animation: fadeIn 0.2s ease-out;
 
- .spinner-wrapper {
-   text-align: center;
+  .spinner-wrapper {
+    text-align: center;
 
-   .spinner {
-     width: 40px;
-     height: 40px;
-     border: 3px solid rgba($color-primary, 0.1);
-     border-top-color: $color-primary;
-     border-radius: 50%;
-     animation: spin 1s linear infinite;
-   }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba($color-primary, 0.1);
+      border-top-color: $color-primary;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
 
-   .loading-text {
-     margin-top: $spacing-md;
-     color: $color-gray-700;
-     font-weight: 500;
-     font-size: $font-size-sm;
-   }
- }
+    .loading-text {
+      margin-top: $spacing-md;
+      color: $color-gray-700;
+      font-weight: 500;
+      font-size: $font-size-sm;
+    }
+  }
 }
 
 body.sidebar-open {
- @media (max-width: $breakpoint-md) {
-   overflow: hidden;
-   position: fixed;
-   width: 100%;
-   height: 100%;
- }
+  @media (max-width: $breakpoint-md) {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
 }
 
 @keyframes fadeIn {
- from { opacity: 0; }
- to { opacity: 1; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes spin {
- to { transform: rotate(360deg); }
+  to { transform: rotate(360deg); }
 }
 
 @media print {
- .sidebar-container,
- .header-container,
- .footer-container {
-   display: none !important;
- }
+  .sidebar-container,
+  .header-container,
+  .footer-container {
+    display: none !important;
+  }
 
- .main-content {
-   margin: 0 !important;
-   padding: 0 !important;
- }
+  .main-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
 
- .content-area {
-   padding: 0;
+  .content-area {
+    padding: 0;
 
-   .route-container {
-     box-shadow: none;
-     min-height: auto;
-   }
- }
+    .route-container {
+      box-shadow: none;
+      min-height: auto;
+    }
+  }
 }
