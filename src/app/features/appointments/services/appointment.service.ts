@@ -20,7 +20,7 @@ export class AppointmentService {
   }
 
   getAppointmentsByDateTime(date: Date): Observable<AppointmentListDTO[]> {
-    return this.apiService.get<AppointmentListDTO[]>(`${this.endpoint}/list/date/${date.toISOString()}`);
+    return this.apiService.get<AppointmentListDTO[]>(`${this.endpoint}/datetime/${date.toISOString()}`);
   }
 
   getAppointmentById(id: number): Observable<AppointmentDTO> {
