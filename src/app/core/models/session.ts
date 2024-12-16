@@ -9,6 +9,22 @@ export enum AttendanceStatus {
   ABSENT = 'ABSENT'
 }
 
+export const getSessionTypeLabel = (type: SessionType): string => {
+  const labels = {
+    [SessionType.INDIVIDUAL]: 'فردي',
+    [SessionType.GROUP]: 'جماعي'
+  };
+  return labels[type];
+};
+
+export const getAttendanceStatusLabel = (status: AttendanceStatus): string => {
+  const labels = {
+    [AttendanceStatus.PRESENT]: 'حاضر',
+    [AttendanceStatus.ABSENT]: 'غائب'
+  };
+  return labels[status];
+};
+
 export interface SessionDTO {
   sessionId: number;
   caseId: number;

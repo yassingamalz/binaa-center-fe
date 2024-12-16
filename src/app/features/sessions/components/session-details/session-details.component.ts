@@ -6,7 +6,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { SessionService } from '../../services/session.service';
 import { SessionFormComponent } from '../session-form/session-form.component';
 import { ToastrService } from 'ngx-toastr';
-import { SessionResponseDTO, AttendanceStatus } from '../../../../core/models/session';
+import { SessionResponseDTO, SessionType, AttendanceStatus } from '../../../../core/models/session';
 
 @Component({
   selector: 'app-session-details',
@@ -17,6 +17,21 @@ export class SessionDetailsComponent implements OnInit, OnDestroy {
   session?: SessionResponseDTO;
   isLoading = true;
   activeTab: 'info' | 'notes' | 'attachments' = 'info';
+
+  // Expose enums to template
+  SessionType = SessionType;
+  AttendanceStatus = AttendanceStatus;
+  
+  // Arabic labels mapping
+  sessionTypeLabels = {
+    [SessionType.INDIVIDUAL]: 'فردي',
+    [SessionType.GROUP]: 'جماعي'
+  };
+
+  attendanceStatusLabels = {
+    [AttendanceStatus.PRESENT]: 'حضر',
+    [AttendanceStatus.ABSENT]: 'غائب'
+  };
   
   private destroy$ = new Subject<void>();
 
@@ -59,7 +74,8 @@ export class SessionDetailsComponent implements OnInit, OnDestroy {
 
     const modalRef = this.modalService.open(SessionFormComponent, {
       size: 'lg',
-      backdrop: 'static'
+      backdrop: 'static',
+      centered: true
     });
 
     modalRef.componentInstance.session = this.session;
@@ -70,8 +86,7 @@ export class SessionDetailsComponent implements OnInit, OnDestroy {
           this.session = result;
           this.toastr.success('تم تحديث بيانات الجلسة بنجاح');
         }
-      },
-      () => {} // Modal dismissed
+      }
     );
   }
 
@@ -88,7 +103,8 @@ export class SessionDetailsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (updatedSession) => {
           this.session = updatedSession;
-          this.toastr.success('تم تحديث حالة الحضور بنجاح');
+          const statusLabel = this.attendanceStatusLabels[newStatus];
+          this.toastr.success(`تم تحديث حالة الحضور إلى ${statusLabel}`);
         },
         error: (error) => {
           console.error('Error updating attendance:', error);
@@ -114,8 +130,22 @@ export class SessionDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
+  getSessionTypeLabel(type: SessionType): string {
+    return this.sessionTypeLabels[type];
+  }
+
+  getAttendanceStatusLabel(status: AttendanceStatus): string {
+    return this.attendanceStatusLabels[status];
+  }
+
   getStatusClass(): string {
-    return this.session?.attendanceStatus.toLowerCase() || '';
+    if (!this.session) return '';
+    return this.session.attendanceStatus.toLowerCase();
+  }
+
+  getSessionTypeClass(): string {
+    if (!this.session) return '';
+    return this.session.sessionType.toLowerCase();
   }
 
   ngOnDestroy(): void {

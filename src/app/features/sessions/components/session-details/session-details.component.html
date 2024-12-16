@@ -13,13 +13,13 @@
         <div class="session-info" *ngIf="session">
           <div class="session-title">
             <h1>{{session.purpose}}</h1>
-            <div class="session-type" [class]="session.sessionType.toLowerCase()">
-              {{session.typeLabel}}
+            <div class="session-type" [class]="getSessionTypeClass()">
+              {{getSessionTypeLabel(session.sessionType)}}
             </div>
           </div>
           <div class="session-meta">
             <span class="status-badge" [class]="getStatusClass()">
-              {{session.statusLabel}}
+              {{getAttendanceStatusLabel(session.attendanceStatus)}}
             </span>
             <span class="meta-item">
               <i class="far fa-calendar"></i>
@@ -27,6 +27,7 @@
             </span>
             <span class="meta-item">
               <i class="far fa-clock"></i>
+              {{session.sessionDate | date:'mediumDate'}}
               {{session.sessionTime}}
             </span>
             <span class="meta-item">

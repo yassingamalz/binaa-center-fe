@@ -124,10 +124,19 @@
 
     @media (max-width: $breakpoint-md) {
         width: 100%;
-        justify-content: stretch;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: $spacing-sm;
+
+        .btn-attendance {
+            grid-column: 1 / -1;
+            order: -1;
+        }
 
         button {
-            flex: 1;
+            height: 44px;
+            padding: $spacing-sm;
+            justify-content: center;
         }
     }
 
@@ -167,26 +176,26 @@
     .btn-attendance {
         @include button-base;
         gap: $spacing-sm;
-      
+
         &-present {
-          background: rgba($color-accent, 0.7);
-          color: $color-gray-900;
-      
-          &:hover {
-            background: $color-warning;
-            color: $color-black;
-          }
+            background: rgba($color-accent, 0.7);
+            color: $color-gray-900;
+
+            &:hover {
+                background: $color-warning;
+                color: $color-black;
+            }
         }
-      
+
         &-absent {
-          background: $color-success;
-          color: $color-white;
-      
-          &:hover {
-            background: darken($color-success, 10%);
-          }
+            background: $color-success;
+            color: $color-white;
+
+            &:hover {
+                background: darken($color-success, 10%);
+            }
         }
-      }
+    }
 }
 
 // Tabs Navigation
@@ -199,9 +208,15 @@
     overflow-x: auto;
     @include scrollable;
 
+    // Improved mobile responsiveness
     @media (max-width: $breakpoint-md) {
         padding: $spacing-sm;
-        justify-content: start;
+        justify-content: center;
+        
+        // Ensure tabs are evenly distributed
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        width: 100%;
     }
 
     .tab-btn {
@@ -213,6 +228,7 @@
         min-width: auto;
         height: auto;
         white-space: nowrap;
+        transition: all 0.3s ease; // Smooth transition for hover and active states
 
         &:hover {
             color: $color-primary;
@@ -222,18 +238,29 @@
         &.active {
             color: $color-primary;
             background: rgba($color-primary, 0.1);
+            font-weight: bold; // Emphasize active tab
         }
 
         @media (max-width: $breakpoint-sm) {
+            // Compact mobile view
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             padding: $spacing-sm;
+            
+            i {
+                margin-bottom: $spacing-xs;
+                font-size: $font-size-lg; // Larger icon for mobile
+            }
 
             span {
-                display: none;
+                font-size: $font-size-xs; // Smaller text
+                text-align: center;
             }
         }
     }
 }
-
 // Content Area
 .page-content {
     margin-top: $spacing-lg;
