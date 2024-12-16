@@ -2,17 +2,27 @@
 import { Component, ElementRef, OnInit, ViewChild, OnDestroy, AfterViewInit, HostListener } from '@angular/core';
 import { DashboardService } from '../../services/dashboard.service';
 import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
+import { curveLinear, curveBasis, curveMonotoneX, curveStep, curveStepAfter, curveStepBefore } from 'd3-shape';
 import { Subject, takeUntil } from 'rxjs';
-import { FinancialSummary, PaymentWithDate } from '../../services/dashboard.service'; 
-type PeriodType = 'week' | 'month' | 'quarter' | 'year' | 'overall';
+import { FinancialSummary, PaymentWithDate, ExpenseWithDate } from '../../services/dashboard.service';
+
+export type PeriodType = 'week' | 'month' | 'quarter' | 'year' | 'overall';
+
+interface ChartDataPoint {
+  name: string;
+  income: number;
+  expenses: number;
+  net: number;
+}
+
+interface ChartSeries {
+  name: string;
+  value: number;
+}
 
 interface ChartData {
   name: string;
-  series: Array<{
-    name: string;
-    value: number;
-    min: number;
-  }>;
+  series: ChartSeries[];
 }
 
 @Component({
@@ -23,24 +33,48 @@ interface ChartData {
 export class MonthlyIncomeChartComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('chartContainer') chartContainer!: ElementRef;
 
-  // Chart properties
-  LegendPosition = LegendPosition;
   selectedPeriod: PeriodType = 'month';
   chartData: ChartData[] = [];
   view: [number, number] = [700, 300];
   isLoading = false;
 
-  // Color scheme configuration
+  // Chart options
+  showXAxis = true;
+  showYAxis = true;
+  gradient = true;
+  showLegend = true;
+  showXAxisLabel = true;
+  showYAxisLabel = true;
+  legendPosition = LegendPosition.Below;
+  legendTitle = '';
+  timeline = false;
+  animations = true;
+  showGridLines = true;
+  roundDomains = true;
+  rangeFillOpacity = 0.15; 
+
+  xAxisLabel = 'التاريخ';
+  yAxisLabel = 'المبلغ (جنيه)';
+
   colorScheme: Color = {
     name: 'custom',
     selectable: true,
     group: ScaleType.Ordinal,
-    domain: ['#800080'] // Single purple color for income line
+    domain: ['#800080', '#FF69B4', '#4CAF50']
   };
 
-  // Chart labels
-  xAxisLabel: string = 'التاريخ';
-  yAxisLabel: string = 'المبلغ (جنيه)';
+  periodOptions = [
+    { value: 'overall', label: 'كل الفترة' },
+    { value: 'year', label: 'سنة' },
+    { value: 'quarter', label: 'ربع سنوي' },
+    { value: 'month', label: 'شهر' },
+    { value: 'week', label: 'أسبوع' }
+  ];
+
+  // RTL support
+  yAxisTickFormatting = (value: any): string => {
+    return value.toLocaleString('ar-EG') + ' ج.م';
+  };
 
   private destroy$ = new Subject<void>();
 
@@ -62,7 +96,7 @@ export class MonthlyIncomeChartComponent implements OnInit, OnDestroy, AfterView
   private updateChartDimensions(): void {
     if (this.chartContainer) {
       const containerWidth = this.chartContainer.nativeElement.offsetWidth;
-      const containerHeight = Math.max(250, window.innerHeight * 0.3);
+      const containerHeight = Math.max(300, window.innerHeight * 0.4);
       this.view = [containerWidth, containerHeight];
     }
   }
@@ -86,7 +120,7 @@ export class MonthlyIncomeChartComponent implements OnInit, OnDestroy, AfterView
         startDate.setFullYear(endDate.getFullYear() - 1);
         break;
       case 'overall':
-        startDate = new Date(0); // From beginning
+        startDate = new Date(0);
         break;
     }
 
@@ -117,32 +151,69 @@ export class MonthlyIncomeChartComponent implements OnInit, OnDestroy, AfterView
 
   private formatChartData(financialSummary: FinancialSummary, period: PeriodType): ChartData[] {
     const dateFormat = this.getDateFormat(period);
-    
-    // Group payments by date
-    const groupedData = financialSummary.payments.reduce<Record<string, number>>((acc: Record<string, number>, payment: PaymentWithDate) => {
+    const dataMap = new Map<string, ChartDataPoint>();
+
+    const initializeDataPoint = (): ChartDataPoint => ({
+      name: '',
+      income: 0,
+      expenses: 0,
+      net: 0
+    });
+
+    // Process data and create translation-ready names
+    const arabicLabels = {
+      income: 'الدخل',
+      expenses: 'المصروفات',
+      net: 'صافي الدخل'
+    };
+
+    financialSummary.payments.forEach((payment: PaymentWithDate) => {
       const date = payment.paymentDate.toLocaleDateString('ar-EG', dateFormat);
-      acc[date] = (acc[date] || 0) + payment.amount;
-      return acc;
-    }, {});
-  
-    // Sort dates and create series data
-    const sortedDates = Object.entries(groupedData)
-      .sort(([dateA], [dateB]) => {
-        return new Date(dateB).getTime() - new Date(dateA).getTime();
-      });
-  
-    return [{
-      name: 'الدخل',
-      series: sortedDates.map(([date, value]) => ({
-        name: date,
-        value: Number(value), // Ensure value is a number
-        min: 0
-      }))
-    }];
+      const point = dataMap.get(date) || { ...initializeDataPoint(), name: date };
+      point.income += payment.amount;
+      point.net = point.income - point.expenses;
+      dataMap.set(date, point);
+    });
+
+    financialSummary.expenses.forEach((expense: ExpenseWithDate) => {
+      const date = expense.date.toLocaleDateString('ar-EG', dateFormat);
+      const point = dataMap.get(date) || { ...initializeDataPoint(), name: date };
+      point.expenses += expense.amount;
+      point.net = point.income - point.expenses;
+      dataMap.set(date, point);
+    });
+
+    // Sort and reverse for RTL
+    const sortedData = Array.from(dataMap.values())
+      .sort((a, b) => new Date(b.name).getTime() - new Date(a.name).getTime());
+
+    return [
+      {
+        name: arabicLabels.income,
+        series: sortedData.map(point => ({
+          name: point.name,
+          value: point.income
+        }))
+      },
+      {
+        name: arabicLabels.expenses,
+        series: sortedData.map(point => ({
+          name: point.name,
+          value: point.expenses
+        }))
+      },
+      {
+        name: arabicLabels.net,
+        series: sortedData.map(point => ({
+          name: point.name,
+          value: point.net
+        }))
+      }
+    ];
   }
 
   onSelect(event: any): void {
-    console.log('Selected:', event);
+    console.log('Item clicked', event);
   }
 
   ngOnDestroy(): void {

@@ -7,33 +7,32 @@
         [(ngModel)]="selectedPeriod" 
         (change)="updateChart()"
         class="period-select">
-        <option value="overall">كل الفترة</option>
-        <option value="year">سنة</option>
-        <option value="quarter">ربع سنوي</option>
-        <option value="month">شهر</option>
-        <option value="week">أسبوع</option>
+        <option *ngFor="let option of periodOptions" [value]="option.value">
+          {{option.label}}
+        </option>
       </select>
     </div>
   </div>
 
-  <div class="chart-wrapper" #chartContainer>
+  <div class="chart-wrapper" #chartContainer dir="ltr">
     <ngx-charts-line-chart
       [view]="view"
+      [scheme]="colorScheme"
       [results]="chartData"
-      [xAxis]="true"
-      [yAxis]="true"
-      [legend]="true"
-      [legendTitle]="''"
-      [legendPosition]="LegendPosition.Below"
-      [showXAxisLabel]="true"
-      [showYAxisLabel]="true"
+      [gradient]="gradient"
+      [xAxis]="showXAxis"
+      [yAxis]="showYAxis"
+      [legend]="showLegend"
+      [showXAxisLabel]="showXAxisLabel"
+      [showYAxisLabel]="showYAxisLabel"
       [xAxisLabel]="xAxisLabel"
       [yAxisLabel]="yAxisLabel"
-      [autoScale]="true"
-      [scheme]="colorScheme"
-      [timeline]="false"
-      [animations]="true"
-      [showGridLines]="true"
+      [legendTitle]="legendTitle"
+      [legendPosition]="legendPosition"
+      [animations]="animations"
+      [showGridLines]="showGridLines"
+      [roundDomains]="roundDomains"
+      [yAxisTickFormatting]="yAxisTickFormatting"
       (select)="onSelect($event)">
     </ngx-charts-line-chart>
   </div>
