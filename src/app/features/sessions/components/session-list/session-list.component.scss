@@ -23,9 +23,9 @@
         }
 
         .session-count {
-            font-size: $font-size-sm;
-            color: $color-gray-600;
-            background: $color-gray-100;
+            font-size: $font-size-lg;
+            background: rgba($color-primary, 0.1);
+            color: $color-primary;
             padding: $spacing-xs $spacing-sm;
             border-radius: $border-radius-full;
         }
