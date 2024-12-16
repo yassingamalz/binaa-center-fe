@@ -1,13 +1,13 @@
-// case-list.component.ts
+// src\app\features\cases\components\case-list\case-list.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { CaseService } from '../../services/case.service';
 import { ToastrService } from 'ngx-toastr';
-import { CaseDTO, CaseStatus } from '../../../../core/models/case';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CaseFormComponent } from '../case-form/case-form.component';
+import { CaseDTO, CaseStatus } from '../../../../core/models/case';
 
 @Component({
   selector: 'app-case-list',
@@ -19,7 +19,7 @@ export class CaseListComponent implements OnInit, OnDestroy {
   filteredCases: CaseDTO[] = [];
   isLoading = false;
   searchForm: FormGroup;
-  CaseStatus = CaseStatus;
+  CaseStatus = CaseStatus; // For template access
   
   // Pagination
   currentPage = 1;
@@ -56,6 +56,7 @@ export class CaseListComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe(() => {
+        this.currentPage = 1;
         this.filterCases();
       });
   }
@@ -111,7 +112,7 @@ export class CaseListComponent implements OnInit, OnDestroy {
 
   onStatusFilterChange(status: CaseStatus | 'all'): void {
     this.statusFilter = status;
-    this.currentPage = 1;
+    this.currentPage = 1; // Reset to first page on filter change
     this.filterCases();
   }
 
@@ -119,16 +120,31 @@ export class CaseListComponent implements OnInit, OnDestroy {
     this.router.navigate(['/cases', caseId]);
   }
 
-  editCase(caseId: number, event: Event): void {
-    event.stopPropagation();
-    
-    const case_ = this.cases.find(c => c.caseId === caseId);
-    if (!case_) return;
-  
+  createNewCase(): void {
     const modalRef = this.modalService.open(CaseFormComponent, {
       size: 'lg',
       backdrop: 'static',
-      keyboard: false,
+      centered: true
+    });
+  
+    modalRef.result.then(
+      (result) => {
+        if (result) {
+          this.loadCases();
+          this.toastr.success('تم إضافة الحالة بنجاح');
+        }
+      }
+    );
+  }
+
+  editCase(caseId: number, event: Event): void {
+    event.stopPropagation();
+    const case_ = this.cases.find(c => c.caseId === caseId);
+    if (!case_) return;
+
+    const modalRef = this.modalService.open(CaseFormComponent, {
+      size: 'lg',
+      backdrop: 'static',
       centered: true
     });
   
@@ -137,39 +153,11 @@ export class CaseListComponent implements OnInit, OnDestroy {
     modalRef.result.then(
       (result) => {
         if (result) {
-          this.loadCases(); // Refresh the list
+          this.loadCases();
           this.toastr.success('تم تحديث الحالة بنجاح');
         }
-      },
-      (reason) => {
-        // Modal dismissed
       }
     );
-  }
-
-  createNewCase(): void {
-    const modalRef = this.modalService.open(CaseFormComponent, {
-      size: 'lg',
-      backdrop: 'static',
-      keyboard: false,
-      centered: true
-    });
-  
-    modalRef.result.then(
-      (result) => {
-        if (result) {
-          this.loadCases(); // Refresh the list
-          this.toastr.success('تم إضافة الحالة بنجاح');
-        }
-      },
-      (reason) => {
-        // Modal dismissed
-      }
-    );
-  }
-
-  getTotalPages(): number {
-    return Math.ceil(this.totalCases / this.pageSize);
   }
 
   toggleCaseStatus(caseId: number, event: Event): void {
@@ -194,6 +182,10 @@ export class CaseListComponent implements OnInit, OnDestroy {
           this.toastr.error('حدث خطأ أثناء تحديث حالة الملف');
         }
       });
+  }
+
+  getTotalPages(): number {
+    return Math.ceil(this.totalCases / this.pageSize);
   }
 
   ngOnDestroy(): void {
