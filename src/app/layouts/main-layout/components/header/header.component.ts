@@ -1,62 +1,49 @@
-// src/app/layout/components/header/header.component.ts
-import { Component, EventEmitter, Input, Output, OnInit, OnDestroy } from '@angular/core';
-import { Observable, Subscription, fromEvent } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { 
+  Component, 
+  EventEmitter, 
+  Input, 
+  Output, 
+  OnInit, 
+  OnDestroy, 
+  ChangeDetectionStrategy, 
+  ViewChild, 
+  ElementRef 
+} from '@angular/core';
+import { Observable, Subject, fromEvent } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { UserDTO } from '../../../../core/models/user';
 import { AuthService } from '../../../../core/services/auth.service';
-
-interface Notification {
-  icon: string;
-  iconClass: string;
-  message: string;
-  time: string;
-}
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   @Input() isSidebarCollapsed = false;
   @Output() toggleSidebar = new EventEmitter<void>();
-  
-  // Observables
-  currentUser$: Observable<UserDTO | null>;
-  private scrollSubscription?: Subscription;
-  private resizeSubscription?: Subscription;
 
-  // State
+  @ViewChild('header') headerElement!: ElementRef;
+  @ViewChild('notificationDropdown') notificationDropdown!: NgbDropdown;
+
+  currentUser$: Observable<UserDTO | null>;
+  notifications$ = this.notificationService.notifications$;
+  unreadCount$ = this.notificationService.unreadCount$;
+  private destroy$ = new Subject<void>();
+
   isSearchActive = false;
   showMobileSearch = false;
-  notificationCount = 3;
   searchQuery = '';
-  
-  notifications: Notification[] = [
-    {
-      icon: 'fas fa-calendar-check',
-      iconClass: 'text-success',
-      message: 'موعد جديد تم تأكيده',
-      time: 'منذ 5 دقائق'
-    },
-    {
-      icon: 'fas fa-coins',
-      iconClass: 'text-warning',
-      message: 'تم استلام دفعة جديدة',
-      time: 'منذ ساعة'
-    },
-    {
-      icon: 'fas fa-user-plus',
-      iconClass: 'text-info',
-      message: 'حالة جديدة تم تسجيلها',
-      time: 'منذ ساعتين'
-    }
-  ];
+  isScrolled = false;
 
   constructor(
     private authService: AuthService,
+    private notificationService: NotificationService,
     private router: Router,
     private toastr: ToastrService
   ) {
@@ -69,24 +56,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.checkMobileView();
   }
 
-  ngOnDestroy(): void {
-    this.scrollSubscription?.unsubscribe();
-    this.resizeSubscription?.unsubscribe();
-  }
-
   onSearch(event: Event): void {
     event.preventDefault();
-    if (this.searchQuery.trim()) {
-      console.log('Searching for:', this.searchQuery);
-      // Implement search logic here
-      // You might want to emit an event or call a service
-    }
-  }
+    if (!this.searchQuery.trim()) return;
 
-  onLogout(): void {
-    this.authService.logout();
-    this.toastr.success('تم تسجيل الخروج بنجاح');
-    this.router.navigate(['/auth/login']);
+    if (this.showMobileSearch) {
+      this.showMobileSearch = false;
+    }
+
+    this.router.navigate(['/search'], {
+      queryParams: { q: this.searchQuery.trim() }
+    });
+
+    this.searchQuery = '';
+    this.isSearchActive = false;
   }
 
   toggleMobileSearch(): void {
@@ -101,24 +84,52 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
+  onLogout(): void {
+    this.authService.logout();
+    this.toastr.success('تم تسجيل الخروج بنجاح');
+    this.router.navigate(['/auth/login']);
+  }
+
+  viewAllNotifications(): void {
+    this.notificationDropdown.close();
+    this.router.navigate(['/notifications']);
+  }
+
+  markAllAsRead(): void {
+    this.notificationService.markAllAsRead()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.toastr.success('تم تعليم جميع الإشعارات كمقروءة');
+          this.notificationDropdown.close();
+        },
+        error: (error) => {
+          console.error('Error marking notifications as read:', error);
+          this.toastr.error('حدث خطأ أثناء تحديث الإشعارات');
+        }
+      });
+  }
+
   private initializeScrollListener(): void {
-    this.scrollSubscription = fromEvent(window, 'scroll')
-      .pipe(debounceTime(10))
+    fromEvent(window, 'scroll')
+      .pipe(
+        debounceTime(10),
+        takeUntil(this.destroy$)
+      )
       .subscribe(() => {
-        const header = document.querySelector('.header');
-        if (header) {
-          if (window.scrollY > 0) {
-            header.classList.add('scrolled');
-          } else {
-            header.classList.remove('scrolled');
-          }
+        this.isScrolled = window.scrollY > 0;
+        if (this.headerElement) {
+          this.headerElement.nativeElement.classList.toggle('scrolled', this.isScrolled);
         }
       });
   }
 
   private initializeResizeListener(): void {
-    this.resizeSubscription = fromEvent(window, 'resize')
-      .pipe(debounceTime(100))
+    fromEvent(window, 'resize')
+      .pipe(
+        debounceTime(100),
+        takeUntil(this.destroy$)
+      )
       .subscribe(() => {
         this.checkMobileView();
       });
@@ -129,5 +140,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (isMobile && this.showMobileSearch) {
       this.showMobileSearch = false;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

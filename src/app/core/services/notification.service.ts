@@ -1,7 +1,7 @@
 // src/app/core/services/notification.service.ts
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, interval } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap, finalize } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { NOTIFICATION_ICONS, NOTIFICATION_POLL_INTERVAL } from '../constants/notification.constants';
 import { NotificationResponse, NotificationDTO, NotificationActionRequest, NotificationStatus } from '../models/notification.interface';
@@ -10,12 +10,14 @@ import { NotificationResponse, NotificationDTO, NotificationActionRequest, Notif
   providedIn: 'root'
 })
 export class NotificationService {
-  private readonly endpoint = 'api/notifications';
+  private readonly endpoint = 'notifications';
   private notificationsSubject = new BehaviorSubject<NotificationResponse[]>([]);
   private unreadCountSubject = new BehaviorSubject<number>(0);
+  private loadingSubject = new BehaviorSubject<boolean>(false);
 
   notifications$ = this.notificationsSubject.asObservable();
   unreadCount$ = this.unreadCountSubject.asObservable();
+  loading$ = this.loadingSubject.asObservable();
 
   constructor(private apiService: ApiService) {
     // Poll for notifications as fallback
@@ -25,22 +27,29 @@ export class NotificationService {
   }
 
   loadNotifications(): Observable<NotificationResponse[]> {
+    this.loadingSubject.next(true);
     return this.apiService.get<NotificationDTO[]>(this.endpoint)
       .pipe(
         map(notifications => notifications.map(n => this.formatNotification(n))),
         tap(notifications => {
           this.notificationsSubject.next(notifications);
           this.updateUnreadCount();
-        })
+        }),
+        finalize(() => this.loadingSubject.next(false))
       );
   }
 
   getArchivedNotifications(): Observable<NotificationResponse[]> {
+    this.loadingSubject.next(true);
     return this.apiService.get<NotificationDTO[]>(`${this.endpoint}/archived`)
-      .pipe(map(notifications => notifications.map(n => this.formatNotification(n))));
+      .pipe(
+        map(notifications => notifications.map(n => this.formatNotification(n))),
+        finalize(() => this.loadingSubject.next(false))
+      );
   }
 
   performAction(request: NotificationActionRequest): Observable<void> {
+    this.loadingSubject.next(true);
     return this.apiService.post<void>(`${this.endpoint}/action`, request)
       .pipe(
         tap(() => {
@@ -91,11 +100,13 @@ export class NotificationService {
 
           this.notificationsSubject.next(updated);
           this.updateUnreadCount();
-        })
+        }),
+        finalize(() => this.loadingSubject.next(false))
       );
   }
 
   markAllAsRead(): Observable<void> {
+    this.loadingSubject.next(true);
     return this.apiService.put<void>(`${this.endpoint}/read-all`, {})
       .pipe(
         tap(() => {
@@ -106,11 +117,13 @@ export class NotificationService {
           }));
           this.notificationsSubject.next(updated);
           this.updateUnreadCount();
-        })
+        }),
+        finalize(() => this.loadingSubject.next(false))
       );
   }
 
   archiveAll(): Observable<void> {
+    this.loadingSubject.next(true);
     return this.apiService.put<void>(`${this.endpoint}/archive-all`, {})
       .pipe(
         tap(() => {
@@ -121,17 +134,20 @@ export class NotificationService {
           }));
           this.notificationsSubject.next(updated);
           this.updateUnreadCount();
-        })
+        }),
+        finalize(() => this.loadingSubject.next(false))
       );
   }
 
   deleteAll(): Observable<void> {
+    this.loadingSubject.next(true);
     return this.apiService.delete<void>(`${this.endpoint}/delete-all`)
       .pipe(
         tap(() => {
           this.notificationsSubject.next([]);
           this.updateUnreadCount();
-        })
+        }),
+        finalize(() => this.loadingSubject.next(false))
       );
   }
 

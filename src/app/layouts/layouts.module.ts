@@ -6,7 +6,7 @@ import { MainLayoutModule } from './main-layout/main-layout.module';
 @NgModule({
   imports: [
     MainLayoutModule,
-    AuthLayoutModule
+    AuthLayoutModule,
   ],
   exports: [
     MainLayoutModule,

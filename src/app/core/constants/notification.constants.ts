@@ -25,4 +25,4 @@ export const NOTIFICATION_ICONS: NotificationIconMap = {
     }
 };
 
-export const NOTIFICATION_POLL_INTERVAL = 60000; // 1 minute in milliseconds
+export const NOTIFICATION_POLL_INTERVAL = 6000; // 1 minute in milliseconds

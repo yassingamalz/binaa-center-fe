@@ -9,6 +9,7 @@ import { MainLayoutComponent } from './main-layout.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
     RouterModule,
     NgbModule,
     NgbDropdownModule,
-    FormsModule
+    FormsModule,
+    SharedModule
   ],
   exports: [
     MainLayoutComponent

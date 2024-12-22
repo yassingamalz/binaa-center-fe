@@ -237,6 +237,17 @@ $end: left;
   }
 }
 
+@mixin skeleton-loading {
+  background: linear-gradient(
+    90deg,
+    $color-gray-200 25%,
+    $color-gray-300 37%,
+    $color-gray-200 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
 
 // Mobile-first container
 .container {

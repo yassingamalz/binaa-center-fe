@@ -1,0 +1,85 @@
+<div class="modal-content notification-detail">
+    <div class="modal-header">
+      <div class="header-content">
+        <span class="notification-type" [ngClass]="notification.type.toLowerCase()">
+          {{getTypeLabel(notification.type)}}
+        </span>
+        <h5 class="modal-title">{{notification.title}}</h5>
+      </div>
+      <button type="button" class="close" (click)="dismiss()">
+        <span>&times;</span>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="notification-content">
+        <!-- Icon and Message -->
+        <div class="content-header">
+          <div class="notification-icon">
+            <i [class]="notification.icon" [ngClass]="notification.iconClass"></i>
+          </div>
+          <p class="notification-message">{{notification.message}}</p>
+        </div>
+  
+        <!-- Metadata -->
+        <div class="notification-meta">
+          <div class="meta-item">
+            <i class="far fa-calendar"></i>
+            <span>تاريخ الإنشاء: {{getFormattedDate(notification.createdAt)}}</span>
+          </div>
+          
+          <div class="meta-item" *ngIf="notification.readAt">
+            <i class="far fa-check-circle"></i>
+            <span>تم القراءة في: {{getFormattedDate(notification.readAt)}}</span>
+          </div>
+          
+          <div class="meta-item" *ngIf="notification.archivedAt">
+            <i class="fas fa-archive"></i>
+            <span>تم الأرشفة في: {{getFormattedDate(notification.archivedAt)}}</span>
+          </div>
+        </div>
+  
+        <!-- Additional Data -->
+        <div class="notification-data" *ngIf="isDataObject()">
+          <h6>البيانات المرفقة</h6>
+          <pre><code>{{getJsonData()}}</code></pre>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <div class="action-buttons">
+        <!-- Primary Action Button -->
+        <button 
+          *ngIf="hasTargetRoute()"
+          type="button" 
+          class="btn btn-primary"
+          (click)="navigateToTarget()">
+          <i class="fas fa-external-link-alt"></i>
+          عرض التفاصيل
+        </button>
+  
+        <!-- Secondary Actions -->
+        <button 
+          type="button" 
+          class="btn btn-light"
+          [disabled]="notification.archived"
+          (click)="archiveNotification()">
+          <i class="fas fa-archive"></i>
+          أرشفة
+        </button>
+  
+        <button 
+          type="button" 
+          class="btn btn-light text-danger"
+          (click)="deleteNotification()">
+          <i class="fas fa-trash"></i>
+          حذف
+        </button>
+      </div>
+  
+      <button type="button" class="btn btn-secondary" (click)="close()">
+        إغلاق
+      </button>
+    </div>
+  </div>

@@ -1,0 +1,59 @@
+<div class="notification-list" [@fadeSlideIn]>
+  <ng-container *ngIf="notifications$ | async as notifications">
+    <ng-container *ngIf="notifications.length === 0; else notificationsList">
+      <div class="empty-state" [@fadeSlideIn]>
+        <div class="empty-icon">
+          <i class="far fa-bell"></i>
+        </div>
+        <h3>لا توجد إشعارات</h3>
+        <p>ستظهر هنا الإشعارات الجديدة عند وصولها</p>
+      </div>
+    </ng-container>
+
+    <ng-template #notificationsList>
+      <div class="notification-item-wrapper"
+           *ngFor="let notification of notifications; trackBy: trackByNotificationId">
+        <div class="notification-item" 
+             [class.unread]="notification.status === 'UNREAD'"
+             [@fadeSlideOut]
+             (click)="onNotificationClick(notification)">
+          
+          <div class="notification-icon" [ngClass]="notification.type.toLowerCase()">
+            <i class="fas fa-{{getTypeIcon(notification.type)}}"></i>
+          </div>
+
+          <div class="notification-content">
+            <div class="notification-header">
+              <h3>{{notification.title}}</h3>
+              <div class="notification-actions">
+                <button *ngIf="notification.status === 'UNREAD'"
+                        class="mark-read-btn"
+                        (click)="markAsRead(notification); $event.stopPropagation()"
+                        title="تعليم كمقروءة">
+                  <i class="fas fa-check"></i>
+                </button>
+                <button class="delete-btn"
+                        (click)="deleteNotification(notification); $event.stopPropagation()"
+                        title="حذف الإشعار">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+
+            <p class="notification-message">{{notification.message}}</p>
+
+            <div class="notification-meta">
+              <span class="time-ago">
+                <i class="far fa-clock"></i>
+                {{notification.timeAgo}}
+              </span>
+              <span class="type-badge" [ngClass]="notification.type.toLowerCase()">
+                {{getTypeLabel(notification.type)}}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>

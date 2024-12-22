@@ -1,5 +1,5 @@
 <!-- src/app/layout/components/header/header.component.html -->
-<nav class="header">
+<nav class="header" #header>
   <!-- Right/Start Section -->
   <div class="header-start">
     <button 
@@ -32,27 +32,26 @@
     <div class="notifications" ngbDropdown placement="bottom-end">
       <button class="icon-button" ngbDropdownToggle>
         <i class="fas fa-bell"></i>
-        <span class="badge" *ngIf="notificationCount > 0">{{notificationCount}}</span>
+        <ng-container *ngIf="unreadCount$ | async as unreadCount">
+          <span class="badge" *ngIf="unreadCount > 0">
+            {{unreadCount}}
+          </span>
+        </ng-container>
       </button>
       <div class="dropdown-menu notification-menu" ngbDropdownMenu>
         <div class="notification-header">
           <h6>الإشعارات</h6>
-          <button class="clear-all">تعليم كمقروءة</button>
+          <button class="clear-all" (click)="markAllAsRead()">
+            تعليم كمقروءة
+          </button>
         </div>
+        
         <div class="notification-list">
-          <div *ngFor="let notification of notifications" 
-               class="notification-item">
-            <div class="notification-icon">
-              <i [class]="notification.icon" [ngClass]="notification.iconClass"></i>
-            </div>
-            <div class="notification-content">
-              <p>{{notification.message}}</p>
-              <small>{{notification.time}}</small>
-            </div>
-          </div>
+          <app-notification-list></app-notification-list>
         </div>
+        
         <div class="notification-footer">
-          <button class="view-all">
+          <button class="view-all" (click)="viewAllNotifications()">
             عرض جميع الإشعارات
             <i class="fas fa-arrow-left"></i>
           </button>
