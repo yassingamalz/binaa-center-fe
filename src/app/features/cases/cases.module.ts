@@ -14,6 +14,7 @@ import { CaseService } from './services/case.service';
 import { CaseSessionsComponent } from './components/case-sessions/case-sessions.component';
 import { CaseAssessmentsComponent } from './components/case-assessments/case-assessments.component';
 import { CasePaymentsComponent } from './components/case-payments/case-payments.component';
+import { SharedModule } from '../../shared/shared.module';
 
 const routes: Routes = [
   {
@@ -44,7 +45,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     NgbModule,
-    NgbModalModule
+    NgbModalModule,
+    SharedModule
   ],
   providers: [
     CaseService
