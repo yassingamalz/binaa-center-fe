@@ -1,0 +1,226 @@
+// src/styles/_forms.scss
+@import 'main';
+
+// Form Grid System
+.row {
+  display: grid;
+  gap: $spacing-lg; // Increased gap between form groups
+  margin-bottom: $spacing-md;
+  
+  @media (min-width: $breakpoint-md) {
+    grid-template-columns: repeat(12, 1fr);
+    
+    .col-md-6 {
+      grid-column: span 6;
+      width: 100%;
+    }
+    
+    .col-md-12 {
+      grid-column: span 12;
+      width: 100%;
+    }
+  }
+}
+
+// Form Section Styling
+.form-section {
+  border-radius: $border-radius-sm;  
+  h5 {
+    color: $color-primary;
+    font-size: $font-size-lg;
+    margin-bottom: $spacing-lg;
+    padding-bottom: $spacing-sm;
+    border-bottom: 2px solid $color-gray-100;
+    font-weight: 600;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Form Group Container
+.form-group {
+  position: relative; // For error positioning
+  margin-bottom: $spacing-sm; // Increased bottom margin
+  
+  label {
+    display: block;
+    margin-bottom: $spacing-xs;
+    color: $color-gray-700;
+    font-weight: 500;
+    font-size: $font-size-base;
+  }
+
+  // Error message positioning
+  .invalid-feedback {
+    position: absolute;
+    top: 100%; // Position below the input
+    right: 0;
+    margin-top: $spacing-xs;
+    font-size: $font-size-sm;
+    color: $color-error;
+    animation: fadeIn 0.2s ease-out;
+  }
+}
+
+// Form Controls
+.form-control {
+  width: 100%;
+  padding: $spacing-sm $spacing-md;
+  border: 1px solid $color-gray-300;
+  border-radius: $border-radius-md;
+  font-family: $font-family-primary;
+  font-size: $font-size-base;
+  transition: $transition-base;
+  min-height: 44px; // Mobile touch target
+  text-align: right;
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
+  }
+
+  &.is-invalid {
+    border-color: $color-error;
+    padding-left: $spacing-xl; // Space for error icon
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23F44336' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'%3E%3C/circle%3E%3Cline x1='12' y1='8' x2='12' y2='12'%3E%3C/line%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'%3E%3C/line%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left $spacing-sm center;
+    background-size: $spacing-lg $spacing-lg;
+    
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($color-error, 0.1);
+    }
+  }
+
+  &::placeholder {
+    color: $color-gray-500;
+  }
+}
+
+// Textarea Specific Styles
+textarea.form-control {
+  min-height: 100px;
+  resize: vertical;
+  padding: $spacing-md;
+  
+  &.is-invalid {
+    background-position: left $spacing-sm top $spacing-sm;
+  }
+}
+
+// Modal Specific Styles
+.modal-content {
+  direction: rtl;
+}
+
+.modal-header {
+  border-bottom: 1px solid $color-gray-200;
+  padding: $spacing-md $spacing-lg;
+
+  .modal-title {
+    margin: 0;
+    font-size: $font-size-xl;
+    color: $color-gray-900;
+  }
+
+  .close {
+    padding: $spacing-sm;
+    margin: calc(-1 * #{$spacing-sm});
+    color: $color-gray-600;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    
+    &:hover {
+      color: $color-gray-900;
+    }
+  }
+}
+
+.modal-body {
+  padding: $spacing-lg;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  @include scrollable;
+}
+
+.modal-footer {
+  border-top: 1px solid $color-gray-200;
+  padding: $spacing-md $spacing-lg;
+  @include flex-between;
+  gap: $spacing-sm;
+
+  button {
+    @include button-base;
+    min-width: 120px;
+  }
+
+  .btn-secondary {
+    background: $color-gray-100;
+    color: $color-gray-700;
+    
+    &:hover {
+      background: $color-gray-200;
+    }
+  }
+
+  .btn-primary {
+    background: $color-primary;
+    color: $color-white;
+    
+    &:hover:not(:disabled) {
+      background: darken($color-primary, 5%);
+    }
+    
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Animation
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY($spacing-xs);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive Adjustments
+@media (max-width: $breakpoint-md) {
+  .modal-body {
+    padding: $spacing-md;
+  }
+  
+  .form-section {
+    padding: $spacing-md;
+    margin-bottom: $spacing-md;
+  }
+  
+  .form-group {
+    margin-bottom: $spacing-sm; // Keep good spacing on mobile
+  }
+  
+  .form-control {
+    padding: $spacing-md; // Larger touch target
+    font-size: 16px; // Prevent zoom on iOS
+  }
+  
+  // Stack footer buttons on mobile
+  .modal-footer {
+    flex-direction: column;
+    gap: $spacing-md;
+    
+    button {
+      width: 100%;
+    }
+  }
+}
