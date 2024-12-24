@@ -1,0 +1,18 @@
+// _badges.scss
+@mixin badge-base {
+    padding: $spacing-xs $spacing-sm;
+    background: rgba($color-primary, 0.1);
+    color: $color-primary;
+    border-radius: $border-radius-full;
+    font-size: $font-size-base;
+  }
+  
+  @mixin status-badge($color) {
+    @include badge-base;
+    background: rgba($color, 0.1);
+    color: $color;
+  }
+  
+  @mixin count-badge {
+    @include badge-base;
+  }

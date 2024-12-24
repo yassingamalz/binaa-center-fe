@@ -1,5 +1,6 @@
 <!-- src\app\features\appointments\components\appointment-list\appointment-list.component.html -->
 <div class="page-container">
+  <!-- Header -->
   <div class="content-header">
     <div class="header-title">
       <h1>المواعيد</h1>
@@ -20,7 +21,9 @@
     </div>
   </div>
 
+  <!-- Filters -->
   <div class="filters">
+    <!-- Search -->
     <div class="search">
       <div class="search-field">
         <input type="text" 
@@ -31,7 +34,8 @@
       </div>
     </div>
 
-    <div class="filter-group">
+    <!-- Filter Controls -->
+    <div class="filter-controls">
       <div class="date-filter">
         <label>التاريخ</label>
         <input type="date" 
@@ -51,32 +55,37 @@
     </div>
   </div>
 
+  <!-- Appointments List -->
   <div class="appointments-list" [class.loading]="isLoading">
     <!-- Shimmer Loading State -->
     <div *ngIf="isLoading" class="shimmer-list">
-      <div class="appointment-card" *ngFor="let i of [1,2,3,4,5]">
-        <div class="appointment-time shimmer">
-          <div class="shimmer-text time"></div>
-          <div class="shimmer-text date"></div>
+      <div class="appointment-card shimmer" *ngFor="let i of [1,2,3,4,5]">
+        <div class="appointment-time">
+          <div class="shimmer-content">
+            <div class="shimmer-item time"></div>
+            <div class="shimmer-item date"></div>
+          </div>
         </div>
+        
         <div class="appointment-info">
           <div class="appointment-header">
-            <div class="shimmer-text type"></div>
-            <div class="shimmer-text badge"></div>
+            <div class="shimmer-item type"></div>
+            <div class="shimmer-item badge"></div>
           </div>
           <div class="appointment-details">
-            <div class="shimmer-text"></div>
-            <div class="shimmer-text"></div>
+            <div class="shimmer-item person"></div>
+            <div class="shimmer-item person"></div>
           </div>
         </div>
+        
         <div class="appointment-actions">
-          <div class="shimmer-circle"></div>
-          <div class="shimmer-circle"></div>
+          <div class="shimmer-item circle"></div>
+          <div class="shimmer-item circle"></div>
         </div>
       </div>
     </div>
 
-    <!-- Actual Appointments -->
+    <!-- Appointments -->
     <div *ngIf="!isLoading && filteredAppointments.length > 0">
       <div class="appointment-card" 
            *ngFor="let appointment of filteredAppointments" 

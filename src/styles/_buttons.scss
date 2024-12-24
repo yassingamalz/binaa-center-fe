@@ -1,0 +1,56 @@
+@import 'main.scss';
+@mixin btn-primary {
+    @include button-base;
+    padding: $spacing-sm $spacing-lg;
+    gap: $spacing-sm;
+    height: 44px;
+    min-width: 140px;
+    box-shadow: $shadow-sm;
+    background: $color-primary;
+    color: $color-white;
+
+    &:hover {
+        background: darken($color-primary, 5%);
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: $breakpoint-sm) {
+        min-width: 44px;
+        padding: $spacing-xs;
+
+        span {
+            display: none;
+        }
+    }
+}
+
+@mixin btn-secondary {
+    @include button-base;
+    padding: $spacing-sm $spacing-lg;
+    gap: $spacing-sm;
+    height: 44px;
+    min-width: 140px;
+    box-shadow: $shadow-sm;
+    background: $color-white;
+    color: $color-gray-700;
+
+    &:hover {
+        background: $color-gray-100;
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: $breakpoint-sm) {
+        min-width: 44px;
+        padding: $spacing-xs;
+
+        span {
+            display: none;
+        }
+    }
+}

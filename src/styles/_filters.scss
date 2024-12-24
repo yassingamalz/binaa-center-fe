@@ -1,0 +1,139 @@
+// _filters.scss
+@import 'main';
+
+// Base filter container
+@mixin filters-container {
+  display: grid;
+  gap: $spacing-lg;
+  margin-bottom: $spacing-xl;
+  
+  @media (min-width: $breakpoint-md) {
+    grid-template-columns: minmax(250px, 400px) 1fr;
+    align-items: flex-start;
+  }
+}
+
+// Search field with icon
+@mixin search-field {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+
+  input {
+    @include input-base;
+    padding-left: $spacing-xl;
+    width: 100%;
+
+    &::placeholder {
+      color: $color-gray-400;
+    }
+  }
+
+  i {
+    position: absolute;
+    left: $spacing-sm;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $color-gray-400;
+    pointer-events: none;
+  }
+}
+
+// Filter controls wrapper
+@mixin filter-controls {
+  display: flex;
+  gap: $spacing-lg;
+  align-items: flex-end;
+  
+  @media (max-width: $breakpoint-md) {
+    flex-direction: column;
+    gap: $spacing-md;
+    width: 100%;
+  }
+}
+
+// Date filter
+@mixin date-filter {
+  width: 200px;
+  flex-shrink: 0;
+  
+  @media (max-width: $breakpoint-md) {
+    width: 100%;
+  }
+
+  label {
+    display: block;
+    margin-bottom: $spacing-xs;
+    color: $color-gray-700;
+    font-weight: 500;
+  }
+
+  input {
+    @include input-base;
+    width: 100%;
+  }
+}
+
+// Filter chips container
+@mixin filter-chips-container {
+  display: flex;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+  flex: 1;
+  
+  @media (max-width: $breakpoint-md) {
+    width: 100%;
+  }
+}
+
+// Individual filter chip
+@mixin filter-chip {
+  @include button-base;
+  background: $color-gray-100;
+  color: $color-gray-700;
+  padding: $spacing-xs $spacing-md;
+  height: 44px;
+  min-width: fit-content;
+  
+  &:hover {
+    background: $color-gray-200;
+  }
+  
+  &.active {
+    background: $color-primary;
+    color: $color-white;
+  }
+
+  @media (max-width: $breakpoint-md) {
+    flex: 1;
+  }
+}
+
+// RTL Support
+[dir="rtl"] {
+  .search-field {
+    i {
+      left: auto;
+      right: $spacing-sm;
+    }
+
+    input {
+      padding-left: $spacing-md;
+      padding-right: $spacing-xl;
+    }
+  }
+}
+
+// Print styles
+@media print {
+  .filters {
+    display: none !important;
+  }
+}
+
+// High contrast mode
+@media (forced-colors: active) {
+  .filter-chip {
+    border: 1px solid currentColor;
+  }
+}
