@@ -1,16 +1,19 @@
-
-// appointment-list.component.scss
+// src\app\features\appointments\components\appointment-list\appointment-list.component.scss
 @import 'styles/main';
+@import 'styles/_tables';
+@import 'styles/_buttons';
 
-.appointments-container {
+.page-container {
   padding: $spacing-lg;
+  background: $color-gray-100;
+  min-height: calc(100vh - #{$layout-header-height});
   
   @media (max-width: $breakpoint-md) {
     padding: $spacing-md;
   }
 }
 
-.page-header {
+.content-header {
   @include flex-between;
   margin-bottom: $spacing-lg;
 
@@ -21,81 +24,107 @@
     h1 {
       margin: 0;
       font-size: $font-size-2xl;
+      font-weight: 700;
+      color: $color-gray-900;
     }
 
-    .appointment-count {
-      font-size: $font-size-lg;
+    .badge {
+      padding: $spacing-xs $spacing-sm;
       background: rgba($color-primary, 0.1);
       color: $color-primary;
-      padding: $spacing-xs $spacing-sm;
       border-radius: $border-radius-full;
+      font-size: $font-size-base;
+      box-shadow: $shadow-sm;
     }
   }
 
-  .btn-primary {
-    @include button-base;
-    background: $color-primary;
-    color: $color-white;
-    gap: $spacing-sm;
-    
-    @media (max-width: $breakpoint-sm) {
-      span {
-        display: none;
-      }
-    }
+  .header-actions {
+    @include flex-center;
+    gap: $spacing-md;
+  }
+
+  .btn-primary{
+    @include btn-primary
+  }
+  .btn-secondary {
+    @include btn-secondary
   }
 }
 
-.filters-section {
-  @include flex-between;
-  gap: $spacing-md;
-  margin-bottom: $spacing-lg;
-  flex-wrap: wrap;
+.filters {
+  display: grid;
+  gap: $spacing-lg;
+  margin-bottom: $spacing-xl;
   
-  @media (max-width: $breakpoint-md) {
-    flex-direction: column;
+  @media (min-width: $breakpoint-md) {
+    grid-template-columns: 1fr auto;
+    align-items: start;
   }
 
-  .search-box {
-    position: relative;
-    flex: 1;
-    min-width: 250px;
-    
-    i {
-      position: absolute;
-      right: $spacing-sm;
-      top: 50%;
-      transform: translateY(-50%);
-      color: $color-gray-500;
-    }
-    
-    input {
-      @include input-base;
-      padding-right: $spacing-xl;
+  .search {
+    .search-field {
+      position: relative;
+      max-width: 400px;
+      
+      input {
+        @include input-base;
+        padding-right: $spacing-xl;
+        width: 100%;
+        
+        &::placeholder {
+          color: $color-gray-400;
+        }
+      }
+      
+      i {
+        position: absolute;
+        right: $spacing-sm;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $color-gray-400;
+        pointer-events: none;
+      }
     }
   }
 
-  .date-filter {
-    input {
-      @include input-base;
-      min-width: 200px;
-    }
-  }
-
-  .status-filter {
-    @include flex-center;
-    gap: $spacing-sm;
+  .filter-group {
+    display: flex;
+    gap: $spacing-lg;
     flex-wrap: wrap;
-    
-    .filter-btn {
-      @include button-base;
-      background: $color-gray-100;
-      color: $color-gray-700;
 
-      // appointment-list.component.scss (continued)
-      &.active {
-        background: $color-primary;
-        color: $color-white;
+    .date-filter {
+      label {
+        display: block;
+        margin-bottom: $spacing-xs;
+        color: $color-gray-700;
+        font-weight: 500;
+      }
+
+      input {
+        @include input-base;
+        min-width: 200px;
+      }
+    }
+
+    .filter-chips {
+      display: flex;
+      gap: $spacing-sm;
+      flex-wrap: wrap;
+
+      .filter-chip {
+        @include button-base;
+        background: $color-gray-100;
+        color: $color-gray-700;
+        padding: $spacing-xs $spacing-md;
+        box-shadow: $shadow-sm;
+        
+        &:hover {
+          background: $color-gray-200;
+        }
+        &.active {
+          background: $color-primary;
+          color: $color-white;
+        }
       }
     }
   }
@@ -103,7 +132,7 @@
 
 .appointments-list {
   display: grid;
-  gap: $spacing-md;
+ 
   
   &.loading {
     opacity: 0.7;
@@ -115,9 +144,31 @@
   @include card;
   display: grid;
   grid-template-columns: auto 1fr auto;
-  gap: $spacing-lg;
-  padding: $spacing-lg;
+  gap: $spacing-xl;
+  padding: $spacing-md;
+  margin-bottom: $spacing-md;
+  transition: $transition-base;
   
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  // Type-based colors
+  &.type-assessment {
+    border-right: 4px solid $color-primary;
+    .appointment-type { color: $color-primary; }
+  }
+  
+  &.type-therapy {
+    border-right: 4px solid $color-success;
+    .appointment-type { color: $color-success; }
+  }
+  
+  &.type-consultation {
+    border-right: 4px solid $color-warning;
+    .appointment-type { color: $color-warning; }
+  }
+
   @media (max-width: $breakpoint-md) {
     grid-template-columns: 1fr;
     gap: $spacing-md;
@@ -142,20 +193,20 @@
     
     .time {
       font-size: $font-size-xl;
-      font-weight: bold;
+      font-weight: 900;
       color: $color-primary;
     }
     
     .date {
-      font-size: $font-size-sm;
       color: $color-gray-600;
+      font-size: $font-size-sm;
     }
   }
 
   .appointment-info {
     @include flex-column;
     gap: $spacing-md;
-    min-width: 0; // For text truncation
+    min-width: 0;
 
     .appointment-header {
       @include flex-between;
@@ -163,29 +214,7 @@
       
       .appointment-type {
         font-size: $font-size-lg;
-        font-weight: bold;
-        color: $color-gray-900;
-      }
-      
-      .status-badge {
-        padding: $spacing-xs $spacing-sm;
-        border-radius: $border-radius-full;
-        font-size: $font-size-sm;
-        
-        &.scheduled {
-          background: rgba($color-primary, 0.1);
-          color: $color-primary;
-        }
-        
-        &.completed {
-          background: rgba($color-success, 0.1);
-          color: $color-success;
-        }
-        
-        &.cancelled {
-          background: rgba($color-error, 0.1);
-          color: $color-error;
-        }
+        font-weight: 600;
       }
     }
 
@@ -201,7 +230,7 @@
         color: $color-gray-700;
         
         i {
-          color: $color-gray-500;
+          color: $color-gray-900;
           font-size: $font-size-sm;
         }
       }
@@ -211,7 +240,6 @@
       font-size: $font-size-sm;
       color: $color-gray-600;
       line-height: 1.5;
-      margin-top: $spacing-sm;
     }
   }
 
@@ -227,9 +255,9 @@
       @include button-base;
       width: 36px;
       height: 36px;
+      min-height: 36px;
       padding: 0;
-      color: $color-gray-600;
-      background: $color-gray-100;
+      box-shadow: $shadow-sm;
       
       &:hover {
         color: $color-primary;
@@ -244,10 +272,57 @@
   }
 }
 
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $border-radius-full;
+  font-size: $font-size-sm;
+  font-weight: 500;
+  box-shadow: $shadow-sm;
+  
+  &.scheduled {
+    background: rgba($color-primary, 0.1);
+    color: $color-primary;
+  }
+  
+  &.completed {
+    background: rgba($color-success, 0.1);
+    color: $color-success;
+  }
+  
+  &.cancelled {
+    background: rgba($color-error, 0.1);
+    color: $color-error;
+  }
+}
+
+// Shimmer Effects
+.shimmer-list {
+  .shimmer-text {
+    height: 20px;
+    width: 100%;
+    background: $color-gray-200;
+    border-radius: $border-radius-sm;
+    
+    &.time { width: 60px; }
+    &.date { width: 80px; }
+    &.type { width: 100px; }
+    &.badge { width: 80px; }
+  }
+
+  .shimmer-circle {
+    width: 36px;
+    height: 36px;
+    background: $color-gray-200;
+    border-radius: 50%;
+  }
+}
+
+// Empty State
 .empty-state {
   @include flex-column;
   align-items: center;
-  justify-content: center;
   padding: $spacing-2xl;
   text-align: center;
   background: $color-white;
@@ -269,19 +344,27 @@
     @include button-base;
     background: $color-gray-100;
     color: $color-gray-700;
+    padding: $spacing-sm $spacing-lg;
+    box-shadow: $shadow-sm;
     
     &:hover {
       background: $color-gray-200;
+      transform: translateY(-2px);
     }
   }
 }
 
 // Print styles
 @media print {
-  .filters-section,
-  .appointment-actions,
-  .btn-primary {
+  .content-header button,
+  .filters,
+  .appointment-actions {
     display: none !important;
+  }
+
+  .page-container {
+    padding: 0;
+    background: none;
   }
 
   .appointment-card {
@@ -292,20 +375,83 @@
   }
 }
 
-// High contrast mode support
+// High contrast mode
 @media (forced-colors: active) {
-  .status-badge {
+  .status-badge,
+  .btn-icon,
+  .filter-chip {
     border: 1px solid currentColor;
   }
-  
+
   .appointment-card {
     border: 1px solid currentColor;
+  }
+
+  .shimmer-text,
+  .shimmer-circle {
+    border: 1px solid currentColor;
+  }
+}
+
+// RTL Support
+[dir="rtl"] {
+  .search-field {
+    i {
+      right: auto;
+      left: $spacing-sm;
+    }
+
+    input {
+      padding-right: $spacing-md;
+      padding-left: $spacing-xl;
+    }
+  }
+
+  .appointment-card {
+    border-right: none;
+    border-left: 4px solid transparent;
+
+    &.type-assessment { border-left-color: $color-primary; }
+    &.type-therapy { border-left-color: $color-success; }
+    &.type-consultation { border-left-color: $color-warning; }
   }
 }
 
 // Reduced motion
 @media (prefers-reduced-motion: reduce) {
-  .appointment-card {
+  .appointment-card,
+  .btn-icon,
+  .btn-primary,
+  .btn-secondary {
     transition: none;
+    &:hover { transform: none; }
+  }
+}
+
+// Shimmer Animation
+@keyframes shimmer {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+.shimmer-text,
+.shimmer-circle {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      transparent 100%
+    );
+    animation: shimmer 1.2s infinite;
   }
 }

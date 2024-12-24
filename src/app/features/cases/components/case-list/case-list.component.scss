@@ -1,12 +1,13 @@
 // src\app\features\cases\components\case-list\case-list.component.scss
 @import 'styles/main';
 @import 'styles/_tables';
+@import 'styles/_buttons';
 
 .page-container {
   padding: $spacing-lg;
   background: $color-gray-100;
   min-height: calc(100vh - #{$layout-header-height});
-  
+
   @media (max-width: $breakpoint-md) {
     padding: $spacing-md;
   }
@@ -39,30 +40,7 @@
   }
 
   .btn-primary {
-    @include button-base;
-    background: $color-primary;
-    color: $color-white;
-    padding: $spacing-sm $spacing-lg;
-    gap: $spacing-sm;
-    height: 44px;
-    min-width: 140px;
-    
-    &:hover {
-      background: darken($color-primary, 5%);
-    }
-
-    i {
-      font-size: $font-size-lg;
-    }
-
-    @media (max-width: $breakpoint-sm) {
-      min-width: 44px;
-      padding: $spacing-xs;
-      
-      span {
-        display: none;
-      }
-    }
+    @include btn-primary;
   }
 }
 
@@ -70,7 +48,7 @@
   display: grid;
   gap: $spacing-lg;
   margin-bottom: $spacing-xl;
-  
+
   @media (min-width: $breakpoint-md) {
     grid-template-columns: 1fr auto;
     align-items: center;
@@ -81,20 +59,20 @@
   form {
     max-width: 400px;
   }
-  
+
   .search-field {
     position: relative;
-    
+
     input {
       @include input-base;
       padding-left: $spacing-xl;
       width: 100%;
-      
+
       &::placeholder {
         color: $color-gray-400;
       }
     }
-    
+
     i {
       position: absolute;
       left: $spacing-sm;
@@ -110,7 +88,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: $spacing-sm;
-  
+
   @media (max-width: $breakpoint-md) {
     width: 100%;
     justify-content: stretch;
@@ -121,11 +99,11 @@
     background: $color-gray-100;
     color: $color-gray-700;
     padding: $spacing-xs $spacing-lg;
-    
+
     &:hover {
       background: $color-gray-200;
     }
-    
+
     &.active {
       background: $color-primary;
       color: $color-white;
@@ -157,12 +135,10 @@
         right: 0;
         width: 50%;
         height: 100%;
-        background: linear-gradient(
-          90deg,
-          transparent 0%,
-          rgba(255, 255, 255, 0.4) 50%,
-          transparent 100%
-        );
+        background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.4) 50%,
+            transparent 100%);
         animation: shimmerAnimation 1.2s infinite;
       }
     }
@@ -183,12 +159,10 @@
         right: 0;
         width: 50%;
         height: 100%;
-        background: linear-gradient(
-          90deg,
-          transparent 0%,
-          rgba(255, 255, 255, 0.4) 50%,
-          transparent 100%
-        );
+        background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.4) 50%,
+            transparent 100%);
         animation: shimmerAnimation 1.2s infinite;
       }
     }
@@ -213,12 +187,10 @@
           right: 0;
           width: 50%;
           height: 100%;
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.4) 50%,
-            transparent 100%
-          );
+          background: linear-gradient(90deg,
+              transparent 0%,
+              rgba(255, 255, 255, 0.4) 50%,
+              transparent 100%);
           animation: shimmerAnimation 1.2s infinite;
         }
       }
@@ -239,12 +211,12 @@
   border-radius: $border-radius-full;
   font-size: $font-size-sm;
   font-weight: 500;
-  
+
   &.active {
     background: rgba($color-success, 0.1);
     color: $color-success;
   }
-  
+
   &.inactive {
     background: rgba($color-gray-600, 0.1);
     color: $color-gray-600;
@@ -254,7 +226,7 @@
 .actions {
   @include flex-center;
   gap: $spacing-sm;
-  
+
   .btn-icon {
     @include button-base;
     width: 36px;
@@ -262,7 +234,7 @@
     min-height: 36px;
     padding: 0;
     background: transparent;
-    
+
     &:hover {
       color: $color-primary;
     }
@@ -275,18 +247,18 @@
     min-height: 36px;
     padding: 0;
     background: transparent;
-    
+
     &.active {
       color: $color-success;
-      
+
       &:hover {
         color: $color-gray-400;
       }
     }
-    
+
     &:not(.active) {
       color: $color-gray-400;
-      
+
       &:hover {
         color: $color-success;
       }
@@ -298,7 +270,7 @@
   @include flex-center;
   gap: $spacing-md;
   margin-top: $spacing-lg;
-  
+
   .btn-icon {
     @include button-base;
     width: 36px;
@@ -308,13 +280,13 @@
     background: $color-white;
     color: $color-gray-700;
     border: 1px solid $color-gray-200;
-    
+
     &:disabled {
       opacity: 0.5;
       cursor: not-allowed;
       background: $color-gray-100;
     }
-    
+
     &:not(:disabled):hover {
       background: $color-gray-100;
       color: $color-primary;
@@ -323,8 +295,10 @@
 }
 
 @keyframes shimmerAnimation {
-  0% {transform: translateX(100%);
+  0% {
+    transform: translateX(100%);
   }
+
   100% {
     transform: translateX(-100%);
   }
@@ -356,7 +330,7 @@
     background: $color-gray-100;
     color: $color-gray-700;
     padding: $spacing-sm $spacing-lg;
-    
+
     &:hover {
       background: $color-gray-200;
     }
@@ -368,17 +342,17 @@
   background: $color-white;
   border-radius: $border-radius-lg;
   box-shadow: $shadow-sm;
-  
+
   thead {
     background: $color-gray-100;
-    
+
     th {
       padding: $spacing-md;
       font-weight: 600;
       color: $color-gray-700;
       text-align: right;
       white-space: nowrap;
-      
+
       &.cell-center {
         text-align: center;
       }
@@ -392,11 +366,11 @@
       transition: $transition-base;
 
       &:hover:not(.shimmer-row) {
-        background: $color-gray-100;
+        background: rgba($color-secondary, 0.1);
       }
 
       &.inactive:not(.shimmer-row) {
-        background: rgba($color-gray-100, 0.5);
+        background: rgba($color-gray-300, 0.5);
         color: $color-gray-600;
       }
 
@@ -407,7 +381,7 @@
       td {
         padding: $spacing-md;
         vertical-align: middle;
-        
+
         &.cell-center {
           text-align: center;
         }
@@ -418,6 +392,7 @@
 
 // Print styles
 @media print {
+
   .content-header button,
   .filters,
   .actions,
@@ -451,7 +426,7 @@
     border: 1px solid currentColor;
   }
 
-  .shimmer-row td > div {
+  .shimmer-row td>div {
     border: 1px solid currentColor;
   }
 }
@@ -473,7 +448,7 @@
 
 // Reduced motion
 @media (prefers-reduced-motion: reduce) {
-  .shimmer-row td > div::after {
+  .shimmer-row td>div::after {
     animation: none;
   }
 }

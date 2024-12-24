@@ -50,7 +50,7 @@ export class AppointmentCalendarComponent implements OnInit, OnDestroy {
       this.selectedDate.day
     );
 
-    this.appointmentService.getAppointmentsByDateTime(date)
+    this.appointmentService.getAllAppointments()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (appointments) => {
@@ -186,8 +186,15 @@ export class AppointmentCalendarComponent implements OnInit, OnDestroy {
   }
 
   nextMonth(): void {
-    const next = this.calendar.getNext(this.selectedDate);
-    this.selectedDate = new NgbDate(next.year, next.month, 1);
+    let newYear = this.selectedDate.year;
+    let newMonth = this.selectedDate.month + 1;
+    
+    if (newMonth > 12) {
+      newYear++;
+      newMonth = 1;
+    }
+  
+    this.selectedDate = new NgbDate(newYear, newMonth, 1);
     this.loadAppointments();
   }
 

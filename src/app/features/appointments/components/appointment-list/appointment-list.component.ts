@@ -210,6 +210,10 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
   getStatusClass(status: AppointmentStatus): string {
     return status.toLowerCase();
   }
+  
+  goToCalendar(): void {
+    this.router.navigate(['/appointments/calendar']);
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
