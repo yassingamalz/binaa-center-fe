@@ -1,6 +1,5 @@
 <!-- src\app\features\cases\components\case-list\case-list.component.html -->
 <div class="page-container">
-  <!-- Header -->
   <div class="content-header">
     <div class="header-title">
       <h1>قائمة الحالات</h1>
@@ -11,8 +10,7 @@
       <span>إضافة حالة</span>
     </button>
   </div>
- 
-  <!-- Filters -->
+
   <div class="filters">
     <div class="search">
       <form [formGroup]="searchForm">
@@ -25,7 +23,7 @@
         </div>
       </form>
     </div>
- 
+
     <div class="filter-chips" role="group" aria-label="فلترة الحالة">
       <button class="filter-chip" 
               [class.active]="statusFilter === 'all'"
@@ -44,10 +42,9 @@
       </button>
     </div>
   </div>
- 
-  <!-- Table -->
-  <div class="table-wrapper" [appShimmer]="isLoading">
-    <table class="responsive-table" *ngIf="filteredCases.length > 0">
+
+  <div class="table-wrapper">
+    <table class="responsive-table">
       <thead>
         <tr>
           <th scope="col">الاسم</th>
@@ -58,7 +55,22 @@
           <th scope="col" class="cell-center">الإجراءات</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody *ngIf="isLoading">
+        <tr *ngFor="let i of [1,2,3,4,5]" class="shimmer-row">
+          <td><div class="shimmer-text"></div></td>
+          <td><div class="shimmer-text"></div></td>
+          <td><div class="shimmer-text"></div></td>
+          <td><div class="shimmer-text"></div></td>
+          <td class="cell-center"><div class="shimmer-badge"></div></td>
+          <td class="cell-center">
+            <div class="shimmer-actions">
+              <div class="shimmer-circle"></div>
+              <div class="shimmer-circle"></div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="!isLoading && filteredCases.length > 0">
         <tr *ngFor="let case of filteredCases" 
             (click)="viewCaseDetails(case.caseId)"
             [class.inactive]="case.status === CaseStatus.INACTIVE">
@@ -102,7 +114,7 @@
         </tr>
       </tbody>
     </table>
- 
+
     <div class="empty-state" *ngIf="!isLoading && filteredCases.length === 0">
       <i class="fas fa-folder-open"></i>
       <p>لا توجد حالات مطابقة للبحث</p>
@@ -111,8 +123,7 @@
       </button>
     </div>
   </div>
- 
-  <!-- Pagination -->
+
   <div class="pagination" *ngIf="totalCases > pageSize" role="navigation">
     <button class="btn-icon"
             [disabled]="currentPage === 1"
@@ -128,4 +139,4 @@
       <i class="fas fa-chevron-left"></i>
     </button>
   </div>
- </div>
+</div>

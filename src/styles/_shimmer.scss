@@ -1,0 +1,87 @@
+// shared/styles/_shimmer.scss
+@import 'main.scss';
+
+.shimmer-effect {
+  overflow: hidden !important;
+
+  .shimmer-overlay {
+    position: absolute;
+    inset: 0;
+    background: $color-gray-100;
+    z-index: 1;
+  }
+
+  .shimmer-animation {
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      transparent 100%
+    );
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: shimmer 1.2s infinite linear;
+    transform: skewX(-10deg);
+  }
+
+  * {
+    visibility: hidden;
+  }
+
+  .shimmer-overlay,
+  .shimmer-animation {
+    visibility: visible;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) skewX(-10deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-10deg);
+  }
+}
+
+// Shimmer variants for different elements
+.shimmer-text {
+  height: 1em;
+  background: $color-gray-200;
+  border-radius: $border-radius-sm;
+  margin: $spacing-xs 0;
+}
+
+.shimmer-image {
+  aspect-ratio: 16/9;
+  background: $color-gray-200;
+  border-radius: $border-radius-md;
+}
+
+.shimmer-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: $color-gray-200;
+}
+
+// Table specific shimmer styles
+.table {
+  tr.shimmer-effect {
+    td {
+      position: relative;
+      padding: $spacing-md;
+      border-color: $color-gray-200;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        inset: $spacing-sm;
+        background: $color-gray-100;
+        border-radius: $border-radius-sm;
+      }
+    }
+  }
+}

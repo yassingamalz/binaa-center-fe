@@ -237,17 +237,6 @@ $end: left;
   }
 }
 
-@mixin skeleton-loading {
-  background: linear-gradient(
-    90deg,
-    $color-gray-200 25%,
-    $color-gray-300 37%,
-    $color-gray-200 63%
-  );
-  background-size: 400% 100%;
-  animation: shimmer 1.4s ease infinite;
-}
-
 
 // Mobile-first container
 .container {
@@ -328,16 +317,6 @@ $end: left;
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -1000px 0;
-  }
-
-  100% {
-    background-position: 1000px 0;
-  }
-}
-
 // Animation Classes
 .fade-in {
   animation: fadeIn 0.3s ease-in-out;
@@ -345,13 +324,6 @@ $end: left;
 
 .slide-up {
   animation: slideUp 0.4s ease-out;
-}
-
-// Loading State
-.skeleton {
-  background: linear-gradient(90deg, $color-gray-200 25%, $color-gray-300 50%, $color-gray-200 75%);
-  background-size: 1000px 100%;
-  animation: shimmer 2s infinite;
 }
 
 // Global Styles
@@ -429,38 +401,5 @@ a {
 
   .no-print {
     display: none !important;
-  }
-
-  // shimmer
-  .shimmer-effect {
-    position: relative;
-    background: $color-gray-200;
-    color: transparent !important;
-    border-color: transparent !important;
-    cursor: wait;
-    pointer-events: none;
-    overflow: hidden;
-
-    &::after {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      transform: translateX(-100%);
-      background-image: linear-gradient(90deg,
-          rgba($color-white, 0) 0,
-          rgba($color-white, 0.2) 20%,
-          rgba($color-white, 0.5) 60%,
-          rgba($color-white, 0));
-      animation: shimmer 2s infinite;
-      content: '';
-    }
-  }
-
-  @keyframes shimmer {
-    100% {
-      transform: translateX(100%);
-    }
   }
 }

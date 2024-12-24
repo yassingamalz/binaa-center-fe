@@ -40,15 +40,12 @@
   &.skeleton {
     pointer-events: none;
     
-    .notification-icon {
-      @include skeleton-loading;
-    }
+   
     
     .skeleton-line {
       height: 16px;
       border-radius: $border-radius-sm;
       margin-bottom: $spacing-sm;
-      @include skeleton-loading;
       
       &.short {
         width: 60%;

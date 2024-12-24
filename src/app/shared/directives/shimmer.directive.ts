@@ -7,20 +7,17 @@ import { Directive, ElementRef, Input, OnChanges, Renderer2 } from '@angular/cor
 export class ShimmerDirective implements OnChanges {
   @Input('appShimmer') isLoading = false;
 
-  private originalStyles: { [key: string]: string } = {};
   private shimmerClass = 'shimmer-effect';
+  private originalPosition: string;
+  private originalBackground: string;
 
   constructor(
     private el: ElementRef,
     private renderer: Renderer2
   ) {
     // Store original styles
-    const element = this.el.nativeElement;
-    this.originalStyles = {
-      backgroundColor: element.style.backgroundColor,
-      color: element.style.color,
-      borderColor: element.style.borderColor
-    };
+    this.originalPosition = this.el.nativeElement.style.position;
+    this.originalBackground = this.el.nativeElement.style.background;
   }
 
   ngOnChanges(): void {
@@ -32,18 +29,30 @@ export class ShimmerDirective implements OnChanges {
   }
 
   private addShimmerEffect(): void {
-    const element = this.el.nativeElement;
-    this.renderer.addClass(element, this.shimmerClass);
+    this.renderer.addClass(this.el.nativeElement, this.shimmerClass);
+    this.renderer.setStyle(this.el.nativeElement, 'position', 'relative');
+
+    // Create shimmer overlay
+    const overlay = this.renderer.createElement('div');
+    this.renderer.addClass(overlay, 'shimmer-overlay');
+    this.renderer.appendChild(this.el.nativeElement, overlay);
+
+    // Create shimmer animation element
+    const shimmer = this.renderer.createElement('div');
+    this.renderer.addClass(shimmer, 'shimmer-animation');
+    this.renderer.appendChild(overlay, shimmer);
   }
 
   private removeShimmerEffect(): void {
-    const element = this.el.nativeElement;
-    this.renderer.removeClass(element, this.shimmerClass);
-    
-    // Restore original styles
-    Object.entries(this.originalStyles).forEach(([property, value]) => {
-      this.renderer.setStyle(element, property, value);
-    });
+    // Remove all shimmer related elements and classes
+    this.renderer.removeClass(this.el.nativeElement, this.shimmerClass);
+    this.renderer.setStyle(this.el.nativeElement, 'position', this.originalPosition || null);
+    this.renderer.setStyle(this.el.nativeElement, 'background', this.originalBackground || null);
+
+    // Remove overlay
+    const overlay = this.el.nativeElement.querySelector('.shimmer-overlay');
+    if (overlay) {
+      this.renderer.removeChild(this.el.nativeElement, overlay);
+    }
   }
 }
-

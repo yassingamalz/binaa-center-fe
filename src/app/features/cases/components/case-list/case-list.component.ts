@@ -2,7 +2,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, finalize, takeUntil } from 'rxjs';
 import { CaseService } from '../../services/case.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -63,21 +63,27 @@ export class CaseListComponent implements OnInit, OnDestroy {
 
   loadCases(): void {
     this.isLoading = true;
+    
     this.caseService.getAllCases()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => {
+          setTimeout(() => {
+            this.isLoading = false;
+          }, 800)
+        })
+      )
       .subscribe({
         next: (cases) => {
           this.cases = cases;
           this.filterCases();
-          this.isLoading = false;
         },
         error: (error) => {
           console.error('Error loading cases:', error);
           this.toastr.error('حدث خطأ أثناء تحميل الحالات');
-          this.isLoading = false;
         }
       });
-  }
+   }
 
   filterCases(): void {
     let filtered = [...this.cases];

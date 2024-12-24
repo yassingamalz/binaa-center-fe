@@ -3,31 +3,31 @@
 @import 'styles/_tables';
 
 .page-container {
- padding: $spacing-lg;
- background: $color-gray-100;
- min-height: calc(100vh - #{$layout-header-height});
- 
- @media (max-width: $breakpoint-md) {
-   padding: $spacing-md;
- }
+  padding: $spacing-lg;
+  background: $color-gray-100;
+  min-height: calc(100vh - #{$layout-header-height});
+  
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-md;
+  }
 }
 
 .content-header {
   @include flex-between;
   margin-bottom: $spacing-lg;
   align-items: center;
- 
+
   .header-title {
     @include flex-center;
     gap: $spacing-sm;
- 
+
     h1 {
       margin: 0;
       font-size: $font-size-2xl;
       font-weight: 700;
       color: $color-gray-900;
     }
- 
+
     .badge {
       padding: $spacing-xs $spacing-sm;
       background: rgba($color-primary, 0.1);
@@ -35,13 +35,9 @@
       border-radius: $border-radius-full;
       font-size: $font-size-base;
       transition: $transition-base;
- 
-      &.shimmer-effect {
-        animation: badgeShimmer 1.2s infinite;
-      }
     }
   }
- 
+
   .btn-primary {
     @include button-base;
     background: $color-primary;
@@ -54,11 +50,11 @@
     &:hover {
       background: darken($color-primary, 5%);
     }
- 
+
     i {
       font-size: $font-size-lg;
     }
- 
+
     @media (max-width: $breakpoint-sm) {
       min-width: 44px;
       padding: $spacing-xs;
@@ -68,191 +64,416 @@
       }
     }
   }
- }
+}
 
 .filters {
- display: grid;
- gap: $spacing-lg;
- margin-bottom: $spacing-xl;
- 
- @media (min-width: $breakpoint-md) {
-   grid-template-columns: 1fr auto;
-   align-items: center;
- }
+  display: grid;
+  gap: $spacing-lg;
+  margin-bottom: $spacing-xl;
+  
+  @media (min-width: $breakpoint-md) {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
 }
 
 .search {
- form {
-   max-width: 400px;
- }
- 
- .search-field {
-   position: relative;
-   
-   input {
-     @include input-base;
-     padding-left: $spacing-xl;
-     width: 100%;
-     
-     &::placeholder {
-       color: $color-gray-400;
-     }
-   }
-   
-   i {
-     position: absolute;
-     left: $spacing-sm;
-     top: 50%;
-     transform: translateY(-50%);
-     color: $color-gray-400;
-     pointer-events: none;
-   }
- }
+  form {
+    max-width: 400px;
+  }
+  
+  .search-field {
+    position: relative;
+    
+    input {
+      @include input-base;
+      padding-left: $spacing-xl;
+      width: 100%;
+      
+      &::placeholder {
+        color: $color-gray-400;
+      }
+    }
+    
+    i {
+      position: absolute;
+      left: $spacing-sm;
+      top: 50%;
+      transform: translateY(-50%);
+      color: $color-gray-400;
+      pointer-events: none;
+    }
+  }
 }
 
 .filter-chips {
- display: flex;
- flex-wrap: wrap;
- gap: $spacing-sm;
- 
- @media (max-width: $breakpoint-md) {
-   width: 100%;
-   justify-content: stretch;
- }
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  
+  @media (max-width: $breakpoint-md) {
+    width: 100%;
+    justify-content: stretch;
+  }
 
- .filter-chip {
-   @include button-base;
-   background: $color-gray-100;
-   color: $color-gray-700;
-   padding: $spacing-xs $spacing-lg;
-   
-   &:hover {
-     background: $color-gray-200;
-   }
-   
-   &.active {
-     background: $color-primary;
-     color: $color-white;
-   }
+  .filter-chip {
+    @include button-base;
+    background: $color-gray-100;
+    color: $color-gray-700;
+    padding: $spacing-xs $spacing-lg;
+    
+    &:hover {
+      background: $color-gray-200;
+    }
+    
+    &.active {
+      background: $color-primary;
+      color: $color-white;
+    }
 
-   @media (max-width: $breakpoint-md) {
-     flex: 1;
-   }
- }
+    @media (max-width: $breakpoint-md) {
+      flex: 1;
+    }
+  }
+}
+
+.shimmer-row {
+  td {
+    padding: $spacing-md;
+    background: none !important;
+
+    .shimmer-text {
+      height: 20px;
+      width: 100%;
+      background: $color-gray-200;
+      border-radius: $border-radius-sm;
+      position: relative;
+      overflow: hidden;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.4) 50%,
+          transparent 100%
+        );
+        animation: shimmerAnimation 1.2s infinite;
+      }
+    }
+
+    .shimmer-badge {
+      width: 60px;
+      height: 24px;
+      background: $color-gray-200;
+      border-radius: $border-radius-full;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.4) 50%,
+          transparent 100%
+        );
+        animation: shimmerAnimation 1.2s infinite;
+      }
+    }
+
+    .shimmer-actions {
+      display: flex;
+      justify-content: center;
+      gap: $spacing-sm;
+
+      .shimmer-circle {
+        width: 36px;
+        height: 36px;
+        background: $color-gray-200;
+        border-radius: 50%;
+        position: relative;
+        overflow: hidden;
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 50%;
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.4) 50%,
+            transparent 100%
+          );
+          animation: shimmerAnimation 1.2s infinite;
+        }
+      }
+    }
+  }
 }
 
 .name-cell {
- display: flex;
- align-items: center;
- gap: $spacing-sm;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
 }
 
 .status-badge {
- display: inline-flex;
- align-items: center;
- padding: $spacing-xs $spacing-sm;
- border-radius: $border-radius-full;
- font-size: $font-size-sm;
- font-weight: 500;
- 
- &.active {
-   background: rgba($color-success, 0.1);
-   color: $color-success;
- }
- 
- &.inactive {
-   background: rgba($color-gray-600, 0.1);
-   color: $color-gray-600;
- }
+  display: inline-flex;
+  align-items: center;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $border-radius-full;
+  font-size: $font-size-sm;
+  font-weight: 500;
+  
+  &.active {
+    background: rgba($color-success, 0.1);
+    color: $color-success;
+  }
+  
+  &.inactive {
+    background: rgba($color-gray-600, 0.1);
+    color: $color-gray-600;
+  }
 }
 
 .actions {
- @include flex-center;
- gap: $spacing-sm;
- 
- .btn-icon {
-   @include button-base;
-   width: 36px;
-   height: 36px;
-   min-height: 36px;
-   padding: 0;
-   background: transparent;
-   
-   &:hover {
-     color: $color-primary;
-   }
- }
+  @include flex-center;
+  gap: $spacing-sm;
+  
+  .btn-icon {
+    @include button-base;
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0;
+    background: transparent;
+    
+    &:hover {
+      color: $color-primary;
+    }
+  }
 
- .btn-toggle {
-   @include button-base;
-   width: 36px;
-   height: 36px;
-   min-height: 36px;
-   padding: 0;
-   background: transparent;
-   
-   &.active {
-     color: $color-success;
-     
-     &:hover {
-       color: $color-gray-400;
-     }
-   }
-   
-   &:not(.active) {
-     color: $color-gray-400;
-     
-     &:hover {
-       color: $color-success;
-     }
-   }
- }
+  .btn-toggle {
+    @include button-base;
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0;
+    background: transparent;
+    
+    &.active {
+      color: $color-success;
+      
+      &:hover {
+        color: $color-gray-400;
+      }
+    }
+    
+    &:not(.active) {
+      color: $color-gray-400;
+      
+      &:hover {
+        color: $color-success;
+      }
+    }
+  }
 }
 
 .pagination {
- @include flex-center;
- gap: $spacing-md;
- margin-top: $spacing-lg;
- 
- .btn-icon {
-   @include button-base;
-   width: 36px;
-   height: 36px;
-   min-height: 36px;
-   padding: 0;
-   background: $color-white;
-   color: $color-gray-700;
-   border: 1px solid $color-gray-200;
-   
-   &:disabled {
-     opacity: 0.5;
-     cursor: not-allowed;
-     background: $color-gray-100;
-   }
-   
-   &:not(:disabled):hover {
-     background: $color-gray-100;
-     color: $color-primary;
-   }
- }
- 
- .page-info {
-   color: $color-gray-600;
-   font-size: $font-size-sm;
- }
+  @include flex-center;
+  gap: $spacing-md;
+  margin-top: $spacing-lg;
+  
+  .btn-icon {
+    @include button-base;
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0;
+    background: $color-white;
+    color: $color-gray-700;
+    border: 1px solid $color-gray-200;
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: $color-gray-100;
+    }
+    
+    &:not(:disabled):hover {
+      background: $color-gray-100;
+      color: $color-primary;
+    }
+  }
 }
 
-@keyframes badgeShimmer {
- 0% { opacity: 0.5; }
- 50% { opacity: 1; }
- 100% { opacity: 0.5; }
+@keyframes shimmerAnimation {
+  0% {transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
+.empty-state {
+  @include flex-column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-2xl;
+  text-align: center;
+  background: $color-white;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-sm;
+
+  i {
+    font-size: $font-size-4xl;
+    color: $color-gray-400;
+    margin-bottom: $spacing-lg;
+  }
+
+  p {
+    margin-bottom: $spacing-lg;
+    color: $color-gray-600;
+  }
+
+  .btn-secondary {
+    @include button-base;
+    background: $color-gray-100;
+    color: $color-gray-700;
+    padding: $spacing-sm $spacing-lg;
+    
+    &:hover {
+      background: $color-gray-200;
+    }
+  }
+}
+
+.responsive-table {
+  width: 100%;
+  background: $color-white;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-sm;
+  
+  thead {
+    background: $color-gray-100;
+    
+    th {
+      padding: $spacing-md;
+      font-weight: 600;
+      color: $color-gray-700;
+      text-align: right;
+      white-space: nowrap;
+      
+      &.cell-center {
+        text-align: center;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid $color-gray-200;
+      cursor: pointer;
+      transition: $transition-base;
+
+      &:hover:not(.shimmer-row) {
+        background: $color-gray-100;
+      }
+
+      &.inactive:not(.shimmer-row) {
+        background: rgba($color-gray-100, 0.5);
+        color: $color-gray-600;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      td {
+        padding: $spacing-md;
+        vertical-align: middle;
+        
+        &.cell-center {
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+// Print styles
 @media print {
- .content-header button,
- .filters,
- .actions,
- .pagination {
-   display: none;
- }
+  .content-header button,
+  .filters,
+  .actions,
+  .pagination {
+    display: none;
+  }
+
+  .page-container {
+    padding: 0;
+    background: none;
+  }
+
+  .responsive-table {
+    box-shadow: none;
+    border: 1px solid $color-gray-200;
+  }
+
+  tbody tr {
+    break-inside: avoid;
+  }
+}
+
+// High contrast mode
+@media (forced-colors: active) {
+  .status-badge {
+    border: 1px solid currentColor;
+  }
+
+  .btn-icon,
+  .btn-toggle {
+    border: 1px solid currentColor;
+  }
+
+  .shimmer-row td > div {
+    border: 1px solid currentColor;
+  }
+}
+
+// RTL Support
+[dir="rtl"] {
+  .search-field {
+    i {
+      left: auto;
+      right: $spacing-sm;
+    }
+
+    input {
+      padding-left: $spacing-md;
+      padding-right: $spacing-xl;
+    }
+  }
+}
+
+// Reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .shimmer-row td > div::after {
+    animation: none;
+  }
 }
