@@ -210,6 +210,37 @@ export class AssessmentListComponent implements OnInit, OnDestroy {
     return statusOption?.label || '';
   }
 
+  
+getTypeIcon(type: AssessmentType | 'all'): string {
+  switch (type) {
+    case 'all':
+      return 'fas fa-layer-group';
+    case AssessmentType.IQ:
+      return 'fas fa-brain';
+    case AssessmentType.PSYCHOLOGICAL:
+      return 'fas fa-heart';
+    case AssessmentType.LEARNING_DIFFICULTIES:
+      return 'fas fa-book-reader';
+    default:
+      return 'fas fa-clipboard-check';
+  }
+}
+
+getStatusIcon(status: AssessmentStatus | 'all'): string {
+  switch (status) {
+    case 'all':
+      return 'fas fa-list';
+    case AssessmentStatus.COMPLETED:
+      return 'fas fa-check-circle';
+    case AssessmentStatus.PENDING:
+      return 'fas fa-clock';
+    case AssessmentStatus.SCHEDULED:
+      return 'fas fa-calendar-alt';
+    default:
+      return 'fas fa-info-circle';
+  }
+}
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
