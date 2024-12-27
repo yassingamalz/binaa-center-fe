@@ -1,44 +1,74 @@
-
 <!-- src/app/features/reports/components/financial-reports/financial-reports.component.html -->
 <div class="financial-reports-container" [class.loading]="isLoading">
   <!-- Filters Section -->
   <div class="filters-section">
     <form [formGroup]="filtersForm">
       <div class="filters-grid">
+        <!-- Date Range -->
         <div class="date-range">
           <div class="form-group">
-            <label>من تاريخ</label>
-            <input type="date" class="form-control" formControlName="startDate">
+            <label for="startDate">
+              <i class="far fa-calendar-alt"></i>
+              من تاريخ
+            </label>
+            <input 
+              id="startDate"
+              type="date" 
+              class="form-control" 
+              formControlName="startDate">
           </div>
           <div class="form-group">
-            <label>إلى تاريخ</label>
-            <input type="date" class="form-control" formControlName="endDate">
+            <label for="endDate">
+              <i class="far fa-calendar-alt"></i>
+              إلى تاريخ
+            </label>
+            <input 
+              id="endDate"
+              type="date" 
+              class="form-control" 
+              formControlName="endDate">
           </div>
         </div>
 
+        <!-- Payment Method -->
         <div class="form-group">
-          <label>طريقة الدفع</label>
-          <select class="form-control" formControlName="paymentMethod">
-            <option value="all">الكل</option>
+          <label for="paymentMethod">
+            <i class="fas fa-money-bill-wave"></i>
+            طريقة الدفع
+          </label>
+          <select 
+            id="paymentMethod"
+            class="form-control" 
+            formControlName="paymentMethod">
+            <option value="all">جميع طرق الدفع</option>
             <option value="cash">نقدي</option>
             <option value="card">بطاقة</option>
             <option value="transfer">تحويل بنكي</option>
           </select>
         </div>
 
+        <!-- Category -->
         <div class="form-group">
-          <label>التصنيف</label>
-          <select class="form-control" formControlName="category">
-            <option value="all">الكل</option>
+          <label for="category">
+            <i class="fas fa-tag"></i>
+            التصنيف
+          </label>
+          <select 
+            id="category"
+            class="form-control" 
+            formControlName="category">
+            <option value="all">جميع التصنيفات</option>
             <option value="sessions">جلسات</option>
             <option value="assessments">تقييمات</option>
             <option value="packages">باقات</option>
           </select>
         </div>
 
+        <!-- Quick Range Selection -->
         <div class="quick-ranges">
           <button 
             *ngFor="let range of dateRanges"
+            type="button"
             class="btn-filter"
             [class.active]="dateRange === range.value"
             (click)="changeDateRange(range.value)">
@@ -47,9 +77,15 @@
         </div>
       </div>
 
+      <!-- Show Void Transactions -->
       <div class="form-check">
-        <input type="checkbox" class="form-check-input" formControlName="showVoid" id="showVoid">
+        <input 
+          type="checkbox" 
+          id="showVoid"
+          class="form-check-input" 
+          formControlName="showVoid">
         <label class="form-check-label" for="showVoid">
+          <i class="fas fa-ban"></i>
           إظهار المعاملات الملغاة
         </label>
       </div>
@@ -60,9 +96,11 @@
   <div class="report-tabs">
     <button 
       *ngFor="let type of reportTypes"
+      type="button"
       class="tab-btn" 
       [class.active]="activeReport === type.value"
-      (click)="switchReport(type.value)">
+      (click)="switchReport(type.value)"
+      [attr.aria-pressed]="activeReport === type.value">
       <i [class]="type.icon"></i>
       <span>{{type.label}}</span>
     </button>
@@ -70,29 +108,40 @@
 
   <!-- Report Content -->
   <div class="report-content">
+    <!-- Actions Bar -->
     <div class="report-actions">
       <div class="action-group">
-        <button class="btn-secondary" (click)="printReport()">
+        <button 
+          type="button"
+          class="btn-secondary" 
+          (click)="printReport()">
           <i class="fas fa-print"></i>
-          طباعة
+          <span>طباعة</span>
         </button>
-        <button class="btn-secondary" (click)="exportToExcel()">
+        <button 
+          type="button"
+          class="btn-secondary" 
+          (click)="exportToExcel()">
           <i class="fas fa-file-excel"></i>
-          تصدير Excel
+          <span>تصدير Excel</span>
         </button>
       </div>
-      <button class="btn-primary" (click)="downloadReport()">
+      
+      <button 
+        type="button"
+        class="btn-primary" 
+        (click)="downloadReport()">
         <i class="fas fa-download"></i>
-        تحميل التقرير
+        <span>تحميل التقرير</span>
       </button>
     </div>
 
+    <!-- Report Data -->
     <div class="report-data">
-      <!-- Report data will be displayed here based on activeReport -->
+      <!-- Loading State -->
       <div class="loading-overlay" *ngIf="isLoading">
         <div class="loading-spinner"></div>
       </div>
     </div>
   </div>
 </div>
-
