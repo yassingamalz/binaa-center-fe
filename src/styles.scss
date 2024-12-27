@@ -1,27 +1,31 @@
+// Import base styles first (variables, mixins, etc)
 @import 'styles/main';
-@import "@fortawesome/fontawesome-free/css/all.min.css";
-@import 'styles/_shimmer';
-@import 'styles/_buttons';
-@import 'styles/_badges';
-@import 'styles/_filters';
 
-app-header,
-app-footer,
-app-sidebar {
-  display: block;
-  width: 100%;
-}
+// Component styles
+@import 'styles/shimmer';
+@import 'styles/buttons';
+@import 'styles/badges';
+@import 'styles/filters';
 
-html, body {
+// Global styles
+html,
+body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
   direction: rtl;
   overflow-x: hidden;
 }
-  
-  body {
-    font-family: 'Cairo', sans-serif;
-    background-color: $color-gray-100;
-    overflow-x: hidden;
-    }
+
+body {
+  font-family: 'Cairo', sans-serif;
+  background-color: $color-gray-100; 
+}
+
+// Component display properties
+app-header,
+app-footer,
+app-sidebar {
+  display: block;
+  width: 100%;
+}

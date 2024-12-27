@@ -1,121 +1,146 @@
 <!-- src/app/features/sessions/components/session-list/session-list.component.html -->
 <div class="sessions-container">
-    <!-- Header -->
-    <div class="page-header">
-      <div class="header-title">
-        <h1>الجلسات</h1>
-        <span class="session-count" *ngIf="filteredSessions.length">
-          {{filteredSessions.length}} جلسة
-        </span>
-      </div>
-      
-      <button class="btn-primary" (click)="createSession()">
-        <i class="fas fa-plus"></i>
-        <span>جلسة جديدة</span>
-      </button>
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-title">
+      <h1>الجلسات</h1>
+      <span class="session-count" *ngIf="filteredSessions.length">
+        {{filteredSessions.length}} جلسة
+      </span>
     </div>
-  
-    <!-- Filters -->
-    <div class="filters-section">
-      <form [formGroup]="searchForm" class="search-form">
-        <div class="search-input">
-          <i class="fas fa-search"></i>
-          <input 
-            type="text"
-            formControlName="searchTerm"
-            placeholder="بحث بإسم الحالة أو المعالج..."
-          >
-        </div>
-      </form>
-  
-      <div class="filters-group">
-        <div class="type-filters">
-          <button 
-            *ngFor="let type of sessionTypes"
-            class="filter-btn"
-            [class.active]="selectedType === type.value"
-            (click)="onTypeChange(type.value)">
-            {{type.label}}
-          </button>
-        </div>
-  
-        <div class="status-filters">
-          <button 
-            *ngFor="let status of attendanceStatuses"
-            class="filter-btn"
-            [class.active]="selectedStatus === status.value"
-            (click)="onStatusChange(status.value)">
-            {{status.label}}
-          </button>
-        </div>
+    
+    <button class="btn-primary" (click)="createSession()">
+      <i class="fas fa-plus"></i>
+      <span>جلسة جديدة</span>
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <form [formGroup]="searchForm" class="search-form">
+      <div class="search-input">
+        <i class="fas fa-search"></i>
+        <input 
+          type="text"
+          formControlName="searchTerm"
+          placeholder="بحث بإسم الحالة أو المعالج..."
+        >
       </div>
-    </div>
-  
-    <!-- Sessions List -->
-    <div class="sessions-list" [class.loading]="isLoading">
-      <div class="session-card" 
-           *ngFor="let session of filteredSessions"
-           (click)="viewSessionDetails(session.sessionId)">
-        <div class="session-header">
-          <div class="session-type" [class]="session.sessionType.toLowerCase()">
-            {{session.sessionType === 'INDIVIDUAL' ? 'فردي' : 'جماعي'}}
-          </div>
-          <div class="session-datetime">
-            <span class="date">
-              <i class="far fa-calendar"></i>
-              {{session.sessionDate | date:'mediumDate'}}
-            </span>
-            <span class="time">
-              <i class="far fa-clock"></i>
-              {{session.sessionDate | date:'shortTime'}}
-            </span>
-          </div>
-        </div>
-  
-        <div class="session-content">
-          <h3 class="session-purpose">{{session.purpose}}</h3>
-          
-          <div class="session-info">
-            <div class="case-info">
-              <i class="fas fa-user"></i>
-              <span>{{session.caseName}}</span>
-            </div>
-            <div class="staff-info">
-              <i class="fas fa-user-md"></i>
-              <span>{{session.staffName}}</span>
-            </div>
-            <div class="duration">
-              <i class="fas fa-hourglass-half"></i>
-              <span>{{session.duration}} دقيقة</span>
-            </div>
-          </div>
-  
-          <p class="session-notes" *ngIf="session.notes">{{session.notes}}</p>
-        </div>
-  
-        <div class="session-footer">
-          <span class="status-badge" [class]="getStatusClass(session.attendanceStatus)">
-            {{session.attendanceStatus === 'PRESENT' ? 'حضر' : 'غائب'}}
-          </span>
-          
-          <div class="actions">
-            <button class="btn-icon" (click)="editSession(session, $event)" title="تعديل">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="btn-icon danger" (click)="deleteSession(session, $event)" title="حذف">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </div>
+    </form>
+
+    <div class="filters-group">
+      <div class="type-filters">
+        <button 
+          *ngFor="let type of sessionTypes"
+          class="filter-btn"
+          [class.active]="selectedType === type.value"
+          (click)="onTypeChange(type.value)">
+          <i [class]="type.value === 'INDIVIDUAL' ? 'fas fa-user' : 'fas fa-users'"></i>
+          {{type.label}}
+        </button>
       </div>
-  
-      <!-- Empty State -->
-      <div class="empty-state" *ngIf="!isLoading && filteredSessions.length === 0">
-        <i class="far fa-calendar-check"></i>
-        <p>لا توجد جلسات مطابقة للبحث</p>
-        <button class="btn-secondary" (click)="createSession()">
-          إضافة جلسة جديدة
+
+      <div class="status-filters">
+        <button 
+          *ngFor="let status of attendanceStatuses"
+          class="filter-btn"
+          [class.active]="selectedStatus === status.value"
+          (click)="onStatusChange(status.value)">
+          <i [class]="status.value === 'PRESENT' ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
+          {{status.label}}
         </button>
       </div>
     </div>
   </div>
+
+  <!-- Sessions List -->
+  <div class="sessions-list" [class.loading]="isLoading">
+    <div class="session-card" 
+         *ngFor="let session of filteredSessions"
+         (click)="viewSessionDetails(session.sessionId)">
+      <!-- Card Header -->
+      <div class="session-header">
+        <div class="session-type" [class]="session.sessionType.toLowerCase()">
+          <i [class]="session.sessionType === 'INDIVIDUAL' ? 'fas fa-user' : 'fas fa-users'"></i>
+          {{session.sessionType === 'INDIVIDUAL' ? 'فردي' : 'جماعي'}}
+        </div>
+        <div class="session-datetime">
+          <span class="date">
+            <i class="far fa-calendar"></i>
+            {{session.sessionDate | date:'mediumDate'}}
+          </span>
+          <span class="time">
+            <i class="far fa-clock"></i>
+            {{session.sessionDate | date:'shortTime'}}
+          </span>
+        </div>
+      </div>
+
+      <!-- Card Content -->
+      <div class="session-content">
+        <h3 class="session-purpose">{{session.purpose}}</h3>
+        
+        <div class="session-info">
+          <div class="info-item case-info">
+            <div class="icon-wrapper">
+              <i class="fas fa-user"></i>
+            </div>
+            <div class="info-text">
+              <span class="label">الحالة</span>
+              <span>{{session.caseName}}</span>
+            </div>
+          </div>
+          
+          <div class="info-item staff-info">
+            <div class="icon-wrapper">
+              <i class="fas fa-user-md"></i>
+            </div>
+            <div class="info-text">
+              <span class="label">المعالج</span>
+              <span>{{session.staffName}}</span>
+            </div>
+          </div>
+          
+          <div class="info-item duration">
+            <div class="icon-wrapper">
+              <i class="fas fa-hourglass-half"></i>
+            </div>
+            <div class="info-text">
+              <span class="label">المدة</span>
+              <span>{{session.duration}} دقيقة</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="session-notes" *ngIf="session.notes">{{session.notes}}</p>
+      </div>
+
+      <!-- Card Footer -->
+      <div class="session-footer">
+        <span class="status-badge" [class]="getStatusClass(session.attendanceStatus)">
+          <i [class]="session.attendanceStatus === 'PRESENT' ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
+          {{session.attendanceStatus === 'PRESENT' ? 'حضر' : 'غائب'}}
+        </span>
+        
+        <div class="actions">
+          <button class="btn-icon" (click)="editSession(session, $event)" title="تعديل">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="btn-icon danger" (click)="deleteSession(session, $event)" title="حذف">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!isLoading && filteredSessions.length === 0">
+      <i class="far fa-calendar-check"></i>
+      <p>لا توجد جلسات مطابقة للبحث</p>
+      <button class="btn-secondary" (click)="createSession()">
+        <i class="fas fa-plus"></i>
+        <span>إضافة جلسة جديدة</span>
+      </button>
+    </div>
+  </div>
+</div>

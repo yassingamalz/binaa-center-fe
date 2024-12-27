@@ -1,313 +1,535 @@
 // src/app/features/sessions/components/session-list/session-list.component.scss
 @import 'styles/main';
+@import 'styles/badges';
+@import 'styles/buttons';
+@import 'styles/filters';
+@import 'styles/shimmer';
 
+// Container
 .sessions-container {
-    padding: $spacing-lg;
+  padding: $spacing-lg;
+  min-height: calc(100vh - #{$layout-header-height});
+  background: linear-gradient(
+    135deg,
+    $color-gray-100 0%,
+    rgba($color-gray-100, 0.5) 100%
+  );
 
-    @media (max-width: $breakpoint-md) {
-        padding: $spacing-md;
-    }
+  @media (max-width: $breakpoint-md) {
+    padding: $spacing-md;
+  }
 }
 
+// Header Section
 .page-header {
+  @include flex-between;
+  margin-bottom: $spacing-xl;
+
+  .header-title {
+    @include flex-center;
+    gap: $spacing-sm;
+
+    h1 {
+      margin: 0;
+      font-size: $font-size-2xl;
+      color: $color-gray-900;
+      font-weight: 600;
+      
+      @media (max-width: $breakpoint-md) {
+        font-size: $font-size-xl;
+      }
+    }
+
+    .session-count {
+      @include badge-base;
+      background: linear-gradient(135deg, rgba($color-primary, 0.1), rgba($color-secondary, 0.1));
+      color: $color-primary;
+      font-weight: 500;
+    }
+  }
+
+  .btn-primary {
+    @include btn-primary;
+    
+    i {
+      transition: transform 0.2s ease;
+    }
+    
+    &:hover i {
+      transform: rotate(90deg);
+    }
+  }
+}
+
+// Filters Section
+.filters-section {
+  @include filters-container;
+  background: $color-white;
+  padding: $spacing-lg;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-sm;
+  margin-bottom: $spacing-xl;
+
+  .search-form {
+    .search-input {
+      @include search-field;
+      
+      input {
+        background: $color-gray-100;
+        transition: background 0.2s ease;
+        
+        &:focus {
+          background: $color-white;
+        }
+      }
+    }
+  }
+
+  .filters-group {
+    @include filter-controls;
+
+    .type-filters,
+    .status-filters {
+      @include filter-chips-container;
+    }
+
+    .filter-btn {
+      @include filter-chip;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        transform: translateY(-2px);
+      }
+      
+      &.active {
+        background: linear-gradient(135deg, $color-primary, darken($color-primary, 10%));
+        box-shadow: $shadow-sm;
+      }
+    }
+  }
+}
+
+// Sessions List
+.sessions-list {
+  display: grid;
+  gap: $spacing-lg;
+  
+  &.loading {
+    .session-card {
+      @extend .shimmer-effect;
+    }
+  }
+}
+
+// Session Card - Main Styles
+.session-card {
+  @include card;
+  padding: $spacing-lg;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid $color-gray-200;
+  position: relative;
+  overflow: hidden;
+  
+  background: linear-gradient(
+    135deg,
+    $color-white 0%,
+    rgba($color-gray-100, 0.5) 100%
+  );
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-lg;
+    border-color: rgba($color-primary, 0.2);
+    
+    &::after {
+      opacity: 1;
+    }
+  }
+  
+  // Gradient border effect
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 2px solid transparent;
+    background: linear-gradient(135deg, $color-primary, $color-secondary) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    mask:linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  // Header Section
+  .session-header {
     @include flex-between;
     margin-bottom: $spacing-lg;
+    padding-bottom: $spacing-md;
+    border-bottom: 1px solid rgba($color-gray-200, 0.5);
 
-    .header-title {
-        @include flex-center;
-        gap: $spacing-sm;
+    .session-type {
+      @include flex-center;
+      gap: $spacing-sm;
+      padding: $spacing-sm $spacing-md;
+      border-radius: $border-radius-full;
+      font-weight: 500;
+      
+      i {
+        font-size: $font-size-lg;
+      }
 
-        h1 {
-            margin: 0;
-            font-size: $font-size-2xl;
+      &.individual {
+        background: rgba($color-primary, 0.1);
+        color: $color-primary;
+        
+        i {
+          color: $color-primary;
         }
-
-        .session-count {
-            font-size: $font-size-lg;
-            background: rgba($color-primary, 0.1);
-            color: $color-primary;
-            padding: $spacing-xs $spacing-sm;
-            border-radius: $border-radius-full;
+      }
+      
+      &.group {
+        background: rgba($color-secondary, 0.1);
+        color: $color-secondary;
+        
+        i {
+          color: $color-secondary;
         }
-    }
-
-    .btn-primary {
-        @include button-base;
-        background: $color-primary;
-        color: $color-white;
-        gap: $spacing-sm;
-
-        @media (max-width: $breakpoint-sm) {
-            span {
-                display: none;
-            }
-        }
-    }
-}
-
-.filters-section {
-    margin-bottom: $spacing-lg;
-
-    .search-form {
-        margin-bottom: $spacing-md;
-
-        .search-input {
-            position: relative;
-            max-width: 400px;
-
-            input {
-                @include input-base;
-                padding-right: $spacing-xl;
-            }
-
-            i {
-                position: absolute;
-                right: $spacing-sm;
-                top: 50%;
-                transform: translateY(-50%);
-                color: $color-gray-500;
-            }
-        }
-    }
-
-    .filters-group {
-        display: flex;
-        gap: $spacing-lg;
-        flex-wrap: wrap;
-
-        @media (max-width: $breakpoint-md) {
-            flex-direction: column;
-            gap: $spacing-md;
-        }
-
-        .type-filters,
-        .status-filters {
-            @include flex-center;
-            gap: $spacing-sm;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            @include button-base;
-            background: $color-gray-100;
-            color: $color-gray-700;
-
-            &.active {
-                background: $color-primary;
-                color: $color-white;
-            }
-        }
-    }
-}
-
-.sessions-list {
-    display: grid;
-    gap: $spacing-lg;
-
-    &.loading {
-        opacity: 0.7;
-        pointer-events: none;
-    }
-}
-
-.session-card {
-    @include card;
-    cursor: pointer;
-    transition: $transition-base;
-
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow: $shadow-lg;
-    }
-
-    .session-header {
-        @include flex-between;
-        margin-bottom: $spacing-md;
-        padding-bottom: $spacing-md;
-        border-bottom: 1px solid $color-gray-200;
-
-        .session-type {
-            padding: $spacing-xs $spacing-sm;
-            border-radius: $border-radius-full;
-            font-size: $font-size-sm;
-            font-weight: 500;
-
-            &.individual {
-                background: rgba($color-primary, 0.1);
-                color: $color-primary;
-            }
-
-            &.group {
-                background: rgba($color-secondary, 0.1);
-                color: $color-secondary;
-            }
-        }
+      }
     }
 
     .session-datetime {
+      @include flex-center;
+      gap: $spacing-md;
+      
+      .date,
+      .time {
         @include flex-center;
-        gap: $spacing-md;
-        color: $color-gray-600;
-        font-size: $font-size-sm;
-
-        .date,
-        .time {
-            @include flex-center;
-            gap: $spacing-xs;
+        gap: $spacing-sm;
+        padding: $spacing-xs $spacing-sm;
+        background: $color-gray-100;
+        border-radius: $border-radius-lg;
+        color: $color-gray-700;
+        
+        i {
+          font-size: $font-size-base;
+          background: $color-white;
+          padding: $spacing-xs;
+          border-radius: $border-radius-md;
         }
+      }
+      
+      .date i {
+        color: $color-warning;
+      }
+      
+      .time i {
+        color: $color-info;
+      }
     }
-}
+  }
 
-.session-content {
-    margin-bottom: $spacing-lg;
+  // Content Section
+  .session-content {
+    margin: $spacing-lg 0;
 
     .session-purpose {
-        font-size: $font-size-lg;
-        color: $color-gray-900;
-        margin-bottom: $spacing-md;
+      font-size: $font-size-xl;
+      font-weight: 600;
+      color: $color-gray-900;
+      margin-bottom: $spacing-md;
+      line-height: 1.4;
+      
+      @media (hover: hover) {
+        .session-card:hover & {
+          background: linear-gradient(90deg, $color-primary, $color-secondary);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+      }
     }
 
     .session-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: $spacing-lg;
+      margin: $spacing-lg 0;
+
+      .info-item {
         @include flex-center;
-        gap: $spacing-lg;
-        flex-wrap: wrap;
-        margin-bottom: $spacing-sm;
-
-        @media (max-width: $breakpoint-md) {
-            gap: $spacing-md;
+        gap: $spacing-sm;
+        padding: $spacing-sm $spacing-md;
+        background: $color-gray-100;
+        border-radius: $border-radius-lg;
+        transition: transform 0.2s ease;
+        
+        &:hover {
+          transform: translateY(-2px);
         }
 
-        .case-info,
-        .staff-info,
-        .duration {
-            @include flex-center;
-            gap: $spacing-xs;
-            color: $color-gray-600;
+        .icon-wrapper {
+          @include flex-center;
+          width: 40px;
+          height: 40px;
+          border-radius: $border-radius-full;
+          background: $color-white;
+          flex-shrink: 0;
+          
+          i {
+            font-size: $font-size-lg;
+          }
+        }
+
+        .info-text {
+          font-weight: 500;
+          color: $color-gray-700;
+          
+          .label {
+            display: block;
             font-size: $font-size-sm;
-
-            i {
-                color: $color-gray-500;
-            }
+            color: $color-gray-900;
+            margin-bottom: 2px;
+          }
         }
+
+        &.case-info {
+          .icon-wrapper {
+            box-shadow: 0 0 0 2px rgba($color-primary, 0.1);
+            i { color: $color-primary; }
+          }
+        }
+        
+        &.staff-info {
+          .icon-wrapper {
+            box-shadow: 0 0 0 2px rgba($color-secondary, 0.1);
+            i { color: $color-secondary; }
+          }
+        }
+        
+        &.duration {
+          .icon-wrapper {
+            box-shadow: 0 0 0 2px rgba($color-warning, 0.1);
+            i { color: $color-warning; }
+          }
+        }
+      }
     }
 
     .session-notes {
-        color: $color-gray-600;
-        font-size: $font-size-sm;
-        margin: 0;
-        line-height: 1.5;
+      position: relative;
+      color: $color-gray-600;
+      font-size: $font-size-base;
+      line-height: 1.6;
+      margin: $spacing-md 0;
+      padding: $spacing-lg;
+      background: linear-gradient(
+        45deg,
+        rgba($color-gray-100, 0.5) 0%,
+        rgba($color-gray-100, 0.5) 100%
+      );
+      border-radius: $border-radius-lg;
+      border: 1px solid $color-gray-200;
+      
+      &::before {
+        content: '"';
+        position: absolute;
+        top: $spacing-sm;
+        right: $spacing-sm;
+        font-size: $font-size-3xl;
+        color: $color-gray-300;
+        font-family: serif;
+      }
     }
-}
+  }
 
-.session-footer {
+  // Footer Section
+  .session-footer {
     @include flex-between;
     padding-top: $spacing-md;
-    border-top: 1px solid $color-gray-200;
+    border-top: 1px solid rgba($color-gray-200, 0.5);
 
     .status-badge {
-        padding: $spacing-xs $spacing-sm;
-        border-radius: $border-radius-full;
-        font-size: $font-size-sm;
-        font-weight: 500;
-
-        &.present {
-            background: rgba($color-success, 0.1);
-            color: $color-success;
+      @include flex-center;
+      gap: $spacing-sm;
+      padding: $spacing-sm $spacing-lg;
+      border-radius: $border-radius-full;
+      font-weight: 500;
+      
+      i {
+        font-size: $font-size-base;
+      }
+      
+      &.present {
+        background: linear-gradient(45deg, rgba($color-success, 0.1), rgba($color-success, 0.2));
+        color: $color-success;
+        
+        i {
+          color: $color-success;
         }
-
-        &.absent {
-            background: rgba($color-error, 0.1);
-            color: $color-error;
+      }
+      
+      &.absent {
+        background: linear-gradient(45deg, rgba($color-error, 0.1), rgba($color-error, 0.2));
+        color: $color-error;
+        
+        i {
+          color: $color-error;
         }
+      }
     }
 
     .actions {
+      @include flex-center;
+      gap: $spacing-sm;
+
+      .btn-icon {
         @include flex-center;
-        gap: $spacing-sm;
-
-        .btn-icon {
-            @include button-base;
-            width: 36px;
-            height: 36px;
-            padding: 0;
-            background: $color-gray-100;
-            color: $color-gray-600;
-
-            &:hover {
-                background: rgba($color-primary, 0.1);
-                color: $color-primary;
-            }
-
-            &.danger:hover {
-                background: rgba($color-error, 0.1);
-                color: $color-error;
-            }
+        width: 40px;
+        height: 40px;
+        border-radius: $border-radius-full;
+        background: $color-white;
+        border: 1px solid $color-gray-200;
+        transition: all 0.2s ease;
+        
+        i {
+          font-size: $font-size-lg;
+          transition: transform 0.2s ease;
         }
+        
+        &:hover {
+          border-color: $color-primary;
+          background: rgba($color-primary, 0.1);
+          transform: translateY(-2px);
+          
+          i {
+            color: $color-primary;
+            transform: scale(1.1);
+          }
+        }
+
+        &.danger:hover {
+          border-color: $color-error;
+          background: rgba($color-error, 0.1);
+          
+          i {
+            color: $color-error;
+          }
+        }
+      }
     }
+  }
 }
 
+// Empty State
 .empty-state {
-    @include flex-column;
-    align-items: center;
-    padding: $spacing-2xl;
-    background: $color-white;
-    border-radius: $border-radius-lg;
-    text-align: center;
-    box-shadow: $shadow-sm;
+  @include flex-column;
+  align-items: center;
+  padding: $spacing-2xl;
+  background: $color-white;
+  border-radius: $border-radius-lg;
+  text-align: center;
+  min-height: 300px;
+  box-shadow: $shadow-sm;
 
-    i {
-        font-size: $font-size-4xl;
-        color: $color-gray-400;
-        margin-bottom: $spacing-lg;
+  i {
+    font-size: $font-size-4xl;
+    color: $color-gray-400;
+    margin-bottom: $spacing-lg;
+  }
+
+  p {
+    color: $color-gray-600;
+    margin-bottom: $spacing-lg;
+    font-size: $font-size-lg;
+  }
+
+  .btn-secondary {
+    @include btn-secondary;
+  }
+}
+
+// RTL Support
+[dir="rtl"] {
+  .session-card {
+    border-right: none;
+    border-left: 4px solid transparent;
+  }
+
+  .info-item {
+    .icon-wrapper {
+      margin-left: $spacing-sm;
+      margin-right: 0;
     }
+  }
 
-    p {
-        color: $color-gray-600;
-        margin-bottom: $spacing-lg;
-    }
-
-    .btn-secondary {
-        @include button-base;
-        background: $color-gray-100;
-        color: $color-gray-700;
-
-        &:hover {
-            background: $color-gray-200;
-        }
-    }
+  .session-notes::before {
+    right: auto;
+    left: $spacing-sm;
+  }
 }
 
 // Print Styles
 @media print {
+  .sessions-container {
+    background: none;
+    padding: 0;
+  }
 
-    .filters-section,
-    .actions,
-    .btn-primary {
-        display: none !important;
-    }
+  .filters-section,
+  .actions,
+  .btn-primary {
+    display: none !important;
+  }
 
-    .session-card {
-        break-inside: avoid;
-        page-break-inside: avoid;
-        box-shadow: none;
-        border: 1px solid $color-gray-200;
+  .session-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    box-shadow: none;
+    background: none;
+    
+    &::after {
+      display: none;
     }
-}
-
-// High Contrast Mode
-@media (forced-colors: active) {
-    .session-card {
-        border: 1px solid currentColor;
-    }
-
-    .status-badge {
-        border: 1px solid currentColor;
-    }
+  }
 }
 
 // Reduced Motion
 @media (prefers-reduced-motion: reduce) {
-    .session-card {
-        transition: none;
+  .session-card,
+  .btn-icon,
+  .info-item {
+    transition: none;
+    
+    &:hover {
+      transform: none;
     }
+    
+    i {
+      transition: none;
+      
+      &:hover {
+        transform: none;
+      }
+    }
+  }
+}
+
+// High Contrast Mode
+@media (forced-colors: active) {
+  .session-card {
+    border: 2px solid currentColor;
+    
+    &::after {
+      display: none;
+    }
+    
+    .info-item,
+    .btn-icon,
+    .status-badge {
+      border: 1px solid currentColor;
+    }
+  }
 }
