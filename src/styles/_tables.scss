@@ -6,9 +6,37 @@
   background: $color-white;
   border-radius: $border-radius-lg;
   box-shadow: $shadow-sm;
+  overflow-x: auto; // Enable horizontal scrolling
+  -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
+  
+  // Container for horizontal scroll on mobile
+  @media (max-width: $breakpoint-md) {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    
+    // Custom scrollbar styling
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: $color-gray-100;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background-color: $color-gray-400;
+      border-radius: $border-radius-full;
+    }
+  }
 
   thead {
     background: $color-gray-100;
+    
+    @media (max-width: $breakpoint-sm) {
+      font-size: $font-size-sm; // Smaller font on mobile
+    }
 
     th {
       padding: $spacing-md;
@@ -16,9 +44,20 @@
       color: $color-gray-700;
       text-align: right;
       white-space: nowrap;
+      
+      @media (max-width: $breakpoint-md) {
+        padding: $spacing-sm; // Reduced padding on mobile
+      }
 
       &.cell-center {
         text-align: center;
+      }
+      
+      // Optional: Hide less important columns on mobile
+      &.hide-mobile {
+        @media (max-width: $breakpoint-sm) {
+          display: none;
+        }
       }
     }
   }
@@ -28,6 +67,10 @@
       border-bottom: 1px solid $color-gray-200;
       cursor: pointer;
       transition: $transition-base;
+
+      @media (max-width: $breakpoint-sm) {
+        font-size: $font-size-sm; // Smaller font on mobile
+      }
 
       &:hover:not(.shimmer-row) {
         background: rgba($color-secondary, 0.1);
@@ -45,9 +88,28 @@
       td {
         padding: $spacing-md;
         vertical-align: middle;
+        
+        @media (max-width: $breakpoint-md) {
+          padding: $spacing-sm; // Reduced padding on mobile
+        }
 
         &.cell-center {
           text-align: center;
+        }
+        
+        // Hide less important columns on mobile
+        &.hide-mobile {
+          @media (max-width: $breakpoint-sm) {
+            display: none;
+          }
+        }
+        
+        // Handle long content
+        &.truncate {
+          max-width: 200px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
       }
     }
@@ -60,6 +122,37 @@
 
     tbody tr {
       break-inside: avoid;
+    }
+  }
+}
+
+// Optional: Responsive card view for very small screens
+@mixin table-card-view {
+  @media (max-width: $breakpoint-sm) {
+    thead {
+      display: none; // Hide headers
+    }
+    
+    tbody {
+      tr {
+        display: block;
+        margin-bottom: $spacing-md;
+        border: 1px solid $color-gray-200;
+        border-radius: $border-radius-md;
+        
+        td {
+          display: block;
+          text-align: right;
+          padding: $spacing-sm $spacing-md;
+          
+          &::before {
+            content: attr(data-label);
+            float: right;
+            font-weight: bold;
+            margin-left: $spacing-md;
+          }
+        }
+      }
     }
   }
 }
