@@ -1,199 +1,308 @@
 @import 'styles/main';
 
 .status-container {
-    min-height: calc(100vh - #{$layout-header-height});
-    @include flex-center;
-    padding: $spacing-xl;
+  min-height: calc(100vh - #{$layout-header-height});
+  @include flex-center;
+  padding: $spacing-xl;
+  background: linear-gradient(135deg, rgba($color-primary, 0.05) 0%, rgba($color-secondary, 0.05) 100%);
+  position: relative;
+  overflow: hidden;
+
+  // Decorative background elements
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    z-index: 0;
   }
-  
+
+  &::before {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba($color-primary, 0.1) 0%, rgba($color-primary, 0) 70%);
+    top: -100px;
+    right: -100px;
+  }
+
+  &::after {
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba($color-secondary, 0.1) 0%, rgba($color-secondary, 0) 70%);
+    bottom: -50px;
+    left: -50px;
+  }
+}
+
+.status-content {
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  @include flex-column;
+  align-items: center;
+  gap: $spacing-xl;
+  background: rgba($color-white, 0.9);
+  backdrop-filter: blur(10px);
+  padding: $spacing-xl;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-lg;
+  position: relative;
+  z-index: 1;
+  animation: slideUp 0.6s ease-out;
+}
+
+.status-header {
+  @include flex-column;
+  align-items: center;
+  gap: $spacing-md;
+
+  h1 {
+    font-size: $font-size-4xl;
+    color: $color-primary;
+    margin: 0;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba($color-primary, 0.1);
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(to right, $color-primary, $color-secondary);
+      border-radius: $border-radius-full;
+    }
+  }
+}
+
+.status-icon {
+  width: 140px;
+  height: 140px;
+  @include flex-center;
+  border-radius: 50%;
+  font-size: $font-size-3xl;
+  margin-bottom: $spacing-md;
+  position: relative;
+  transition: $transition-base;
+
+  &.construction {
+    background: linear-gradient(135deg, rgba($color-primary, 0.1) 0%, rgba($color-secondary, 0.1) 100%);
+    color: $color-primary;
+    
+    i {
+      animation: bounce 2s infinite;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      border: 2px dashed rgba($color-primary, 0.2);
+      animation: spin 20s linear infinite;
+    }
+  }
+
+  &:hover {
+    transform: scale(1.05);
+    
+    &::after {
+      animation-duration: 10s;
+    }
+  }
+}
+
+.status-message {
+  @include flex-column;
+  gap: $spacing-md;
+
+  .main-text {
+    font-size: $font-size-xl;
+    color: $color-gray-800;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .sub-text {
+    font-size: $font-size-lg;
+    color: $color-gray-600;
+    margin: 0;
+  }
+}
+
+.status-actions {
+  display: flex;
+  gap: $spacing-md;
+  margin-top: $spacing-lg;
+
+  .btn-primary {
+    @include button-base;
+    background: linear-gradient(135deg, $color-primary, darken($color-primary, 10%));
+    color: $color-white;
+    padding: $spacing-md $spacing-xl;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba($color-primary, 0.3);
+    transform-origin: center;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba($color-primary, 0.4);
+      
+      i {
+        transform: translateX(-4px);
+      }
+    }
+
+    i {
+      transition: transform 0.3s ease;
+    }
+  }
+}
+
+.construction-animation {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  opacity: 0.1;
+  pointer-events: none;
+
+  .gear-icon {
+    position: absolute;
+    color: $color-primary;
+    
+    &:nth-child(1) {
+      font-size: 80px;
+      top: -100px;
+      right: -60px;
+      animation: spin 8s linear infinite;
+    }
+
+    &:nth-child(2) {
+      font-size: 60px;
+      bottom: -80px;
+      left: -40px;
+      animation: spin 8s linear infinite reverse;
+    }
+  }
+}
+
+// Animations
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: $breakpoint-md) {
+  .status-container {
+    padding: $spacing-md;
+  }
+
   .status-content {
-    max-width: 480px;
-    width: 100%;
-    text-align: center;
-    @include flex-column;
-    align-items: center;
-    gap: $spacing-xl;
+    padding: $spacing-lg;
   }
-  
-  .status-header {
-    @include flex-column;
-    align-items: center;
-    gap: $spacing-md;
-  
-    h1 {
-      font-size: $font-size-4xl;
-      color: $color-gray-900;
-      margin: 0;
-    }
-  
-    h2 {
-      font-size: $font-size-xl;
-      color: $color-gray-700;
-      margin: 0;
-    }
-  }
-  
+
   .status-icon {
     width: 120px;
     height: 120px;
-    @include flex-center;
-    border-radius: 50%;
-    font-size: $font-size-3xl;
-    margin-bottom: $spacing-md;
-  
-    &.construction {
-      background: rgba($color-primary, 0.1);
-      color: $color-primary;
-    }
-  
-    &.not-found {
-      background: rgba($color-error, 0.1);
-      color: $color-error;
-    }
-  
-    &.forbidden {
-      background: rgba($color-warning, 0.1);
-      color: $color-warning;
-    }
+    font-size: $font-size-2xl;
   }
-  
+
+  .status-header h1 {
+    font-size: $font-size-3xl;
+  }
+
   .status-message {
-    @include flex-column;
-    gap: $spacing-sm;
-  
     .main-text {
       font-size: $font-size-lg;
-      color: $color-gray-800;
-      margin: 0;
     }
-  
     .sub-text {
       font-size: $font-size-base;
-      color: $color-gray-600;
-      margin: 0;
     }
   }
-  
+
   .status-actions {
-    display: flex;
-    gap: $spacing-md;
-    flex-wrap: wrap;
-    justify-content: center;
-  
-    button {
-      @include button-base;
-      min-width: 160px;
-      gap: $spacing-sm;
-  
-      @media (max-width: $breakpoint-sm) {
-        width: 100%;
-      }
-    }
-  
+    width: 100%;
+    
     .btn-primary {
-      background: $color-primary;
-      color: $color-white;
-  
-      &:hover {
-        background: darken($color-primary, 5%);
-      }
-    }
-  
-    .btn-secondary {
-      background: $color-gray-100;
-      color: $color-gray-700;
-  
-      &:hover {
-        background: $color-gray-200;
-      }
+      width: 100%;
     }
   }
-  
-  // Construction page specific animations
-  .construction-animation {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    margin-top: $spacing-xl;
-  
-    .gear-icon {
-      position: absolute;
-      font-size: 48px;
-      color: $color-primary;
-      opacity: 0.2;
-      animation: spin 4s linear infinite;
-  
-      &.reverse {
-        right: -20px;
-        bottom: -20px;
-        animation-direction: reverse;
-        font-size: 32px;
-      }
-    }
+}
+
+// Reduced motion preferences
+@media (prefers-reduced-motion: reduce) {
+  .status-icon,
+  .construction-animation .gear-icon {
+    animation: none;
   }
-  
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
+
+  .status-content {
+    animation: none;
   }
-  
-  // Responsive adjustments
-  @media (max-width: $breakpoint-md) {
-    .status-container {
-      padding: $spacing-lg;
-    }
-  
-    .status-icon {
-      width: 100px;
-      height: 100px;
-      font-size: $font-size-2xl;
-    }
-  
-    .status-header {
-      h1 {
-        font-size: $font-size-3xl;
-      }
-  
-      h2 {
-        font-size: $font-size-lg;
-      }
-    }
-  
-    .status-message {
-      .main-text {
-        font-size: $font-size-base;
-      }
-  
-      .sub-text {
-        font-size: $font-size-sm;
-      }
-    }
-  }
-  
-  // Print styles
-  @media print {
-    .status-container {
-      background: none;
-      min-height: auto;
-    }
-  
-    .construction-animation,
-    .status-actions {
+}
+
+// Print styles
+@media print {
+  .status-container {
+    background: none;
+    min-height: auto;
+    padding: $spacing-lg;
+    
+    &::before,
+    &::after {
       display: none;
     }
   }
-  
-  // High contrast mode
-  @media (forced-colors: active) {
-    .status-icon {
-      border: 1px solid currentColor;
-    }
-  
-    button {
-      border: 1px solid currentColor;
-    }
+
+  .status-content {
+    box-shadow: none;
+    background: none;
+    backdrop-filter: none;
   }
+
+  .construction-animation,
+  .status-actions {
+    display: none;
+  }
+}
+
+// High contrast mode
+@media (forced-colors: active) {
+  .status-container::before,
+  .status-container::after {
+    display: none;
+  }
+
+  .status-content {
+    border: 1px solid currentColor;
+  }
+
+  .status-icon {
+    border: 2px solid currentColor;
+  }
+
+  .btn-primary {
+    border: 1px solid currentColor;
+    background: none;
+    color: currentColor;
+  }
+}
