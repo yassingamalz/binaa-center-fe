@@ -1,18 +1,33 @@
 // _badges.scss
 @mixin badge-base {
-    padding: $spacing-xs $spacing-sm;
-    background: rgba($color-primary, 0.1);
-    color: $color-primary;
-    border-radius: $border-radius-full;
-    font-size: $font-size-base;
-  }
-  
-  @mixin status-badge($color) {
-    @include badge-base;
-    background: rgba($color, 0.1);
-    color: $color;
-  }
-  
-  @mixin count-badge {
-    @include badge-base;
-  }
+  padding: $spacing-xs $spacing-sm;
+  background: rgba($color-primary, 0.1);
+  color: $color-primary;
+  border-radius: $border-radius-full;
+  font-size: $font-size-base;
+}
+
+@mixin badge-base-3d {
+  font-size: $font-size-sm;
+  font-weight: 900;
+  color: $color-primary;
+  background: rgb($color-primary,0.1);
+  padding: $spacing-xs $spacing-md;
+  border-radius: $border-radius-full;
+  box-shadow: $shadow-sm;
+  border: 1px solid $color-gray-200;
+}
+
+@mixin status-badge($color) {
+  @include badge-base;
+  background: rgba($color, 0.1);
+  color: $color;
+}
+
+@mixin count-badge {
+  @include badge-base;
+}
+
+@mixin count-badge-3d {
+  @include badge-base-3d;
+}

@@ -4,6 +4,7 @@
 @import 'styles/buttons';
 @import 'styles/filters';
 @import 'styles/shimmer';
+@import 'styles/headers';
 
 .assessments-container {
   padding: $spacing-lg;
@@ -25,32 +26,14 @@
   margin-bottom: $spacing-xl;
 
   .header-title {
-    @include flex-center;
-    gap: $spacing-sm;
-
-    h1 {
-      margin: 0;
-      font-size: $font-size-2xl;
-      color: $color-gray-900;
-      font-weight: 600;
-    }
-
-    .assessment-count {
-      @include count-badge;
-      background: linear-gradient(135deg, rgba($color-primary, 0.1), rgba($color-secondary, 0.1));
-    }
+    @include header-title-2
   }
 
   .btn-primary {
-    @include btn-primary;
-    
-    i {
-      transition: transform 0.2s ease;
-    }
-    
-    &:hover i {
-      transform: rotate(90deg);
-    }
+    @include btn-primary-3d;
+  }
+  .assessment-count{
+    @include count-badge-3d
   }
 }
 

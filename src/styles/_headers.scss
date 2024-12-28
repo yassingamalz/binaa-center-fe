@@ -1,0 +1,45 @@
+@import 'main';
+
+@mixin header-title-1 {
+    @include flex-center;
+    gap: $spacing-sm;
+
+    h1 {
+        margin: 0;
+        font-size: $font-size-2xl;
+        font-weight: 700;
+        color: $color-gray-900;
+    }
+
+    .badge {
+        @include count-badge;
+    }
+}
+
+@mixin header-title-2 {
+    @include flex-center;
+    gap: $spacing-md;
+
+    h1 {
+        margin: 0;
+        font-size: $font-size-2xl;
+        color: $color-gray-900;
+        font-weight: 700;
+        position: relative;
+
+        &:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            right: 0;
+            width: 40%;
+            height: 3px;
+            background: linear-gradient(to left, $color-primary, $color-secondary);
+            border-radius: $border-radius-full;
+        }
+    }
+
+    .badge {
+        @include count-badge-3d;
+    }
+}

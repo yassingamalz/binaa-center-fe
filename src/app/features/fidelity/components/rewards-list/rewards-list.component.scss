@@ -1,6 +1,9 @@
 
 // src\app\features\fidelity\components\rewards-list\rewards-list.component.scss
 @import 'styles/main';
+@import 'styles/buttons';
+@import 'styles/badges';
+@import 'styles/headers';
 
 .rewards-container {
   padding: $spacing-lg;
@@ -15,34 +18,15 @@
   margin-bottom: $spacing-lg;
 
   .header-title {
-    @include flex-center;
-    gap: $spacing-sm;
-
-    h1 {
-      margin: 0;
-      font-size: $font-size-2xl;
-    }
+    @include header-title-2;
 
     .rewards-count {
-      font-size: $font-size-sm;
-      color: $color-gray-600;
-      background: $color-gray-100;
-      padding: $spacing-xs $spacing-sm;
-      border-radius: $border-radius-full;
+    @include count-badge-3d
     }
   }
 
   .btn-primary {
-    @include button-base;
-    background: $color-primary;
-    color: $color-white;
-    gap: $spacing-sm;
-    
-    @media (max-width: $breakpoint-sm) {
-      span {
-        display: none;
-      }
-    }
+  @include btn-primary-3d
   }
 }
 

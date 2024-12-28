@@ -59,7 +59,7 @@
 
   .close {
     padding: $spacing-sm;
-    margin: -$spacing-sm;
+    margin: calc(-1 * #{$spacing-sm});
     color: $color-gray-600;
     background: transparent;
     border: none;
@@ -119,7 +119,7 @@
 .notification-meta {
   margin-bottom: $spacing-lg;
   padding: $spacing-md;
-  background-color: $color-gray-50;
+  background-color: $color-gray-100;
   border-radius: $border-radius-lg;
 
   .meta-item {
@@ -231,7 +231,7 @@
       border: 1px solid $color-gray-200;
       
       &:hover:not(:disabled) {
-        background: $color-gray-50;
+        background: $color-gray-100;
       }
       
       &.text-danger {

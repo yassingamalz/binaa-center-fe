@@ -4,7 +4,8 @@
 @import 'styles/badges';
 @import 'styles/filters';
 @import 'styles/buttons';
-  
+@import 'styles/headers';
+
 
 .page-container {
   padding: $spacing-lg;
@@ -22,18 +23,10 @@
   margin-bottom: $spacing-lg;
 
   .header-title {
-    @include flex-center;
-    gap: $spacing-sm;
-
-    h1 {
-      margin: 0;
-      font-size: $font-size-2xl;
-      font-weight: 700;
-      color: $color-gray-900;
-    }
+    @include header-title-2;
 
     .badge {
-      @include count-badge;
+      @include count-badge-3d;
     }
   }
 
@@ -43,11 +36,11 @@
   }
 
   .btn-primary {
-    @include btn-primary;
+    @include btn-primary-3d;
   }
   
   .btn-secondary {
-    @include btn-secondary;
+    @include btn-secondary-3d;
   }
 }
 

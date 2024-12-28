@@ -11,18 +11,16 @@
     </button>
   </div>
 
-  <div class="filters">
-    <div class="search">
-      <form [formGroup]="searchForm">
-        <div class="search-field">
-          <input type="text" 
-                 formControlName="searchTerm"
-                 placeholder="بحث بالاسم أو رقم الهاتف..."
-                 [attr.aria-label]="'بحث'">
-          <i class="fas fa-search"></i>
-        </div>
-      </form>
-    </div>
+  <div class="filters-section">
+    <form [formGroup]="searchForm" class="search-form">
+      <div class="search-input">
+        <i class="fas fa-search"></i>
+        <input type="text" 
+        formControlName="searchTerm"
+        placeholder="بحث بالاسم أو رقم الهاتف..."
+        [attr.aria-label]="'بحث'">
+      </div>
+    </form>
 
     <div class="filter-chips" role="group" aria-label="فلترة الحالة">
       <button class="filter-chip" 

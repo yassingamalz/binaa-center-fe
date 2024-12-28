@@ -51,7 +51,7 @@ export class CaseListComponent implements OnInit, OnDestroy {
   private setupSearchListener(): void {
     this.searchForm.get('searchTerm')?.valueChanges
       .pipe(
-        debounceTime(300),
+        debounceTime(100),
         distinctUntilChanged(),
         takeUntil(this.destroy$)
       )

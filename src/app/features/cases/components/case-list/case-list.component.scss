@@ -1,9 +1,10 @@
 // src\app\features\cases\components\case-list\case-list.component.scss
 @import 'styles/main';
 @import 'styles/tables';
-@import 'styles/_badges';
-@import 'styles/_filters';
-@import 'styles/_buttons';
+@import 'styles/badges';
+@import 'styles/filters';
+@import 'styles/buttons';
+@import 'styles/headers';
 
 
 .page-container {
@@ -22,27 +23,16 @@
   align-items: center;
 
   .header-title {
-    @include flex-center;
-    gap: $spacing-sm;
-
-    h1 {
-      margin: 0;
-      font-size: $font-size-2xl;
-      font-weight: 700;
-      color: $color-gray-900;
-    }
-
-    .badge {
-      @include count-badge;
-    }
+    @include header-title-2
   }
 
   .btn-primary {
-    @include btn-primary;
+    @include btn-primary-3d
   }
 }
 
-.filters {
+.filters-section {
+  @include filters-container;
   display: grid;
   gap: $spacing-lg;
   margin-bottom: $spacing-xl;
@@ -51,13 +41,14 @@
     grid-template-columns: 1fr auto;
     align-items: center;
   }
-}
 
-.search {
-  form {
-    @include search-field;
+  .search-form {
+    .search-input {
+      @include search-field;
+    }
   }
 }
+
 
 .filter-chips {
   @include filter-chips-container;
@@ -107,12 +98,10 @@
         right: 0;
         width: 50%;
         height: 100%;
-        background: linear-gradient(
-          90deg,
-          transparent 0%,
-          rgba(255, 255, 255, 0.4) 50%,
-          transparent 100%
-        );
+        background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.4) 50%,
+            transparent 100%);
         animation: shimmerAnimation 1.2s infinite;
       }
     }
@@ -133,12 +122,10 @@
         right: 0;
         width: 50%;
         height: 100%;
-        background: linear-gradient(
-          90deg,
-          transparent 0%,
-          rgba(255, 255, 255, 0.4) 50%,
-          transparent 100%
-        );
+        background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.4) 50%,
+            transparent 100%);
         animation: shimmerAnimation 1.2s infinite;
       }
     }
@@ -163,12 +150,10 @@
           right: 0;
           width: 50%;
           height: 100%;
-          background: linear-gradient(
-            90deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.4) 50%,
-            transparent 100%
-          );
+          background: linear-gradient(90deg,
+              transparent 0%,
+              rgba(255, 255, 255, 0.4) 50%,
+              transparent 100%);
           animation: shimmerAnimation 1.2s infinite;
         }
       }
@@ -285,6 +270,7 @@
 
 // Mobile Touch Optimizations
 @media (max-width: $breakpoint-md) {
+
   .actions .btn-icon,
   .actions .btn-toggle,
   .pagination .btn-icon {
@@ -295,8 +281,9 @@
 
 // Print styles
 @media print {
+
   .content-header button,
-  .filters,
+  .filters-section,
   .actions,
   .pagination {
     display: none !important;
@@ -310,13 +297,14 @@
 
 // High contrast mode
 @media (forced-colors: active) {
+
   .status-badge,
   .btn-icon,
   .btn-toggle {
     border: 1px solid currentColor;
   }
 
-  .shimmer-row td > div {
+  .shimmer-row td>div {
     border: 1px solid currentColor;
   }
 }

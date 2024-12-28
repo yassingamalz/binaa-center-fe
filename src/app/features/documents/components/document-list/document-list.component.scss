@@ -1,4 +1,7 @@
 @import 'styles/main';
+@import 'styles/buttons';
+@import 'styles/headers';
+@import 'styles/badges';
 
 .documents-container {
   padding: $spacing-lg;
@@ -17,72 +20,15 @@
   animation: slideUp 0.4s ease-out;
 
   .header-title {
-    @include flex-center;
-    gap: $spacing-md;
-
-    h1 {
-      margin: 0;
-      font-size: $font-size-2xl;
-      color: $color-gray-900;
-      font-weight: 700;
-      position: relative;
-      
-      &:after {
-        content: '';
-        position: absolute;
-        bottom: -8px;
-        right: 0;
-        width: 40%;
-        height: 3px;
-        background: linear-gradient(to left, $color-primary, $color-secondary);
-        border-radius: $border-radius-full;
-      }
-    }
+    @include header-title-2;
 
     .document-count {
-      font-size: $font-size-sm;
-      color: $color-gray-600;
-      background: $color-white;
-      padding: $spacing-xs $spacing-md;
-      border-radius: $border-radius-full;
-      box-shadow: $shadow-sm;
-      border: 1px solid $color-gray-200;
+      @include count-badge-3d;
     }
   }
 
   .btn-primary {
-    @include button-base;
-    background: linear-gradient(45deg, $color-primary, $color-secondary);
-    color: $color-white;
-    gap: $spacing-sm;
-    padding: $spacing-sm $spacing-lg;
-    transition: all 0.3s ease;
-    border-radius: $border-radius-lg;
-    
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba($color-primary, 0.2);
-    }
-
-    i {
-      transition: transform 0.3s ease;
-    }
-
-    &:hover i {
-      transform: translateY(-2px);
-    }
-
-    @media (max-width: $breakpoint-sm) {
-      padding: $spacing-sm;
-      
-      span {
-        display: none;
-      }
-
-      i {
-        margin: 0;
-      }
-    }
+    @include btn-primary-3d
   }
 }
 
@@ -140,7 +86,7 @@
         transition: color 0.3s ease;
       }
 
-      input:focus + i {
+      input:focus+i {
         color: $color-primary;
       }
     }
@@ -235,7 +181,7 @@
 
   &:hover .document-icon {
     transform: scale(1.1);
-    
+
     i {
       transform: scale(1.1);
     }
@@ -364,12 +310,19 @@
 
 // Animations
 @keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
+
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
     transform: translateY(0);
   }
+
   40% {
     transform: translateY(-20px);
   }
+
   60% {
     transform: translateY(-10px);
   }
@@ -399,6 +352,7 @@
 
 // Accessibility Enhancements
 @media (prefers-reduced-motion: reduce) {
+
   .documents-container *,
   .document-card,
   .document-icon,

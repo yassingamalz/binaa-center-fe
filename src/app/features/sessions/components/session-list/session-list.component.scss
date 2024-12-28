@@ -4,6 +4,7 @@
 @import 'styles/buttons';
 @import 'styles/filters';
 @import 'styles/shimmer';
+@import 'styles/headers';
 
 // Container
 .sessions-container {
@@ -26,65 +27,28 @@
   margin-bottom: $spacing-xl;
 
   .header-title {
-    @include flex-center;
-    gap: $spacing-sm;
-
-    h1 {
-      margin: 0;
-      font-size: $font-size-2xl;
-      color: $color-gray-900;
-      font-weight: 600;
-      
-      @media (max-width: $breakpoint-md) {
-        font-size: $font-size-xl;
-      }
-    }
-
-    .session-count {
-      @include badge-base;
-      background: linear-gradient(135deg, rgba($color-primary, 0.1), rgba($color-secondary, 0.1));
-      color: $color-primary;
-      font-weight: 500;
-    }
+    @include header-title_2
   }
 
   .btn-primary {
-    @include btn-primary;
-    
-    i {
-      transition: transform 0.2s ease;
-    }
-    
-    &:hover i {
-      transform: rotate(90deg);
-    }
+    @include btn-primary-3d
+  }
+
+  .session-count{
+    @include count-badge-3d
   }
 }
 
 // Filters Section
 .filters-section {
   @include filters-container;
-  background: $color-white;
-  padding: $spacing-lg;
-  border-radius: $border-radius-lg;
-  box-shadow: $shadow-sm;
-  margin-bottom: $spacing-xl;
 
   .search-form {
     .search-input {
       @include search-field;
-      
-      input {
-        background: $color-gray-100;
-        transition: background 0.2s ease;
-        
-        &:focus {
-          background: $color-white;
-        }
       }
     }
-  }
-
+  
   .filters-group {
     @include filter-controls;
 
@@ -95,16 +59,6 @@
 
     .filter-btn {
       @include filter-chip;
-      transition: all 0.2s ease;
-      
-      &:hover {
-        transform: translateY(-2px);
-      }
-      
-      &.active {
-        background: linear-gradient(135deg, $color-primary, darken($color-primary, 10%));
-        box-shadow: $shadow-sm;
-      }
     }
   }
 }
