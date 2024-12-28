@@ -1,368 +1,395 @@
-  // src\app\features\cases\components\case-payments\case-payments.component.scss
-  @import 'styles/main';
+// src/app/features/cases/components/case-payments/case-payments.component.scss
+@import 'styles/main';
+@import 'styles/badges';
+@import 'styles/buttons';
+@import 'styles/filters';
+@import 'styles/shimmer';
 
-  .payments-container {
-      .summary-cards {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: $spacing-md;
-          margin-bottom: $spacing-lg;
+// Container Layout
+.payments-container {
+    padding: $spacing-lg;
+    min-height: calc(100vh - #{$layout-header-height});
+    background: linear-gradient(135deg,
+            $color-gray-100 0%,
+            rgba($color-gray-100, 0.5) 100%);
 
-          @media (max-width: $breakpoint-md) {
-              grid-template-columns: 1fr;
-          }
+    @media (max-width: $breakpoint-md) {
+        padding: $spacing-md;
+    }
+}
 
-          .summary-card {
-              @include card;
-              @include flex-center;
-              gap: $spacing-md;
-              padding: $spacing-lg;
+// Page Header
+.page-header {
+    @include flex-between;
+    margin-bottom: $spacing-xl;
 
-              .card-icon {
-                  width: 48px;
-                  height: 48px;
-                  border-radius: $border-radius-lg;
-                  @include flex-center;
-                  font-size: $font-size-xl;
+    .header-title {
+        @include flex-center;
+        gap: $spacing-sm;
 
-                  &.total-amount {
-                      background: rgba($color-primary, 0.1);
-                      color: $color-primary;
-                  }
+        h2 {
+            margin: 0;
+            font-size: $font-size-xl;
+        }
 
-                  &.pending {
-                      background: rgba($color-warning, 0.1);
-                      color: $color-warning;
-                  }
+        .payment-count {
+            @include count-badge-3d
+        }
+    }
 
-                  &.overdue {
-                      background: rgba($color-error, 0.1);
-                      color: $color-error;
-                  }
-              }
+    @media (max-width: $breakpoint-md) {
+        flex-direction: column;
+        gap: $spacing-md;
 
-              .card-content {
-                  @include flex-column;
-                  gap: $spacing-xs;
+        .btn-primary {
+            width: 100%;
+        }
+    }
+}
 
-                  .amount {
-                      font-size: $font-size-xl;
-                      font-weight: bold;
-                      color: $color-gray-900;
-                  }
+// Filters Section
+.filters-section {
+    @include filters-container;
+    margin-bottom: $spacing-xl;
 
-                  .label {
-                      font-size: $font-size-sm;
-                      color: $color-gray-600;
-                  }
-              }
-          }
-      }
+    .search-form {
+        .search-input {
+            @include search-field;
+        }
+    }
 
-      .payment-card {
-          @include card;
-          margin-bottom: $spacing-md;
+    .filters-group {
+        @include filter-controls;
 
-          .payment-header {
-              @include flex-between;
-              margin-bottom: $spacing-md;
+        .date-filter {
+            @include date-filter;
+        }
 
-              .payment-amount {
-                  font-size: $font-size-xl;
-                  font-weight: bold;
-                  color: $color-gray-900;
-              }
-          }
+        .status-filters {
+            @include filter-chips-container;
 
-          .payment-content {
-              .payment-details {
-                  @include flex-between;
-                  margin-bottom: $spacing-sm;
+            .filter-btn {
+                @include filter-chip;
+            }
+        }
+    }
+}
 
-                  .payment-method {
-                      @include flex-center;
-                      gap: $spacing-xs;
-                      color: $color-gray-700;
+// Summary Cards
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $spacing-lg;
+    margin-bottom: $spacing-xl;
 
-                      i {
-                          color: $color-gray-400;
-                      }
-                  }
+    @media (max-width: $breakpoint-md) {
+        grid-template-columns: 1fr;
+    }
 
-                  .invoice-number {
-                      font-size: $font-size-sm;
-                      color: $color-gray-600;
-                  }
-              }
+    .summary-card {
+        @include card;
+        padding: $spacing-lg;
+        transition: transform 0.3s ease;
 
-              .payment-description {
-                  color: $color-gray-700;
-                  margin: $spacing-sm 0;
-              }
-          }
+        &:hover {
+            transform: translateY(-4px);
+        }
 
-          .payment-footer {
-              @include flex-between;
-              margin-top: $spacing-md;
-              padding-top: $spacing-md;
-              border-top: 1px solid $color-gray-200;
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: $border-radius-lg;
+            @include flex-center;
+            font-size: $font-size-xl;
+            margin-bottom: $spacing-md;
 
-              .status-badge {
-                  padding: $spacing-xs $spacing-sm;
-                  border-radius: $border-radius-full;
-                  font-size: $font-size-sm;
+            &.total-amount {
+                background: linear-gradient(135deg, rgba($color-primary, 0.1), rgba($color-primary, 0.2));
+                color: $color-primary;
+            }
 
-                  &.paid {
-                      background: rgba($color-success, 0.1);
-                      color: $color-success;
-                  }
+            &.pending {
+                background: linear-gradient(135deg, rgba($color-warning, 0.1), rgba($color-warning, 0.2));
+                color: $color-warning;
+            }
 
-                  &.pending {
-                      background: rgba($color-warning, 0.1);
-                      color: $color-warning;
-                  }
+            &.overdue {
+                background: linear-gradient(135deg, rgba($color-error, 0.1), rgba($color-error, 0.2));
+                color: $color-error;
+            }
+        }
 
-                  &.overdue {
-                      background: rgba($color-error, 0.1);
-                      color: $color-error;
-                  }
-              }
-          }
-      }
-  }
+        .card-content {
+            .amount {
+                font-size: $font-size-2xl;
+                font-weight: bold;
+                color: $color-gray-900;
+                display: block;
+                margin-bottom: $spacing-xs;
+            }
 
-  // Payments Component Responsive Styles
-  .payments-container {
-      .summary-cards {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: $spacing-md;
+            .label {
+                color: $color-gray-600;
+                font-size: $font-size-sm;
+            }
+        }
+    }
+}
 
-          .summary-card {
-              @media (max-width: $breakpoint-md) {
-                  flex-direction: row;
+// Payment Cards
+.payments-list {
+    display: grid;
+    gap: $spacing-lg;
 
-                  .card-content {
-                      flex: 1;
-                  }
-              }
-          }
-      }
+    .payment-card {
+        @include card;
+        border: 1px solid $color-gray-200;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
 
-      .payment-card {
-          .payment-header {
-              @media (max-width: $breakpoint-sm) {
-                  flex-direction: column;
-                  gap: $spacing-sm;
-                  text-align: right;
-              }
-          }
+        &:hover {
+            transform: translateY(-4px);
+            border-color: rgba($color-primary, 0.2);
+            box-shadow: $shadow-lg;
+        }
 
-          .payment-content {
-              .payment-details {
-                  @media (max-width: $breakpoint-sm) {
-                      flex-direction: column;
-                      gap: $spacing-sm;
-                  }
-              }
-          }
+        // Header Section
+        .payment-header {
+            @include flex-between;
+            margin-bottom: $spacing-lg;
+            padding-bottom: $spacing-md;
+            border-bottom: 1px solid rgba($color-gray-200, 0.5);
 
-          .payment-footer {
-              @media (max-width: $breakpoint-sm) {
-                  flex-direction: column;
-                  gap: $spacing-md;
-                  align-items: flex-start;
+            .payment-main-info {
+                @include flex-between;
+                gap: $spacing-lg;
 
-                  .actions {
-                      width: 100%;
-                      display: flex;
-                      gap: $spacing-sm;
-                  }
-              }
-          }
-      }
-  }
+                .payment-amount {
+                    font-size: $font-size-xl;
+                    font-weight: bold;
+                    color: $color-gray-900;
+                }
+            }
+        }
 
+        // Content Section
+        .payment-content {
+            margin: $spacing-lg 0;
 
-  .tab-header {
-      @include flex-between;
-      margin-bottom: $spacing-lg;
+            .payment-info-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: $spacing-lg;
 
-      .header-title {
-          @include flex-center;
-          gap: $spacing-sm;
+                .info-item {
+                    @include flex-center;
+                    gap: $spacing-sm;
+                    padding: $spacing-sm $spacing-md;
+                    background: $color-gray-100;
+                    border-radius: $border-radius-lg;
+                    transition: transform 0.2s ease;
 
-          h2 {
-              margin: 0;
-              font-size: $font-size-xl;
-          }
+                    &:hover {
+                        transform: translateY(-2px);
+                    }
 
-          span {
-              font-size: $font-size-sm;
-              color: $color-gray-600;
-              background: $color-gray-100;
-              padding: $spacing-xs $spacing-sm;
-              border-radius: $border-radius-full;
-          }
-      }
-  }
+                    .icon-wrapper {
+                        @include flex-center;
+                        width: 40px;
+                        height: 40px;
+                        border-radius: $border-radius-full;
+                        background: $color-white;
+                        flex-shrink: 0;
 
-  .empty-state {
-      @include flex-column;
-      align-items: center;
-      padding: $spacing-2xl;
-      text-align: center;
-      color: $color-gray-600;
+                        i {
+                            font-size: $font-size-lg;
+                            color: $color-primary;
+                        }
+                    }
 
-      i {
-          font-size: $font-size-4xl;
-          margin-bottom: $spacing-md;
-          color: $color-gray-400;
-      }
+                    .info-text {
+                        .label {
+                            display: block;
+                            font-size: $font-size-sm;
+                            color: $color-gray-600;
+                            margin-bottom: 2px;
+                        }
+                    }
+                }
+            }
 
-      p {
-          margin-bottom: $spacing-lg;
-      }
-  }
+            .payment-description {
+                margin: $spacing-lg 0;
+                padding: $spacing-lg;
+                background: linear-gradient(45deg,
+                        rgba($color-gray-100, 0.5) 0%,
+                        rgba($color-gray-100, 0.5) 100%);
+                border-radius: $border-radius-lg;
+                color: $color-gray-600;
+            }
+        }
 
-  .btn-primary {
-      @include button-base;
-      background: $color-primary;
-      color: $color-white;
-      gap: $spacing-sm;
+        // Footer Section
+        .payment-footer {
+            @include flex-between;
+            padding-top: $spacing-md;
+            border-top: 1px solid rgba($color-gray-200, 0.5);
 
-      &:hover {
-          background: darken($color-primary, 5%);
-      }
-  }
+            .actions {
+                @include flex-center;
+                gap: $spacing-sm;
 
-  .btn-secondary {
-      @include button-base;
-      background: $color-gray-100;
-      color: $color-gray-700;
+                .btn-icon {
+                    @include flex-center;
+                    width: 40px;
+                    height: 40px;
+                    border-radius: $border-radius-full;
+                    background: $color-white;
+                    border: 1px solid $color-gray-200;
+                    transition: all 0.2s ease;
 
-      &:hover {
-          background: $color-gray-200;
-      }
-  }
+                    i {
+                        font-size: $font-size-lg;
+                        transition: transform 0.2s ease;
+                    }
 
-  .btn-icon {
-      @include button-base;
-      width: 36px;
-      height: 36px;
-      padding: 0;
-      background: $color-white;
-      color: $color-gray-600;
-      border: 1px solid $color-gray-200;
+                    &:hover {
+                        border-color: $color-primary;
+                        background: rgba($color-primary, 0.1);
+                        transform: translateY(-2px);
 
-      &:hover {
-          color: $color-primary;
-          background: $color-gray-100;
-      }
+                        i {
+                            color: $color-primary;
+                            transform: scale(1.1);
+                        }
+                    }
 
-      &.danger:hover {
-          color: $color-error;
-          background: rgba($color-error, 0.1);
-      }
-  }
+                    &.danger:hover {
+                        border-color: $color-error;
+                        background: rgba($color-error, 0.1);
 
-  // RTL Support
-  [dir="rtl"] {
-      .card-icon {
-          margin-left: $spacing-sm;
-          margin-right: 0;
-      }
-  }
+                        i {
+                            color: $color-error;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
-  .tab-header {
-      @include flex-between;
-      margin-bottom: $spacing-lg;
+// Status Badges
+.status-badge {
+    @include flex-center;
+    gap: $spacing-sm;
+    padding: $spacing-sm $spacing-lg;
+    border-radius: $border-radius-full;
+    font-weight: 500;
 
-      @media (max-width: $breakpoint-md) {
-          flex-direction: column;
-          gap: $spacing-md;
+    &.paid {
+        background: linear-gradient(45deg, rgba($color-success, 0.1), rgba($color-success, 0.2));
+        color: $color-success;
+    }
 
-          .header-title {
-              width: 100%;
-              justify-content: space-between;
-          }
+    &.pending {
+        background: linear-gradient(45deg, rgba($color-warning, 0.1), rgba($color-warning, 0.2));
+        color: $color-warning;
+    }
 
-          .btn-primary {
-              width: 100%;
-          }
-      }
-  }
+    &.overdue {
+        background: linear-gradient(45deg, rgba($color-error, 0.1), rgba($color-error, 0.2));
+        color: $color-error;
+    }
+}
 
-  .card {
-      @include card;
-      margin-bottom: $spacing-md;
+// Empty State
+.empty-state {
+    @include flex-column;
+    align-items: center;
+    padding: $spacing-2xl;
+    text-align: center;
+    background: $color-white;
+    border-radius: $border-radius-lg;
+    box-shadow: $shadow-sm;
 
-      @media (max-width: $breakpoint-md) {
-          padding: $spacing-md;
-      }
+    i {
+        font-size: $font-size-4xl;
+        color: $color-gray-400;
+        margin-bottom: $spacing-lg;
+    }
 
-      @media (max-width: $breakpoint-sm) {
-          padding: $spacing-sm;
-      }
-  }
+    p {
+        color: $color-gray-600;
+        margin-bottom: $spacing-lg;
+        font-size: $font-size-lg;
+    }
+}
 
-  // Empty State Responsive
-  .empty-state {
-      padding: clamp($spacing-xl, 10vh, $spacing-2xl);
+// Loading States
+.loading {
+    @extend .shimmer-effect;
+}
 
-      @media (max-width: $breakpoint-md) {
-          i {
-              font-size: $font-size-3xl;
-          }
+// RTL Support
+[dir="rtl"] {
+    .payment-card {
+        .info-item {
+            .icon-wrapper {
+                margin-left: $spacing-sm;
+                margin-right: 0;
+            }
+        }
+    }
+}
 
-          button {
-              width: 100%;
-          }
-      }
-  }
+// Print Styles
+@media print {
+    .payments-container {
+        padding: 0;
+        background: none;
+    }
 
-  // Action Buttons Responsive
-  .actions {
-      display: flex;
-      gap: $spacing-sm;
+    .filters-section,
+    .actions,
+    .btn-primary {
+        @include btn-primary-3d
+    }
 
-      @media (max-width: $breakpoint-sm) {
-          .btn-icon {
-              flex: 1;
-              min-width: 44px; // Better touch target
-          }
-      }
-  }
+    .payment-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid $color-gray-200;
+    }
+}
 
-  // Status Badges Responsive
-  .status-badge {
-      @media (max-width: $breakpoint-sm) {
-          width: 100%;
-          justify-content: center;
-          text-align: center;
-      }
-  }
+// Reduced Motion
+@media (prefers-reduced-motion: reduce) {
 
-  // Grid Layout Helper
-  .responsive-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
-      gap: $spacing-md;
-  }
+    .payment-card,
+    .summary-card,
+    .btn-icon {
+        transition: none;
 
-  // Print Styles
-  @media print {
+        &:hover {
+            transform: none;
+        }
 
-      .filters-bar,
-      .actions,
-      .btn-primary,
-      .btn-secondary {
-          display: none !important;
-      }
+        i {
+            transition: none;
+        }
+    }
+}
 
-      .card {
-          break-inside: avoid;
-          border: 1px solid $color-gray-200;
-          box-shadow: none;
-      }
-  }
+// High Contrast Mode
+@media (forced-colors: active) {
+    .payment-card {
+        border: 2px solid currentColor;
+
+        .info-item,
+        .btn-icon,
+        .status-badge {
+            border: 1px solid currentColor;
+        }
+    }
+}

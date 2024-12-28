@@ -1,103 +1,166 @@
+<!-- case-payments.component.html -->
+<div class="payments-container">
+  <!-- Enhanced Header Section -->
+  <div class="page-header">
+    <div class="header-title">
+      <h2>المدفوعات</h2>
+      <span class="payment-count" *ngIf="payments.length">
+        {{payments.length}} عملية دفع
+      </span>
+    </div>
+    
+    <button class="btn-primary" (click)="addPayment()">
+      <i class="fas fa-plus"></i>
+      <span>تسجيل دفع</span>
+    </button>
+  </div>
 
-  <!-- case-payments.component.html -->
-  <div class="payments-container">
-    <div class="tab-header">
-      <div class="header-title">
-        <h2>المدفوعات</h2>
-        <span class="payment-count" *ngIf="payments.length">
-          {{payments.length}} عملية دفع
-        </span>
-      </div>
-      <button class="btn-primary" (click)="addPayment()">
-        <i class="fas fa-plus"></i>
-        تسجيل دفع
-      </button>
-    </div>
-  
-    <div class="summary-cards">
-      <div class="summary-card total-amount">
-        <div class="card-icon">
-          <i class="fas fa-money-bill-wave"></i>
-        </div>
-        <div class="card-content">
-          <span class="amount">{{getTotalAmount() | currency:'EGP':'symbol':'1.0-0'}}</span>
-          <span class="label">إجمالي المدفوعات</span>
-        </div>
-      </div>
-  
-      <div class="summary-card pending">
-        <div class="card-icon">
-          <i class="fas fa-clock"></i>
-        </div>
-        <div class="card-content">
-          <span class="amount">{{getPendingAmount() | currency:'EGP':'symbol':'1.0-0'}}</span>
-          <span class="label">المبالغ المعلقة</span>
-        </div>
-      </div>
-  
-      <div class="summary-card overdue">
-        <div class="card-icon">
-          <i class="fas fa-exclamation-circle"></i>
-        </div>
-        <div class="card-content">
-          <span class="amount">{{getOverdueAmount() | currency:'EGP':'symbol':'1.0-0'}}</span>
-          <span class="label">المبالغ المتأخرة</span>
-        </div>
+  <!-- Enhanced Filters Section -->
+  <div class="filters-section">
+    <div class="search-form">
+      <div class="search-input">
+        <i class="fas fa-search"></i>
+        <input 
+          type="text" 
+          placeholder="البحث برقم الفاتورة..."
+          [(ngModel)]="searchTerm"
+          (input)="onSearch()">
       </div>
     </div>
-  
-    <div class="payments-list" *ngIf="payments.length; else noPayments">
-      <div class="payment-card" *ngFor="let payment of payments">
-        <div class="payment-header">
-          <div class="payment-date">
-            <i class="far fa-calendar"></i>
-            {{payment.paymentDate | date:'mediumDate'}}
-          </div>
+
+    <div class="filters-group">
+      <div class="date-filter">
+        <label>تصفية بالتاريخ</label>
+        <input 
+          type="date" 
+          [(ngModel)]="selectedDate"
+          (change)="onDateFilter()">
+      </div>
+
+      <div class="status-filters">
+        <button 
+          class="filter-btn" 
+          *ngFor="let status of paymentStatuses"
+          [class.active]="selectedStatus === status.value"
+          (click)="filterByStatus(status.value)">
+          <i [class]="status.icon"></i>
+          {{status.label}}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enhanced Summary Cards -->
+  <div class="summary-cards">
+    <div class="summary-card">
+      <div class="card-icon total-amount">
+        <i class="fas fa-money-bill-wave"></i>
+      </div>
+      <div class="card-content">
+        <span class="amount">{{getTotalAmount() | currency:'EGP':'symbol':'1.0-0'}}</span>
+        <span class="label">إجمالي المدفوعات</span>
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="card-icon pending">
+        <i class="fas fa-clock"></i>
+      </div>
+      <div class="card-content">
+        <span class="amount">{{getPendingAmount() | currency:'EGP':'symbol':'1.0-0'}}</span>
+        <span class="label">المبالغ المعلقة</span>
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="card-icon overdue">
+        <i class="fas fa-exclamation-circle"></i>
+      </div>
+      <div class="card-content">
+        <span class="amount">{{getOverdueAmount() | currency:'EGP':'symbol':'1.0-0'}}</span>
+        <span class="label">المبالغ المتأخرة</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enhanced Payments List -->
+  <div class="payments-list" *ngIf="payments.length; else noPayments">
+    <div class="payment-card" *ngFor="let payment of payments" [class.loading]="isLoading">
+      <div class="payment-header">
+        <div class="payment-main-info">
           <div class="payment-amount">
             {{payment.amount | currency:'EGP':'symbol':'1.0-0'}}
           </div>
-        </div>
-  
-        <div class="payment-content">
-          <div class="payment-details">
-            <div class="payment-method">
-              <i class="fas" [class.fa-money-bill]="payment.paymentMethod === 'CASH'"
-                          [class.fa-credit-card]="payment.paymentMethod === 'CARD'"
-                          [class.fa-university]="payment.paymentMethod === 'BANK'"></i>
-              {{getPaymentMethodLabel(payment.paymentMethod)}}
-            </div>
-            <div class="invoice-number">
-              رقم الفاتورة: {{payment.invoiceNumber}}
-            </div>
-          </div>
-  
-          <p class="payment-description">{{payment.description}}</p>
-        </div>
-  
-        <div class="payment-footer">
           <div class="status-badge" [class]="payment.paymentStatus.toLowerCase()">
+            <i [class]="getStatusIcon(payment.paymentStatus)"></i>
             {{getStatusLabel(payment.paymentStatus)}}
           </div>
-          
-          <div class="actions">
-            <button class="btn-icon" (click)="printReceipt(payment)">
-              <i class="fas fa-print"></i>
-            </button>
-            <button class="btn-icon" (click)="editPayment(payment)">
-              <i class="fas fa-edit"></i>
-            </button>
+        </div>
+      </div>
+
+      <div class="payment-content">
+        <div class="payment-info-grid">
+          <div class="info-item">
+            <div class="icon-wrapper">
+              <i class="far fa-calendar"></i>
+            </div>
+            <div class="info-text">
+              <span class="label">تاريخ الدفع</span>
+              {{payment.paymentDate | date:'mediumDate'}}
+            </div>
           </div>
+
+          <div class="info-item">
+            <div class="icon-wrapper">
+              <i [class]="getPaymentMethodIcon(payment.paymentMethod)"></i>
+            </div>
+            <div class="info-text">
+              <span class="label">طريقة الدفع</span>
+              {{getPaymentMethodLabel(payment.paymentMethod)}}
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="icon-wrapper">
+              <i class="fas fa-file-invoice"></i>
+            </div>
+            <div class="info-text">
+              <span class="label">رقم الفاتورة</span>
+              {{payment.invoiceNumber}}
+            </div>
+          </div>
+        </div>
+
+        <div class="payment-description" *ngIf="payment.description">
+          <p>{{payment.description}}</p>
+        </div>
+      </div>
+
+      <div class="payment-footer">
+        <div class="actions">
+          <button class="btn-icon" (click)="printReceipt(payment)" title="طباعة الإيصال">
+            <i class="fas fa-print"></i>
+          </button>
+          <button class="btn-icon" (click)="editPayment(payment)" title="تعديل">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="btn-icon danger" (click)="deletePayment(payment)" title="حذف">
+            <i class="fas fa-trash"></i>
+          </button>
         </div>
       </div>
     </div>
-  
-    <ng-template #noPayments>
-      <div class="empty-state">
-        <i class="fas fa-money-bill-wave"></i>
-        <p>لا توجد مدفوعات مسجلة</p>
-        <button class="btn-secondary" (click)="addPayment()">
-          تسجيل دفع جديد
-        </button>
-      </div>
-    </ng-template>
   </div>
+
+  <!-- Enhanced Empty State -->
+  <ng-template #noPayments>
+    <div class="empty-state">
+      <i class="fas fa-money-bill-wave"></i>
+      <p>لا توجد مدفوعات مسجلة</p>
+      <button class="btn-primary" (click)="addPayment()">
+        <i class="fas fa-plus"></i>
+        <span>تسجيل دفع جديد</span>
+      </button>
+    </div>
+  </ng-template>
+</div>

@@ -4,8 +4,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 import { PaymentDTO, PaymentStatus, PaymentMethod } from '../../../../core/models/payment';
-import { FinanceService } from '../../../finance/services/finance.service';
 import { PaymentFormComponent } from '../../../../shared/payments/components/payment-form/payment-form.component';
+import { FinanceService } from '../../../finance/services/finance.service';
 
 @Component({
   selector: 'app-case-payments',
@@ -15,8 +15,34 @@ import { PaymentFormComponent } from '../../../../shared/payments/components/pay
 export class CasePaymentsComponent implements OnInit, OnDestroy {
   @Input() caseId!: number;
 
+  // Data
   payments: PaymentDTO[] = [];
+  filteredPayments: PaymentDTO[] = [];
   isLoading = false;
+
+  // Filters
+  searchTerm: string = '';
+  selectedDate: string = '';
+  selectedStatus: PaymentStatus | null = null;
+
+  // Status Options for Filter
+  paymentStatuses = [
+    { 
+      value: PaymentStatus.PAID, 
+      label: 'مدفوع',
+      icon: 'fas fa-check-circle'
+    },
+    { 
+      value: PaymentStatus.PENDING, 
+      label: 'معلق',
+      icon: 'fas fa-clock'
+    },
+    { 
+      value: PaymentStatus.OVERDUE, 
+      label: 'متأخر',
+      icon: 'fas fa-exclamation-circle'
+    }
+  ];
 
   private destroy$ = new Subject<void>();
 
@@ -38,6 +64,7 @@ export class CasePaymentsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (payments) => {
           this.payments = this.sortPayments(payments);
+          this.applyFilters(); // Apply any existing filters
           this.isLoading = false;
         },
         error: (error) => {
@@ -48,26 +75,74 @@ export class CasePaymentsComponent implements OnInit, OnDestroy {
       });
   }
 
+  // Filter Methods
+  onSearch(): void {
+    this.applyFilters();
+  }
+
+  onDateFilter(): void {
+    this.applyFilters();
+  }
+
+  filterByStatus(status: PaymentStatus): void {
+    this.selectedStatus = this.selectedStatus === status ? null : status;
+    this.applyFilters();
+  }
+
+  private applyFilters(): void {
+    let filtered = [...this.payments];
+
+    // Search filter
+    if (this.searchTerm) {
+      const searchLower = this.searchTerm.toLowerCase();
+      filtered = filtered.filter(payment => 
+        payment.invoiceNumber.toLowerCase().includes(searchLower) ||
+        payment.description?.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Date filter
+    if (this.selectedDate) {
+      const filterDate = new Date(this.selectedDate).setHours(0, 0, 0, 0);
+      filtered = filtered.filter(payment => {
+        const paymentDate = new Date(payment.paymentDate).setHours(0, 0, 0, 0);
+        return paymentDate === filterDate;
+      });
+    }
+
+    // Status filter
+    if (this.selectedStatus) {
+      filtered = filtered.filter(payment => 
+        payment.paymentStatus === this.selectedStatus
+      );
+    }
+
+    this.filteredPayments = this.sortPayments(filtered);
+  }
+
   private sortPayments(payments: PaymentDTO[]): PaymentDTO[] {
     return [...payments].sort((a, b) => 
       new Date(b.paymentDate).getTime() - new Date(a.paymentDate).getTime()
     );
   }
 
-  getTotalAmount(): number {
-    return this.payments.reduce((sum, payment) => sum + payment.amount, 0);
+  // UI Helper Methods
+  getStatusIcon(status: PaymentStatus): string {
+    const icons = {
+      [PaymentStatus.PAID]: 'fas fa-check-circle',
+      [PaymentStatus.PENDING]: 'fas fa-clock',
+      [PaymentStatus.OVERDUE]: 'fas fa-exclamation-circle'
+    };
+    return icons[status];
   }
 
-  getPendingAmount(): number {
-    return this.payments
-      .filter(p => p.paymentStatus === PaymentStatus.PENDING)
-      .reduce((sum, payment) => sum + payment.amount, 0);
-  }
-
-  getOverdueAmount(): number {
-    return this.payments
-      .filter(p => p.paymentStatus === PaymentStatus.OVERDUE)
-      .reduce((sum, payment) => sum + payment.amount, 0);
+  getPaymentMethodIcon(method: PaymentMethod): string {
+    const icons = {
+      [PaymentMethod.CASH]: 'fas fa-money-bill',
+      [PaymentMethod.CARD]: 'fas fa-credit-card',
+      [PaymentMethod.BANK]: 'fas fa-university'
+    };
+    return icons[method];
   }
 
   getPaymentMethodLabel(method: PaymentMethod): string {
@@ -88,6 +163,24 @@ export class CasePaymentsComponent implements OnInit, OnDestroy {
     return labels[status];
   }
 
+  // Calculations
+  getTotalAmount(): number {
+    return this.filteredPayments.reduce((sum, payment) => sum + payment.amount, 0);
+  }
+
+  getPendingAmount(): number {
+    return this.filteredPayments
+      .filter(p => p.paymentStatus === PaymentStatus.PENDING)
+      .reduce((sum, payment) => sum + payment.amount, 0);
+  }
+
+  getOverdueAmount(): number {
+    return this.filteredPayments
+      .filter(p => p.paymentStatus === PaymentStatus.OVERDUE)
+      .reduce((sum, payment) => sum + payment.amount, 0);
+  }
+
+  // Action Methods
   async addPayment(): Promise<void> {
     try {
       const modalRef = this.modalService.open(PaymentFormComponent, {
@@ -127,6 +220,19 @@ export class CasePaymentsComponent implements OnInit, OnDestroy {
     }
   }
 
+  async deletePayment(payment: PaymentDTO): Promise<void> {
+    if (confirm('هل أنت متأكد من حذف هذه الدفعة؟')) {
+      try {
+        await this.financeService.deletePayment(payment.paymentId).toPromise();
+        this.loadPayments();
+        this.toastr.success('تم حذف الدفعة بنجاح');
+      } catch (error) {
+        console.error('Error deleting payment:', error);
+        this.toastr.error('حدث خطأ أثناء حذف الدفعة');
+      }
+    }
+  }
+
   async printReceipt(payment: PaymentDTO): Promise<void> {
     try {
       await this.financeService.generateReceipt(payment.paymentId);
@@ -141,5 +247,4 @@ export class CasePaymentsComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
-
 }
