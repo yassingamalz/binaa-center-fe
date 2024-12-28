@@ -1,0 +1,199 @@
+@import 'styles/main';
+
+.status-container {
+    min-height: calc(100vh - #{$layout-header-height});
+    @include flex-center;
+    padding: $spacing-xl;
+  }
+  
+  .status-content {
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    @include flex-column;
+    align-items: center;
+    gap: $spacing-xl;
+  }
+  
+  .status-header {
+    @include flex-column;
+    align-items: center;
+    gap: $spacing-md;
+  
+    h1 {
+      font-size: $font-size-4xl;
+      color: $color-gray-900;
+      margin: 0;
+    }
+  
+    h2 {
+      font-size: $font-size-xl;
+      color: $color-gray-700;
+      margin: 0;
+    }
+  }
+  
+  .status-icon {
+    width: 120px;
+    height: 120px;
+    @include flex-center;
+    border-radius: 50%;
+    font-size: $font-size-3xl;
+    margin-bottom: $spacing-md;
+  
+    &.construction {
+      background: rgba($color-primary, 0.1);
+      color: $color-primary;
+    }
+  
+    &.not-found {
+      background: rgba($color-error, 0.1);
+      color: $color-error;
+    }
+  
+    &.forbidden {
+      background: rgba($color-warning, 0.1);
+      color: $color-warning;
+    }
+  }
+  
+  .status-message {
+    @include flex-column;
+    gap: $spacing-sm;
+  
+    .main-text {
+      font-size: $font-size-lg;
+      color: $color-gray-800;
+      margin: 0;
+    }
+  
+    .sub-text {
+      font-size: $font-size-base;
+      color: $color-gray-600;
+      margin: 0;
+    }
+  }
+  
+  .status-actions {
+    display: flex;
+    gap: $spacing-md;
+    flex-wrap: wrap;
+    justify-content: center;
+  
+    button {
+      @include button-base;
+      min-width: 160px;
+      gap: $spacing-sm;
+  
+      @media (max-width: $breakpoint-sm) {
+        width: 100%;
+      }
+    }
+  
+    .btn-primary {
+      background: $color-primary;
+      color: $color-white;
+  
+      &:hover {
+        background: darken($color-primary, 5%);
+      }
+    }
+  
+    .btn-secondary {
+      background: $color-gray-100;
+      color: $color-gray-700;
+  
+      &:hover {
+        background: $color-gray-200;
+      }
+    }
+  }
+  
+  // Construction page specific animations
+  .construction-animation {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin-top: $spacing-xl;
+  
+    .gear-icon {
+      position: absolute;
+      font-size: 48px;
+      color: $color-primary;
+      opacity: 0.2;
+      animation: spin 4s linear infinite;
+  
+      &.reverse {
+        right: -20px;
+        bottom: -20px;
+        animation-direction: reverse;
+        font-size: 32px;
+      }
+    }
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  // Responsive adjustments
+  @media (max-width: $breakpoint-md) {
+    .status-container {
+      padding: $spacing-lg;
+    }
+  
+    .status-icon {
+      width: 100px;
+      height: 100px;
+      font-size: $font-size-2xl;
+    }
+  
+    .status-header {
+      h1 {
+        font-size: $font-size-3xl;
+      }
+  
+      h2 {
+        font-size: $font-size-lg;
+      }
+    }
+  
+    .status-message {
+      .main-text {
+        font-size: $font-size-base;
+      }
+  
+      .sub-text {
+        font-size: $font-size-sm;
+      }
+    }
+  }
+  
+  // Print styles
+  @media print {
+    .status-container {
+      background: none;
+      min-height: auto;
+    }
+  
+    .construction-animation,
+    .status-actions {
+      display: none;
+    }
+  }
+  
+  // High contrast mode
+  @media (forced-colors: active) {
+    .status-icon {
+      border: 1px solid currentColor;
+    }
+  
+    button {
+      border: 1px solid currentColor;
+    }
+  }

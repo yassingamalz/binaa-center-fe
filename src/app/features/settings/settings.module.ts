@@ -6,6 +6,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { UnderConstructionComponent } from '../../shared/components/under-construction/under-construction.component';
 
 const routes: Routes = [
   {
@@ -15,7 +16,7 @@ const routes: Routes = [
   },
   {
     path: 'center',
-    component: CenterSettingsComponent
+    component: UnderConstructionComponent
   },
   {
     path: 'user',
