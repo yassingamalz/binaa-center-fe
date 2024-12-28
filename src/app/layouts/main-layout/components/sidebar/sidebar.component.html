@@ -9,14 +9,37 @@
     <ul class="nav-list">
       <li *ngFor="let item of menuItems" 
           class="nav-item"
-          [class.active]="isActive(item.route)">
-        <a [routerLink]="item.route" 
+          [class.active]="isActive(item.route) || hasActiveChild(item)"
+          [class.has-children]="item.children">
+        <a [routerLink]="getRouterLink(item)" 
            class="nav-link"
            [class.collapsed-link]="isCollapsed"
-           [title]="isCollapsed ? item.label : ''">
+           [title]="isCollapsed ? item.label : ''"
+           (click)="toggleSubmenu(item, $event)">
           <i class="fas {{item.icon}}"></i>
-          <span class="nav-label" *ngIf="!isCollapsed">{{item.label}}</span>
+          <span class="nav-label" *ngIf="!isCollapsed">
+            {{item.label}}
+            <i *ngIf="item.children" 
+               class="fas fa-chevron-down submenu-arrow"
+               [class.expanded]="item.isExpanded">
+            </i>
+          </span>
         </a>
+        
+        <!-- Submenu -->
+        <ul class="submenu" 
+            *ngIf="shouldShowSubmenu(item)"
+            [@submenuAnimation]="item.isExpanded ? 'expanded' : 'collapsed'">
+          <li *ngFor="let child of item.children"
+              class="submenu-item"
+              [class.active]="isActive(child.route)">
+            <a [routerLink]="child.route" 
+               class="submenu-link">
+              <i class="fas {{child.icon}}"></i>
+              <span>{{child.label}}</span>
+            </a>
+          </li>
+        </ul>
       </li>
     </ul>
   </nav>

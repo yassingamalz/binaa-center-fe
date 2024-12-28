@@ -1,4 +1,4 @@
-// src/app/features/reports/components/case-reports/case-reports.component.ts
+// src/app/features/reports/pages/case-reports/case-reports.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReportService } from '../../services/report.service';
@@ -17,6 +17,39 @@ export class CaseReportsComponent implements OnInit, OnDestroy {
   filtersForm: FormGroup;
   cases: CaseDTO[] = [];
   isLoading = false;
+  selectedReportType: 'registration' | 'activity' | 'financial' = 'registration';
+
+  // Computed properties
+  get selectedCase(): CaseDTO | null {
+    const caseId = this.filtersForm.get('caseId')?.value;
+    return this.cases.find(c => c.caseId === caseId) || null;
+  }
+
+  get reportTypeName(): string {
+    switch (this.selectedReportType) {
+      case 'registration': return 'نموذج التسجيل';
+      case 'activity': return 'تقرير النشاطات';
+      case 'financial': return 'التقرير المالي';
+      default: return 'غير محدد';
+    }
+  }
+
+  get currentDate(): string {
+    return new Date().toLocaleDateString('ar-EG', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  }
+
+  get expectedPageCount(): string {
+    switch (this.selectedReportType) {
+      case 'registration': return '3-4 صفحات';
+      case 'activity': return '5-6 صفحات';
+      case 'financial': return '2-3 صفحات';
+      default: return '-';
+    }
+  }
 
   private destroy$ = new Subject<void>();
 
@@ -53,7 +86,11 @@ export class CaseReportsComponent implements OnInit, OnDestroy {
       });
   }
 
-  generateRegistrationForm(): void {
+  selectReportType(type: 'registration' | 'activity' | 'financial'): void {
+    this.selectedReportType = type;
+  }
+
+  generateReport(): void {
     if (this.filtersForm.invalid) {
       Object.keys(this.filtersForm.controls).forEach(key => {
         const control = this.filtersForm.get(key);
@@ -67,6 +104,20 @@ export class CaseReportsComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     const caseId = this.filtersForm.get('caseId')?.value;
 
+    switch (this.selectedReportType) {
+      case 'registration':
+        this.generateRegistrationForm(caseId);
+        break;
+      case 'activity':
+        this.generateActivityReport(caseId);
+        break;
+      case 'financial':
+        this.generateFinancialReport(caseId);
+        break;
+    }
+  }
+
+  private generateRegistrationForm(caseId: number): void {
     this.reportService.generateRegistrationForm(caseId)
       .pipe(
         takeUntil(this.destroy$),
@@ -74,30 +125,46 @@ export class CaseReportsComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (response) => {
-          // Get filename from headers
-          const contentDisposition = response.headers.get('content-disposition');
-          let filename = 'registration-form.pdf';
-          if (contentDisposition) {
-            const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(contentDisposition);
-            if (matches != null && matches[1]) {
-              filename = matches[1].replace(/['"]/g, '');
-            }
-          }
-
-          // Download the file
-          const blob = response.body;
-          if (blob) {
-            saveAs(blob, filename);
-            this.toastr.success('تم إنشاء نموذج التسجيل بنجاح');
-          } else {
-            this.toastr.error('حدث خطأ أثناء تحميل الملف');
-          }
+          this.downloadReport(response);
         },
         error: (error) => {
           console.error('Error generating form:', error);
           this.toastr.error('حدث خطأ أثناء إنشاء النموذج');
         }
       });
+  }
+
+  private generateActivityReport(caseId: number): void {
+    // Implement activity report generation
+    this.toastr.warning('تقرير النشاطات قيد التطوير');
+    this.isLoading = false;
+  }
+
+  private generateFinancialReport(caseId: number): void {
+    // Implement financial report generation
+    this.toastr.warning('التقرير المالي قيد التطوير');
+    this.isLoading = false;
+  }
+
+  private downloadReport(response: any): void {
+    // Get filename from headers
+    const contentDisposition = response.headers.get('content-disposition');
+    let filename = 'report.pdf';
+    if (contentDisposition) {
+      const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(contentDisposition);
+      if (matches != null && matches[1]) {
+        filename = matches[1].replace(/['"]/g, '');
+      }
+    }
+
+    // Download the file
+    const blob = response.body;
+    if (blob) {
+      saveAs(blob, filename);
+      this.toastr.success('تم إنشاء التقرير بنجاح');
+    } else {
+      this.toastr.error('حدث خطأ أثناء تحميل الملف');
+    }
   }
 
   ngOnDestroy(): void {

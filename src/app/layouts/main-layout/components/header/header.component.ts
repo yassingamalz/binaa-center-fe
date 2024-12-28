@@ -142,6 +142,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
+  formatUsername(username: string): string {
+    return username
+      .replace(/[._]/g, ' ')
+      .trim();
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

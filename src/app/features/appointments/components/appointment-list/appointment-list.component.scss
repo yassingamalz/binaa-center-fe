@@ -5,7 +5,7 @@
 @import 'styles/filters';
 @import 'styles/buttons';
 @import 'styles/headers';
-
+@import 'styles/empty-states';
 
 .page-container {
   padding: $spacing-lg;
@@ -45,11 +45,13 @@
 }
 
 // Filters Section
-.filters {
-  @include filters-container;
+.filters-section {
+ @include filters-container-2;
 
-  .search-field {
-    @include search-field;
+  .search-form {
+    .search-input {
+      @include search-field;
+    }
   }
 
   .filter-controls {
@@ -273,28 +275,7 @@
 
 // Empty State
 .empty-state {
-  @include flex-column;
-  align-items: center;
-  padding: $spacing-2xl;
-  text-align: center;
-  background: $color-white;
-  border-radius: $border-radius-lg;
-  box-shadow: $shadow-sm;
-  
-  i {
-    font-size: $font-size-4xl;
-    color: $color-gray-400;
-    margin-bottom: $spacing-lg;
-  }
-  
-  p {
-    color: $color-gray-600;
-    margin-bottom: $spacing-lg;
-  }
-  
-  .btn-secondary {
-    @include btn-secondary;
-  }
+  @include empty-state;
 }
 
 // RTL Support

@@ -8,7 +8,7 @@
         {{filteredSessions.length}} جلسة
       </span>
     </div>
-    
+
     <button class="btn-primary" (click)="createSession()">
       <i class="fas fa-plus"></i>
       <span>جلسة جديدة</span>
@@ -20,20 +20,13 @@
     <form [formGroup]="searchForm" class="search-form">
       <div class="search-input">
         <i class="fas fa-search"></i>
-        <input 
-          type="text"
-          formControlName="searchTerm"
-          placeholder="بحث بإسم الحالة أو المعالج..."
-        >
+        <input type="text" formControlName="searchTerm" placeholder="بحث بإسم الحالة أو المعالج...">
       </div>
     </form>
 
     <div class="filters-group">
       <div class="type-filters">
-        <button 
-          *ngFor="let type of sessionTypes"
-          class="filter-btn"
-          [class.active]="selectedType === type.value"
+        <button *ngFor="let type of sessionTypes" class="filter-btn" [class.active]="selectedType === type.value"
           (click)="onTypeChange(type.value)">
           <i [class]="type.value === 'INDIVIDUAL' ? 'fas fa-user' : 'fas fa-users'"></i>
           {{type.label}}
@@ -41,11 +34,8 @@
       </div>
 
       <div class="status-filters">
-        <button 
-          *ngFor="let status of attendanceStatuses"
-          class="filter-btn"
-          [class.active]="selectedStatus === status.value"
-          (click)="onStatusChange(status.value)">
+        <button *ngFor="let status of attendanceStatuses" class="filter-btn"
+          [class.active]="selectedStatus === status.value" (click)="onStatusChange(status.value)">
           <i [class]="status.value === 'PRESENT' ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
           {{status.label}}
         </button>
@@ -55,9 +45,7 @@
 
   <!-- Sessions List -->
   <div class="sessions-list" [class.loading]="isLoading">
-    <div class="session-card" 
-         *ngFor="let session of filteredSessions"
-         (click)="viewSessionDetails(session.sessionId)">
+    <div class="session-card" *ngFor="let session of filteredSessions" (click)="viewSessionDetails(session.sessionId)">
       <!-- Card Header -->
       <div class="session-header">
         <div class="session-type" [class]="session.sessionType.toLowerCase()">
@@ -79,7 +67,7 @@
       <!-- Card Content -->
       <div class="session-content">
         <h3 class="session-purpose">{{session.purpose}}</h3>
-        
+
         <div class="session-info">
           <div class="info-item case-info">
             <div class="icon-wrapper">
@@ -90,7 +78,7 @@
               <span>{{session.caseName}}</span>
             </div>
           </div>
-          
+
           <div class="info-item staff-info">
             <div class="icon-wrapper">
               <i class="fas fa-user-md"></i>
@@ -100,7 +88,7 @@
               <span>{{session.staffName}}</span>
             </div>
           </div>
-          
+
           <div class="info-item duration">
             <div class="icon-wrapper">
               <i class="fas fa-hourglass-half"></i>
@@ -121,7 +109,7 @@
           <i [class]="session.attendanceStatus === 'PRESENT' ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
           {{session.attendanceStatus === 'PRESENT' ? 'حضر' : 'غائب'}}
         </span>
-        
+
         <div class="actions">
           <button class="btn-icon" (click)="editSession(session, $event)" title="تعديل">
             <i class="fas fa-edit"></i>
@@ -138,7 +126,6 @@
       <i class="far fa-calendar-check"></i>
       <p>لا توجد جلسات مطابقة للبحث</p>
       <button class="btn-secondary" (click)="createSession()">
-        <i class="fas fa-plus"></i>
         <span>إضافة جلسة جديدة</span>
       </button>
     </div>

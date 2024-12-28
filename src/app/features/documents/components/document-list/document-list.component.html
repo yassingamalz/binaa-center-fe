@@ -17,18 +17,24 @@
 
     <!-- Filters -->
     <div class="filters-section">
+        <!-- Search Form -->
         <form [formGroup]="searchForm" class="search-form">
             <div class="search-input">
                 <i class="fas fa-search"></i>
-                <input type="text" formControlName="searchTerm" placeholder="بحث بإسم الملف أو رقم الحالة...">
+                <input type="text" formControlName="searchTerm" placeholder="بحث بإسم الملف أو رقم الحالة..."
+                    [attr.aria-label]="'بحث'" [disabled]="isLoading">
             </div>
         </form>
 
-        <div class="type-filters">
-            <button *ngFor="let type of documentTypes" class="filter-btn" [class.active]="selectedType === type.value"
-                (click)="onTypeChange(type.value)">
-                {{type.label}}
-            </button>
+        <!-- Filter Controls -->
+        <div class="filter-controls">
+            <div class="filter-chips" role="group" aria-label="تصنيف المستندات">
+                <button *ngFor="let type of documentTypes" class="filter-chip"
+                    [class.active]="selectedType === type.value" (click)="onTypeChange(type.value)"
+                    [disabled]="isLoading">
+                    {{ type.label }}
+                </button>
+            </div>
         </div>
     </div>
 

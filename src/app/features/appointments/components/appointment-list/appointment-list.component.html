@@ -22,34 +22,43 @@
   </div>
 
   <!-- Filters -->
-  <div class="filters">
+  <div class="filters-section">
     <!-- Search -->
-    <div class="search">
-      <div class="search-field">
-        <input type="text" 
-               [(ngModel)]="searchTerm" 
-               (input)="onSearch($event)"
-               placeholder="بحث بالاسم أو المعالج...">
+    <div class="search-form">
+      <div class="search-input">
         <i class="fas fa-search"></i>
+        <input 
+          type="text"
+          [(ngModel)]="searchTerm"
+          (input)="onSearch($event)"
+          placeholder="بحث بالاسم أو المعالج..."
+          [attr.aria-label]="'بحث'"
+          [disabled]="isLoading">
       </div>
     </div>
 
     <!-- Filter Controls -->
     <div class="filter-controls">
+      <!-- Date Filter -->
       <div class="date-filter">
         <label>التاريخ</label>
-        <input type="date" 
-               [ngModel]="selectedDate" 
-               (ngModelChange)="onDateChange($event)" 
-               class="form-control">
+        <input 
+          type="date"
+          [ngModel]="selectedDate"
+          (ngModelChange)="onDateChange($event)"
+          class="form-control"
+          [disabled]="isLoading">
       </div>
 
-      <div class="filter-chips">
-        <button *ngFor="let status of statusOptions" 
-                class="filter-chip" 
-                [class.active]="selectedStatus === status.value"
-                (click)="onStatusChange(status.value)">
-          {{status.label}}
+      <!-- Status Filter Chips -->
+      <div class="filter-chips" role="group" aria-label="فلترة الحالة">
+        <button 
+          *ngFor="let status of statusOptions"
+          class="filter-chip"
+          [class.active]="selectedStatus === status.value"
+          (click)="onStatusChange(status.value)"
+          [disabled]="isLoading">
+          {{ status.label }}
         </button>
       </div>
     </div>

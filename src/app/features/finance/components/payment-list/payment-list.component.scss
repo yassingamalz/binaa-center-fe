@@ -1,5 +1,7 @@
 // src/app/features/finance/components/payment-list/payment-list.component.scss
 @import 'styles/main';
+@import 'styles/buttons';
+@import 'styles/empty-states';
 
 .payments-container {
   padding: $spacing-lg;
@@ -32,16 +34,7 @@
   }
 
   .btn-primary {
-    @include button-base;
-    background: $color-primary;
-    color: $color-white;
-    gap: $spacing-sm;
-    
-    @media (max-width: $breakpoint-sm) {
-      span {
-        display: none;
-      }
-    }
+  @include btn-primary-3d;
   }
 }
 
@@ -218,34 +211,7 @@
 }
 
 .empty-state {
-  @include flex-column;
-  align-items: center;
-  padding: $spacing-2xl;
-  background: $color-white;
-  border-radius: $border-radius-lg;
-  text-align: center;
-  box-shadow: $shadow-sm;
-  
-  i {
-    font-size: $font-size-4xl;
-    color: $color-gray-400;
-    margin-bottom: $spacing-lg;
-  }
-  
-  p {
-    color: $color-gray-600;
-    margin-bottom: $spacing-lg;
-  }
-  
-  .btn-secondary {
-    @include button-base;
-    background: $color-gray-100;
-    color: $color-gray-700;
-    
-    &:hover {
-      background: $color-gray-200;
-    }
-  }
+  @include empty-state;
 }
 
 // Print Styles

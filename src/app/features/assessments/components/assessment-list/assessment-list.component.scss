@@ -5,494 +5,448 @@
 @import 'styles/filters';
 @import 'styles/shimmer';
 @import 'styles/headers';
+@import 'styles/empty-states';
 
 .assessments-container {
-  padding: $spacing-lg;
-  min-height: calc(100vh - #{$layout-header-height});
-  background: linear-gradient(
-    135deg,
-    $color-gray-100 0%,
-    rgba($color-gray-100, 0.5) 100%
-  );
+    padding: $spacing-lg;
+    min-height: calc(100vh - #{$layout-header-height});
+    background: linear-gradient(135deg,
+            $color-gray-100 0%,
+            rgba($color-gray-100, 0.5) 100%);
 
-  @media (max-width: $breakpoint-md) {
-    padding: $spacing-md;
-  }
+    @media (max-width: $breakpoint-md) {
+        padding: $spacing-md;
+    }
 }
 
 // Header Section
 .page-header {
-  @include flex-between;
-  margin-bottom: $spacing-xl;
+    @include flex-between;
+    margin-bottom: $spacing-xl;
 
-  .header-title {
-    @include header-title-2
-  }
+    .header-title {
+        @include header-title-2
+    }
 
-  .btn-primary {
-    @include btn-primary-3d;
-  }
-  .assessment-count{
-    @include count-badge-3d
-  }
+    .btn-primary {
+        @include btn-primary-3d;
+    }
+
+    .assessment-count {
+        @include count-badge-3d
+    }
 }
 
 // Filters Section
 .filters-section {
-  @include filters-container;
-  background: $color-white;
-  padding: $spacing-lg;
-  border-radius: $border-radius-lg;
-  box-shadow: $shadow-sm;
-  margin-bottom: $spacing-xl;
+    @include filters-container;
 
-  .search-form {
-    .search-input {
-      @include search-field;
-      
-      input {
-        background: $color-gray-100;
-        transition: background 0.2s ease;
-        
-        &:focus {
-          background: $color-white;
+    .search-form {
+        .search-input {
+            @include search-field;
         }
-      }
-    }
-  }
-
-  .filters-group {
-    @include filter-controls;
-
-    .type-filters,
-    .status-filters {
-      @include filter-chips-container;
     }
 
-    .filter-btn {
-      @include filter-chip;
-      
-      i {
-        margin-right: $spacing-xs;
-      }
-      
-      &:hover {
-        transform: translateY(-2px);
-      }
-      
-      &.active {
-        background: linear-gradient(135deg, $color-primary, darken($color-primary, 10%));
-      }
+    .filters-group {
+        @include filter-controls;
+
+        .type-filters,
+        .status-filters {
+            @include filter-chips-container;
+        }
+
+        .filter-btn {
+            @include filter-chip;
+        }
     }
-  }
 }
 
 // Assessment Cards Grid
 .assessments-list {
-  display: grid;
-  gap: $spacing-lg;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 400px), 1fr));
-  
-  &.loading {
-    .assessment-card {
-      @extend .shimmer-effect;
+    display: grid;
+    gap: $spacing-lg;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 400px), 1fr));
+
+    &.loading {
+        .assessment-card {
+            @extend .shimmer-effect;
+        }
     }
-  }
 }
 
 // Assessment Card
 .assessment-card {
-  @include card;
-  padding: $spacing-lg;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid $color-gray-200;
-  position: relative;
-  overflow: hidden;
-  
-  background: linear-gradient(
-    135deg,
-    $color-white 0%,
-    rgba($color-gray-100, 0.5) 100%
-  );
-  
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: $shadow-lg;
-    border-color: rgba($color-primary, 0.2);
-    
-    &::after {
-      opacity: 1;
-    }
-  }
-  
-  // Hover gradient border
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    border: 2px solid transparent;
-    background: linear-gradient(135deg, $color-primary, $color-secondary) border-box;
-    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: destination-out;
-    mask-composite: exclude;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
+    @include card;
+    padding: $spacing-lg;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid $color-gray-200;
+    position: relative;
+    overflow: hidden;
 
-  // Card Header
-  .assessment-header {
-    @include flex-between;
-    margin-bottom: $spacing-lg;
-    padding-bottom: $spacing-md;
-    border-bottom: 1px solid rgba($color-gray-200, 0.5);
+    background: linear-gradient(135deg,
+            $color-white 0%,
+            rgba($color-gray-100, 0.5) 100%);
 
-    .assessment-type {
-      @include flex-center;
-      gap: $spacing-sm;
-      padding: $spacing-sm $spacing-md;
-      border-radius: $border-radius-full;
-      font-weight: 500;
-      
-      i {
-        font-size: $font-size-lg;
-      }
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: $shadow-lg;
+        border-color: rgba($color-primary, 0.2);
 
-      &.iq {
-        background: linear-gradient(45deg, rgba($color-primary, 0.1), rgba($color-primary, 0.2));
-        color: $color-primary;
-      }
-      
-      &.psychological {
-        background: linear-gradient(45deg, rgba($color-secondary, 0.1), rgba($color-secondary, 0.2));
-        color: $color-secondary;
-      }
-      
-      &.learning_difficulties {
-        background: linear-gradient(45deg, rgba($color-accent, 0.1), rgba($color-accent, 0.2));
-        color: $color-accent;
-      }
-    }
-
-    .assessment-date {
-      @include flex-center;
-      gap: $spacing-sm;
-      padding: $spacing-xs $spacing-sm;
-      background: $color-gray-100;
-      border-radius: $border-radius-lg;
-      color: $color-gray-700;
-      
-      i {
-        color: $color-warning;
-        background: $color-white;
-        padding: $spacing-xs;
-        border-radius: $border-radius-md;
-      }
-    }
-  }
-
-  // Card Content
-  .assessment-content {
-    margin: $spacing-lg 0;
-
-    .assessment-info {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: $spacing-lg;
-      margin-bottom: $spacing-lg;
-
-      .info-item {
-        @include flex-center;
-        gap: $spacing-sm;
-        padding: $spacing-sm $spacing-md;
-        background: $color-gray-100;
-        border-radius: $border-radius-lg;
-        transition: transform 0.2s ease;
-        
-        &:hover {
-          transform: translateY(-2px);
-        }
-
-        .icon-wrapper {
-          @include flex-center;
-          width: 40px;
-          height: 40px;
-          border-radius: $border-radius-full;
-          background: $color-white;
-          flex-shrink: 0;
-          
-          i {
-            font-size: $font-size-lg;
-          }
-        }
-
-        .info-text {
-          font-weight: 500;
-          color: $color-gray-700;
-          
-          .label {
-            display: block;
-            font-size: $font-size-sm;
-            color: $color-gray-900;
-            margin-bottom: 2px;
-          }
-        }
-
-        &.case-info {
-          .icon-wrapper {
-            box-shadow: 0 0 0 2px rgba($color-primary, 0.1);
-            i { color: $color-primary; }
-          }
-        }
-        
-        &.assessor-info {
-          .icon-wrapper {
-            box-shadow: 0 0 0 2px rgba($color-secondary, 0.1);
-            i { color: $color-secondary; }
-          }
-        }
-      }
-    }
-
-    // Score Display
-    .assessment-score {
-      @include flex-center;
-      flex-direction: column;
-      gap: $spacing-sm;
-      margin: $spacing-lg 0;
-
-      .score-circle {
-        width: 80px;
-        height: 80px;
-        @include flex-center;
-        background: linear-gradient(135deg, rgba($color-primary, 0.1), rgba($color-primary, 0.2));
-        border: 2px solid rgba($color-primary, 0.2);
-        color: $color-primary;
-        border-radius: $border-radius-full;
-        font-size: $font-size-2xl;
-        font-weight: bold;
-        position: relative;
-        
         &::after {
-          content: '';
-          position: absolute;
-          inset: -2px;
-          border-radius: inherit;
-          background: linear-gradient(135deg, $color-primary, $color-secondary) border-box;
-          -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-          mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-          -webkit-mask-composite: destination-out;
-          mask-composite: exclude;
+            opacity: 1;
         }
-      }
-
-      .score-label {
-        font-size: $font-size-base;
-        color: $color-gray-600;
-        font-weight: 500;
-      }
     }
 
-    // Notes Section
-    .assessment-notes {
-      background: linear-gradient(
-        45deg,
-        rgba($color-gray-100, 0.5) 0%,
-        rgba($color-gray-100, 0.5) 100%
-      );
-      border-radius: $border-radius-lg;
-      padding: $spacing-lg;
-      border: 1px solid $color-gray-200;
-      position: relative;
-
-      h4 {
-        color: $color-gray-900;
-        font-size: $font-size-lg;
-        margin-bottom: $spacing-md;
-        font-weight: 600;
-      }
-
-      p {
-        color: $color-gray-700;
-        line-height: 1.6;
-        margin: 0;
-      }
+    // Hover gradient border
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        border: 2px solid transparent;
+        background: linear-gradient(135deg, $color-primary, $color-secondary) border-box;
+        -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: destination-out;
+        mask-composite: exclude;
+        opacity: 0;
+        transition: opacity 0.3s ease;
     }
 
-    // Next Assessment Date
-    .next-assessment {
-      @include flex-center;
-      gap: $spacing-sm;
-      margin-top: $spacing-md;
-      padding: $spacing-sm $spacing-md;
-      background: rgba($color-warning, 0.1);
-      border-radius: $border-radius-lg;
-      color: $color-warning;
-      font-weight: 500;
-      
-      i {
-        font-size: $font-size-lg;
-      }
-    }
-  }
+    // Card Header
+    .assessment-header {
+        @include flex-between;
+        margin-bottom: $spacing-lg;
+        padding-bottom: $spacing-md;
+        border-bottom: 1px solid rgba($color-gray-200, 0.5);
 
-  // Card Footer
-  .assessment-footer {
-    @include flex-between;
-    padding-top: $spacing-md;
-    border-top: 1px solid rgba($color-gray-200, 0.5);
+        .assessment-type {
+            @include flex-center;
+            gap: $spacing-sm;
+            padding: $spacing-sm $spacing-md;
+            border-radius: $border-radius-full;
+            font-weight: 500;
 
-    .status-badge {
-      @include flex-center;
-      gap: $spacing-sm;
-      padding: $spacing-sm $spacing-lg;
-      border-radius: $border-radius-full;
-      font-weight: 500;
-      
-      i {
-        font-size: $font-size-base;
-      }
-      
-      &.completed {
-        background: linear-gradient(45deg, rgba($color-success, 0.1), rgba($color-success, 0.2));
-        color: $color-success;
-      }
-      
-      &.pending {
-        background: linear-gradient(45deg, rgba($color-warning, 0.1), rgba($color-warning, 0.2));
-        color: $color-warning;
-      }
-      
-      &.scheduled {
-        background: linear-gradient(45deg, rgba($color-info, 0.1), rgba($color-info, 0.2));
-        color: $color-info;
-      }
-    }
+            i {
+                font-size: $font-size-lg;
+            }
 
-    .actions {
-      @include flex-center;
-      gap: $spacing-sm;
+            &.iq {
+                background: linear-gradient(45deg, rgba($color-primary, 0.1), rgba($color-primary, 0.2));
+                color: $color-primary;
+            }
 
-      .btn-icon {
-        @include button-base;
-        width: 40px;
-        height: 40px;
-        padding: 0;
-        border-radius: $border-radius-full;
-        background: $color-white;
-        border: 1px solid $color-gray-200;
-        transition: all 0.2s ease;
-        
-        i {
-          font-size: $font-size-lg;
-          transition: transform 0.2s ease;
-        }
-        
-        &:hover {
-          border-color: $color-primary;
-          background: rgba($color-primary, 0.1);
-          transform: translateY(-2px);
-          
-          i {
-            color: $color-primary;
-            transform: scale(1.1);
-          }
+            &.psychological {
+                background: linear-gradient(45deg, rgba($color-secondary, 0.1), rgba($color-secondary, 0.2));
+                color: $color-secondary;
+            }
+
+            &.learning_difficulties {
+                background: linear-gradient(45deg, rgba($color-accent, 0.1), rgba($color-accent, 0.2));
+                color: $color-accent;
+            }
         }
 
-        &.danger:hover {
-          border-color: $color-error;
-          background: rgba($color-error, 0.1);
-          
-          i {
-            color: $color-error;
-          }
+        .assessment-date {
+            @include flex-center;
+            gap: $spacing-sm;
+            padding: $spacing-xs $spacing-sm;
+            background: $color-gray-100;
+            border-radius: $border-radius-lg;
+            color: $color-gray-700;
+
+            i {
+                color: $color-warning;
+                background: $color-white;
+                padding: $spacing-xs;
+                border-radius: $border-radius-md;
+            }
         }
-      }
     }
-  }
+
+    // Card Content
+    .assessment-content {
+        margin: $spacing-lg 0;
+
+        .assessment-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: $spacing-lg;
+            margin-bottom: $spacing-lg;
+
+            .info-item {
+                @include flex-center;
+                gap: $spacing-sm;
+                padding: $spacing-sm $spacing-md;
+                background: $color-gray-100;
+                border-radius: $border-radius-lg;
+                transition: transform 0.2s ease;
+
+                &:hover {
+                    transform: translateY(-2px);
+                }
+
+                .icon-wrapper {
+                    @include flex-center;
+                    width: 40px;
+                    height: 40px;
+                    border-radius: $border-radius-full;
+                    background: $color-white;
+                    flex-shrink: 0;
+
+                    i {
+                        font-size: $font-size-lg;
+                    }
+                }
+
+                .info-text {
+                    font-weight: 500;
+                    color: $color-gray-700;
+
+                    .label {
+                        display: block;
+                        font-size: $font-size-sm;
+                        color: $color-gray-900;
+                        margin-bottom: 2px;
+                    }
+                }
+
+                &.case-info {
+                    .icon-wrapper {
+                        box-shadow: 0 0 0 2px rgba($color-primary, 0.1);
+
+                        i {
+                            color: $color-primary;
+                        }
+                    }
+                }
+
+                &.assessor-info {
+                    .icon-wrapper {
+                        box-shadow: 0 0 0 2px rgba($color-secondary, 0.1);
+
+                        i {
+                            color: $color-secondary;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Score Display
+        .assessment-score {
+            @include flex-center;
+            flex-direction: column;
+            gap: $spacing-sm;
+            margin: $spacing-lg 0;
+
+            .score-circle {
+                width: 80px;
+                height: 80px;
+                @include flex-center;
+                background: linear-gradient(135deg, rgba($color-primary, 0.1), rgba($color-primary, 0.2));
+                border: 2px solid rgba($color-primary, 0.2);
+                color: $color-primary;
+                border-radius: $border-radius-full;
+                font-size: $font-size-2xl;
+                font-weight: bold;
+                position: relative;
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    inset: -2px;
+                    border-radius: inherit;
+                    background: linear-gradient(135deg, $color-primary, $color-secondary) border-box;
+                    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+                    mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+                    -webkit-mask-composite: destination-out;
+                    mask-composite: exclude;
+                }
+            }
+
+            .score-label {
+                font-size: $font-size-base;
+                color: $color-gray-600;
+                font-weight: 500;
+            }
+        }
+
+        // Notes Section
+        .assessment-notes {
+            background: linear-gradient(45deg,
+                    rgba($color-gray-100, 0.5) 0%,
+                    rgba($color-gray-100, 0.5) 100%);
+            border-radius: $border-radius-lg;
+            padding: $spacing-lg;
+            border: 1px solid $color-gray-200;
+            position: relative;
+
+            h4 {
+                color: $color-gray-900;
+                font-size: $font-size-lg;
+                margin-bottom: $spacing-md;
+                font-weight: 600;
+            }
+
+            p {
+                color: $color-gray-700;
+                line-height: 1.6;
+                margin: 0;
+            }
+        }
+
+        // Next Assessment Date
+        .next-assessment {
+            @include flex-center;
+            gap: $spacing-sm;
+            margin-top: $spacing-md;
+            padding: $spacing-sm $spacing-md;
+            background: rgba($color-warning, 0.1);
+            border-radius: $border-radius-lg;
+            color: $color-warning;
+            font-weight: 500;
+
+            i {
+                font-size: $font-size-lg;
+            }
+        }
+    }
+
+    // Card Footer
+    .assessment-footer {
+        @include flex-between;
+        padding-top: $spacing-md;
+        border-top: 1px solid rgba($color-gray-200, 0.5);
+
+        .status-badge {
+            @include flex-center;
+            gap: $spacing-sm;
+            padding: $spacing-sm $spacing-lg;
+            border-radius: $border-radius-full;
+            font-weight: 500;
+
+            i {
+                font-size: $font-size-base;
+            }
+
+            &.completed {
+                background: linear-gradient(45deg, rgba($color-success, 0.1), rgba($color-success, 0.2));
+                color: $color-success;
+            }
+
+            &.pending {
+                background: linear-gradient(45deg, rgba($color-warning, 0.1), rgba($color-warning, 0.2));
+                color: $color-warning;
+            }
+
+            &.scheduled {
+                background: linear-gradient(45deg, rgba($color-info, 0.1), rgba($color-info, 0.2));
+                color: $color-info;
+            }
+        }
+
+        .actions {
+            @include flex-center;
+            gap: $spacing-sm;
+
+            .btn-icon {
+                @include button-base;
+                width: 40px;
+                height: 40px;
+                padding: 0;
+                border-radius: $border-radius-full;
+                background: $color-white;
+                border: 1px solid $color-gray-200;
+                transition: all 0.2s ease;
+
+                i {
+                    font-size: $font-size-lg;
+                    transition: transform 0.2s ease;
+                }
+
+                &:hover {
+                    border-color: $color-primary;
+                    background: rgba($color-primary, 0.1);
+                    transform: translateY(-2px);
+
+                    i {
+                        color: $color-primary;
+                        transform: scale(1.1);
+                    }
+                }
+
+                &.danger:hover {
+                    border-color: $color-error;
+                    background: rgba($color-error, 0.1);
+
+                    i {
+                        color: $color-error;
+                    }
+                }
+            }
+        }
+    }
 }
 
 // Empty State
 .empty-state {
-  @include flex-column;
-  align-items: center;
-  padding: $spacing-2xl;
-  background: $color-white;
-  border-radius: $border-radius-lg;
-  text-align: center;
-  min-height: 300px;
-  box-shadow: $shadow-sm;
-
-  i {
-    font-size: $font-size-4xl;
-    color: $color-gray-400;
-    margin-bottom: $spacing-lg;
-  }
-
-  p {
-    color: $color-gray-600;
-    margin-bottom: $spacing-lg;
-    font-size: $font-size-lg;
-  }
-
-  .btn-secondary {
-    @include btn-secondary;
-  }
+    @include empty-state;
 }
 
 // RTL Support
 [dir="rtl"] {
-  .assessment-card {
-    .icon-wrapper {
-      margin-left: $spacing-sm;
-      margin-right: 0;
+    .assessment-card {
+        .icon-wrapper {
+            margin-left: $spacing-sm;
+            margin-right: 0;
+        }
     }
-  }
 }
 
 // Print Styles
 @media print {
-  .assessments-container {
-    background: none;
-    padding: 0;
-  }
-
-  .filters-section,
-  .actions,
-  .btn-primary {
-    display: none !important;
-  }
-
-  .assessment-card {
-    break-inside: avoid;
-    page-break-inside: avoid;
-    box-shadow: none;
-    background: none;
-    
-    &::after {
-      display: none;
+    .assessments-container {
+        background: none;
+        padding: 0;
     }
-  }
+
+    .filters-section,
+    .actions,
+    .btn-primary {
+        display: none !important;
+    }
+
+    .assessment-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        box-shadow: none;
+        background: none;
+
+        &::after {
+            display: none;
+        }
+    }
 }
 
 // Reduced Motion
 @media (prefers-reduced-motion: reduce) {
-  .assessment-card,
-  .btn-icon,
-  .info-item {
-    transition: none;
-    
-    &:hover {
-      transform: none;
+
+    .assessment-card,
+    .btn-icon,
+    .info-item {
+        transition: none;
+
+        &:hover {
+            transform: none;
+        }
+
+        i {
+            transition: none;
+
+            &:hover {
+                transform: none;
+            }
+        }
     }
-    
-    i {
-      transition: none;
-      
-      &:hover {
-        transform: none;
-      }
-    }
-  }
 }

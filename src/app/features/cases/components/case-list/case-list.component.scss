@@ -5,6 +5,7 @@
 @import 'styles/filters';
 @import 'styles/buttons';
 @import 'styles/headers';
+@import 'styles/empty-states';
 
 
 .page-container {
@@ -32,15 +33,7 @@
 }
 
 .filters-section {
-  @include filters-container;
-  display: grid;
-  gap: $spacing-lg;
-  margin-bottom: $spacing-xl;
-
-  @media (min-width: $breakpoint-md) {
-    grid-template-columns: 1fr auto;
-    align-items: center;
-  }
+  @include filters-container-2;
 
   .search-form {
     .search-input {
@@ -48,7 +41,6 @@
     }
   }
 }
-
 
 .filter-chips {
   @include filter-chips-container;
@@ -243,29 +235,7 @@
 }
 
 .empty-state {
-  @include flex-column;
-  align-items: center;
-  justify-content: center;
-  padding: $spacing-2xl;
-  text-align: center;
-  background: $color-white;
-  border-radius: $border-radius-lg;
-  box-shadow: $shadow-sm;
-
-  i {
-    font-size: $font-size-4xl;
-    color: $color-gray-400;
-    margin-bottom: $spacing-lg;
-  }
-
-  p {
-    margin-bottom: $spacing-lg;
-    color: $color-gray-600;
-  }
-
-  .btn-secondary {
-    @include btn-secondary;
-  }
+  @include empty-state;
 }
 
 // Mobile Touch Optimizations

@@ -22,6 +22,18 @@
 
 }
 
+@mixin filters-container-2 {
+  @include filters-container;
+  display: grid;
+  gap: $spacing-lg;
+  margin-bottom: $spacing-xl;
+
+  @media (min-width: $breakpoint-md) {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+}
+
 // Search field with icon
 @mixin search-field {
   position: relative;

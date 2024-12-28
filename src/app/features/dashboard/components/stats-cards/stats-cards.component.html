@@ -1,46 +1,53 @@
-<!-- src\app\features\dashboard\components\stats-cards\stats-cards.component.html -->
+<!-- stats-cards.component.html -->
 <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-header">
-        <i class="fas fa-users text-primary"></i>
-        <h3>الحالات النشطة</h3>
-      </div>
-      <div class="stat-content">
-        <h2>{{ stats.activeCases?.length || 0 }}</h2>
-        <p>حالة نشطة</p>
-      </div>
+  <!-- Active Cases Card -->
+  <div class="stat-card">
+    <div class="stat-content">
+      <h2>{{ stats.activeCases?.length || 0 }}</h2>
+      <p>الحالات النشطة</p>
     </div>
-  
-    <div class="stat-card">
-      <div class="stat-header">
-        <i class="fas fa-calendar-check text-success"></i>
-        <h3>جلسات اليوم</h3>
-      </div>
-      <div class="stat-content">
-        <h2>{{ stats.todaysSessions?.totalSessions || 0 }}</h2>
-        <p>{{ stats.todaysSessions?.completed || 0 }} مكتملة</p>
-      </div>
-    </div>
-  
-    <div class="stat-card">
-      <div class="stat-header">
-        <i class="fas fa-coins text-warning"></i>
-        <h3>الدخل الشهري</h3>
-      </div>
-      <div class="stat-content">
-        <h2>{{ stats.monthlyFinance?.totalIncome | currency:'EGP':'symbol':'1.0-0' }}</h2>
-        <p>{{ stats.monthlyFinance?.pendingAmount | currency:'EGP':'symbol':'1.0-0' }} معلق</p>
-      </div>
-    </div>
-  
-    <div class="stat-card">
-      <div class="stat-header">
-        <i class="fas fa-clipboard-list text-info"></i>
-        <h3>التقييمات القادمة</h3>
-      </div>
-      <div class="stat-content">
-        <h2>{{ stats.upcomingAssessments?.length || 0 }}</h2>
-        <p>تقييم مجدول</p>
-      </div>
+    <div class="icon-wrapper pink">
+      <i class="fas fa-users"></i>
     </div>
   </div>
+
+  <!-- Today's Sessions Card -->
+  <div class="stat-card">
+    <div class="stat-content">
+      <h2>{{ stats.todaysSessions?.totalSessions || 0 }}</h2>
+      <p>جلسات اليوم</p>
+    </div>
+    <div class="icon-wrapper purple">
+      <i class="fas fa-calendar-check"></i>
+    </div>
+  </div>
+
+  <!-- Monthly Income Card -->
+  <div class="stat-card">
+    <div class="stat-content">
+      <h2>{{ stats.monthlyFinance?.totalIncome || 0 }} جنيه</h2>
+      <p>الدخل الشهري</p>
+    </div>
+    <div class="icon-wrapper accent">
+      <i class="fas fa-coins"></i>
+    </div>
+  </div>
+
+  <!-- Upcoming Assessments Card -->
+  <div class="stat-card">
+    <div class="stat-content">
+      <h2>{{ stats.upcomingAssessments?.length || 0 }}</h2>
+      <p>التقييمات القادمة</p>
+    </div>
+    <div class="icon-wrapper info">
+      <i class="fas fa-clipboard-list"></i>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <ng-container *ngIf="isLoading">
+    <div class="stat-card shimmer" *ngFor="let i of [1,2,3,4]">
+      <div class="shimmer-content"></div>
+    </div>
+  </ng-container>
+</div>

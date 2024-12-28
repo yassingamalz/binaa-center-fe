@@ -1,7 +1,7 @@
 // shared/styles/_shimmer.scss
 @import 'main.scss';
 
-.shimmer-effect {
+@mixin shimmer-effect {
   overflow: hidden !important;
 
   .shimmer-overlay {

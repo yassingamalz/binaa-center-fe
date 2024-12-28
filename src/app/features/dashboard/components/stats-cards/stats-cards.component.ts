@@ -1,4 +1,4 @@
-// src/app/features/dashboard/components/stats-cards/stats-cards.component.ts
+// stats-cards.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { DashboardService } from '../../services/dashboard.service';
@@ -10,6 +10,7 @@ import { DashboardService } from '../../services/dashboard.service';
 })
 export class StatsCardsComponent implements OnInit, OnDestroy {
   stats: any = {};
+  isLoading = true;
   private destroy$ = new Subject<void>();
 
   constructor(private dashboardService: DashboardService) {}
@@ -22,8 +23,14 @@ export class StatsCardsComponent implements OnInit, OnDestroy {
     this.dashboardService.getDashboardStats()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (data) => this.stats = data,
-        error: (error) => console.error('Error loading stats:', error)
+        next: (data) => {
+          this.stats = data;
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error loading stats:', error);
+          this.isLoading = false;
+        }
       });
   }
 
