@@ -20,21 +20,33 @@
         <form [formGroup]="searchForm" class="search-form">
             <div class="search-input">
                 <i class="fas fa-search"></i>
-                <input type="text" formControlName="searchTerm" placeholder="بحث برقم الفاتورة أو اسم الحالة...">
+                <input 
+                    type="text" 
+                    formControlName="searchTerm" 
+                    placeholder="بحث برقم الفاتورة أو اسم الحالة..."
+                >
             </div>
         </form>
 
         <div class="filter-controls">
             <div class="filter-chips">
-                <button *ngFor="let status of paymentStatuses" class="filter-chip"
-                    [class.active]="selectedStatus === status.value" (click)="onStatusChange(status.value)">
+                <button 
+                    *ngFor="let status of paymentStatuses" 
+                    class="filter-chip"
+                    [class.active]="selectedStatus === status.value" 
+                    (click)="onStatusChange(status.value)"
+                >
                     {{status.label}}
                 </button>
             </div>
             
             <div class="filter-chips">
-                <button *ngFor="let method of paymentMethods" class="filter-chip"
-                    [class.active]="selectedMethod === method.value" (click)="onMethodChange(method.value)">
+                <button 
+                    *ngFor="let method of paymentMethods" 
+                    class="filter-chip"
+                    [class.active]="selectedMethod === method.value" 
+                    (click)="onMethodChange(method.value)"
+                >
                     {{method.label}}
                 </button>
             </div>
@@ -45,9 +57,15 @@
     <div class="payments-list" [class.loading]="isLoading">
         <div class="payment-card" *ngFor="let payment of filteredPayments">
             <div class="payment-header">
-                <div class="payment-method">
-                    <i [class]="getMethodIcon(payment.paymentMethod)"></i>
-                    <span>{{getMethodLabel(payment.paymentMethod)}}</span>
+                <div class="payment-info">
+                    <div class="method-badge">
+                        <i [class]="getMethodIcon(payment.paymentMethod)"></i>
+                    </div>
+                    <div class="invoice-details">
+                        <div class="invoice-number">
+                            <span>#</span>{{payment.invoiceNumber}}
+                        </div>
+                    </div>
                 </div>
                 <div class="payment-amount">
                     {{payment.amount | currency:'EGP':'symbol':'1.0-0'}}
@@ -55,37 +73,38 @@
             </div>
 
             <div class="payment-content">
-                <div class="payment-details">
-                    <div class="payment-date">
-                        <i class="far fa-calendar"></i>
-                        <span>{{payment.paymentDate | date:'mediumDate'}}</span>
-                    </div>
-                    <div class="case-info">
-                        <i class="fas fa-user"></i>
-                        <span>{{payment.caseName}}</span>
-                    </div>
+                <div class="info-item">
+                    <i class="far fa-calendar"></i>
+                    <span>{{payment.paymentDate | date:'mediumDate'}}</span>
                 </div>
-
-                <div class="payment-info">
-                    <span class="invoice-number">#{{payment.invoiceNumber}}</span>
-                    <p class="payment-description" *ngIf="payment.description">
-                        {{payment.description}}
-                    </p>
+                <div class="info-item">
+                    <i class="fas fa-user"></i>
+                    <span>{{payment.caseName}}</span>
                 </div>
+                <p class="payment-description" *ngIf="payment.description">
+                    {{payment.description}}
+                </p>
             </div>
 
             <div class="payment-footer">
-                <div class="payment-info">
-                    <span class="status-badge" [class]="getStatusClass(payment.paymentStatus)">
-                        {{getStatusLabel(payment.paymentStatus)}}
-                    </span>
-                </div>
+                <span class="status-badge" [class]="getStatusClass(payment.paymentStatus)">
+                    <i class="fas fa-circle"></i>
+                    {{getStatusLabel(payment.paymentStatus)}}
+                </span>
 
                 <div class="actions">
-                    <button class="btn-icon" (click)="editPayment(payment)" title="تعديل">
+                    <button 
+                        class="btn-icon" 
+                        (click)="editPayment(payment)" 
+                        title="تعديل"
+                    >
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="btn-icon" (click)="printReceipt(payment)" title="طباعة الإيصال">
+                    <button 
+                        class="btn-icon" 
+                        (click)="printReceipt(payment)" 
+                        title="طباعة الإيصال"
+                    >
                         <i class="fas fa-print"></i>
                     </button>
                 </div>

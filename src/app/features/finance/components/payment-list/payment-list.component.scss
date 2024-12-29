@@ -6,7 +6,6 @@
 @import 'styles/badges';
 @import 'styles/filters';
 
-
 .payments-container {
   padding: $spacing-lg;
   
@@ -23,12 +22,12 @@
     @include header-title-2;
 
     .payment-count {
-    @include count-badge-3d;
+      @include count-badge-3d;
     }
   }
 
   .btn-primary {
-  @include btn-primary-3d;
+    @include btn-primary-3d;
   }
 }
 
@@ -37,49 +36,39 @@
   margin-bottom: $spacing-xl;
 
   .search-form {
-      flex-grow: 1;
+    flex-grow: 1;
 
-      .search-input {
-          @include search-field;
-          margin-bottom: $spacing-md;
+    .search-input {
+      @include search-field;
+      margin-bottom: $spacing-md;
 
-          @media (min-width: $breakpoint-md) {
-              margin-bottom: 0;
-          }
+      @media (min-width: $breakpoint-md) {
+        margin-bottom: 0;
       }
+    }
   }
 
   .filter-controls {
-      @include filter-controls;
+    @include filter-controls;
 
-      .filter-chips {
-          @include filter-chips-container;
+    .filter-chips {
+      @include filter-chips-container;
 
-          .filter-chip {
-              @include filter-chip;
-
-              &.active {
-                  background: $color-primary;
-                  color: $color-white;
-              }
-
-              &:hover:not(.active):not(:disabled) {
-                  background: $color-gray-200;
-              }
-
-              &:disabled {
-                  opacity: 0.7;
-                  cursor: not-allowed;
-              }
-          }
+      .filter-chip {
+        @include filter-chip;
       }
+    }
   }
 }
-
 
 .payments-list {
   display: grid;
   gap: $spacing-lg;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 500px), 1fr));
+  
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: 1fr;
+  }
   
   &.loading {
     opacity: 0.7;
@@ -89,73 +78,124 @@
 
 .payment-card {
   @include card;
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-md;
+  background: $color-white;
+  padding: $spacing-lg;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-rtl-lg;
+  }
 
   .payment-header {
     @include flex-between;
     padding-bottom: $spacing-md;
-    border-bottom: 1px solid $color-gray-200;
+    border-bottom: 1px solid $color-gray-100;
+    margin-bottom: $spacing-md;
 
     .payment-info {
       @include flex-center;
       gap: $spacing-md;
 
-      .invoice-number {
-        font-weight: 600;
+      .method-badge {
+        @include flex-center;
+        background: rgba($color-primary, 0.08);
+        padding: $spacing-sm;
+        border-radius: $border-radius-lg;
         color: $color-primary;
+        width: 44px;
+        height: 44px;
+        
+        i {
+          font-size: $font-size-xl;
+        }
       }
 
-      .payment-date {
-        @include flex-center;
+      .invoice-details {
+        @include flex-column;
         gap: $spacing-xs;
-        color: $color-gray-600;
-        font-size: $font-size-sm;
+
+        .invoice-number {
+          font-weight: 600;
+          color: $color-primary;
+          font-size: $font-size-lg;
+
+          span {
+            color: $color-gray-500;
+            font-size: $font-size-sm;
+            margin-left: $spacing-xs;
+          }
+        }
       }
     }
 
     .payment-amount {
       font-size: $font-size-xl;
-      font-weight: 600;
+      font-weight: 700;
       color: $color-gray-900;
+      text-align: left;
+      font-family: $font-family-secondary;
     }
   }
 
   .payment-content {
-    .payment-details {
-      @include flex-between;
-      .case-info,
-      .payment-method {
-        @include flex-center;
-        gap: $spacing-xs;
-        color: $color-gray-600;
-        font-size: $font-size-sm;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-md;
+    margin-bottom: $spacing-lg;
 
-        i {
-          color: $color-gray-500;
-        }
+    .info-item {
+      @include flex-center;
+      gap: $spacing-xs;
+      color: $color-gray-600;
+      padding: $spacing-sm;
+      background: rgba($color-gray-100, 0.5);
+      border-radius: $border-radius-md;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background: rgba($color-gray-100, 0.8);
+      }
+
+      i {
+        color: $color-gray-500;
+        font-size: $font-size-base;
+      }
+
+      span {
+        font-size: $font-size-sm;
       }
     }
 
     .payment-description {
-      margin: $spacing-sm 0 0;
+      grid-column: span 2;
       color: $color-gray-600;
       font-size: $font-size-sm;
-      line-height: 1.5;
+      line-height: 1.6;
+      margin: $spacing-xs 0;
+      padding: $spacing-md;
+      background: $color-gray-100;
+      border-radius: $border-radius-md;
+      border-right: 3px solid $color-primary;
     }
   }
 
   .payment-footer {
     @include flex-between;
     padding-top: $spacing-md;
-    border-top: 1px solid $color-gray-200;
+    border-top: 1px solid $color-gray-100;
 
     .status-badge {
-      padding: $spacing-xs $spacing-sm;
+      @include flex-center;
+      gap: $spacing-xs;
+      padding: $spacing-xs $spacing-md;
       border-radius: $border-radius-full;
       font-size: $font-size-sm;
       font-weight: 500;
+      
+      i {
+        font-size: $font-size-xs;
+      }
       
       &.paid {
         background: rgba($color-success, 0.1);
@@ -179,15 +219,26 @@
 
       .btn-icon {
         @include button-base;
-        width: 36px;
-        height: 36px;
+        width: 40px;
+        height: 40px;
         padding: 0;
-        background: $color-gray-100;
+        border-radius: $border-radius-lg;
+        background: transparent;
         color: $color-gray-600;
+        transition: all 0.2s ease;
         
         &:hover {
           background: rgba($color-primary, 0.1);
           color: $color-primary;
+          transform: translateY(-2px);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+
+        i {
+          font-size: $font-size-base;
         }
       }
     }
@@ -196,6 +247,33 @@
 
 .empty-state {
   @include empty-state;
+  padding: $spacing-2xl;
+  text-align: center;
+  background: $color-white;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-sm;
+
+  i {
+    font-size: $font-size-4xl;
+    color: $color-gray-300;
+    margin-bottom: $spacing-lg;
+  }
+
+  p {
+    color: $color-gray-600;
+    margin-bottom: $spacing-lg;
+  }
+
+  .btn-secondary {
+    @include button-base;
+    background: $color-gray-100;
+    color: $color-gray-700;
+    padding: $spacing-sm $spacing-xl;
+    
+    &:hover {
+      background: $color-gray-200;
+    }
+  }
 }
 
 // Print Styles
