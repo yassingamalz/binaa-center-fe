@@ -1,11 +1,18 @@
-<!--src/app/features/dashboard/components/stat-card/stat-card.component.html -->
-<div class="stat-card" [class.shimmer]="isLoading">
-  <div class="stat-content" *ngIf="!isLoading">
-    <h2>{{ value }}{{ suffix }}</h2>
-    <p>{{ label }}</p>
+<div class="stat-card">
+    <div class="stat-content" [appShimmer]="!showContent">
+      <!-- Real content -->
+      <div class="content-wrapper" *ngIf="showContent">
+        <h2>{{ value }}{{ suffix }}</h2>
+        <p>{{ label }}</p>
+      </div>
+      <!-- Shimmer placeholders -->
+      <div class="shimmer-wrapper" *ngIf="!showContent">
+        <div class="shimmer-value"></div>
+        <div class="shimmer-label"></div>
+      </div>
+    </div>
+  
+    <div class="icon-wrapper" [class]="colorClass">
+      <i [class]="icon"></i>
+    </div>
   </div>
-  <div class="icon-wrapper" [class]="colorClass" *ngIf="!isLoading">
-    <i [class]="icon"></i>
-  </div>
-  <div class="shimmer-content" *ngIf="isLoading"></div>
-</div>
