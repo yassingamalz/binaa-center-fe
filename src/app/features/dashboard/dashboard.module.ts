@@ -12,6 +12,8 @@ import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { SharedModule } from '../../shared/shared.module';
+import { StatCardComponent } from './components/stat-card/stat-card.component';
 
 
 const routes = [
@@ -30,7 +32,8 @@ const routes = [
     ActiveCasesChartComponent,
     UpcomingSessionsComponent,
     QuickActionsComponent,
-    DashboardComponent
+    DashboardComponent,
+    StatCardComponent
   ],
   imports: [
     CommonModule,
@@ -38,7 +41,8 @@ const routes = [
     RouterModule.forChild(routes),
     NgbModule,
     ReactiveFormsModule,
-    NgxChartsModule 
+    NgxChartsModule,
+    SharedModule
   ],
   providers: [
     DatePipe,

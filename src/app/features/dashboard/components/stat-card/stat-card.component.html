@@ -1,0 +1,11 @@
+<!--src/app/features/dashboard/components/stat-card/stat-card.component.html -->
+<div class="stat-card" [class.shimmer]="isLoading">
+  <div class="stat-content" *ngIf="!isLoading">
+    <h2>{{ value }}{{ suffix }}</h2>
+    <p>{{ label }}</p>
+  </div>
+  <div class="icon-wrapper" [class]="colorClass" *ngIf="!isLoading">
+    <i [class]="icon"></i>
+  </div>
+  <div class="shimmer-content" *ngIf="isLoading"></div>
+</div>

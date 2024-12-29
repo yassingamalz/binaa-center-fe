@@ -1,21 +1,41 @@
-<!--src\app\features\dashboard\pages\dashboard\dashboard.component.html -->
+<!-- src/app/features/dashboard/pages/dashboard/dashboard.component.html -->
 <div class="dashboard-container">
   <!-- Stats Section -->
-  <app-stats-cards></app-stats-cards>
+  <app-stats-cards
+    [stats]="dashboardState.stats"
+    [isLoading]="loadingState.stats"
+  ></app-stats-cards>
 
   <!-- Main Content Grid -->
   <div class="main-content">
     <!-- Charts Column -->
     <div class="charts-column">
-      <app-monthly-income-chart></app-monthly-income-chart>
-      <app-session-overview></app-session-overview>
+      <app-monthly-income-chart
+        [financialData]="dashboardState.financialData"
+        [selectedPeriod]="dashboardState.selectedPeriod"
+        [isLoading]="loadingState.financial"
+        (periodChange)="onPeriodChange($event)"
+      ></app-monthly-income-chart>
+      
+      <app-session-overview
+        [sessionStats]="dashboardState.sessionStats"
+        [selectedRange]="dashboardState.selectedSessionRange"
+        [isLoading]="loadingState.sessions"
+        (rangeChange)="onSessionRangeChange($event)"
+      ></app-session-overview>
     </div>
 
     <!-- Widgets Column -->
     <div class="widgets-column">
-      <app-quick-actions></app-quick-actions>
-      <app-upcoming-sessions></app-upcoming-sessions>
-      <app-recent-activities></app-recent-activities>
+      <div [appShimmer]="loadingState.quickActions">
+        <app-quick-actions></app-quick-actions>
+      </div>
+      <div [appShimmer]="loadingState.upcomingSessions">
+        <app-upcoming-sessions></app-upcoming-sessions>
+      </div>
+      <div [appShimmer]="loadingState.recentActivities">
+        <app-recent-activities></app-recent-activities>
+      </div>
     </div>
   </div>
 </div>

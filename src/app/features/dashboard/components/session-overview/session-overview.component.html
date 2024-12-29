@@ -1,9 +1,13 @@
-<!-- src\app\features\dashboard\components\session-overview\session-overview.component.html-->
-<div class="overview-card">
+<!-- src/app/features/dashboard/components/session-overview/session-overview.component.html -->
+<div class="overview-card" [class.loading]="isLoading">
   <div class="overview-header">
     <h3>نظرة عامة على الجلسات</h3>
     <div class="overview-filters">
-      <select [(ngModel)]="selectedRange" (change)="updateOverview()">
+      <select 
+        [ngModel]="selectedRange" 
+        (ngModelChange)="onRangeChange($event)"
+        [disabled]="isLoading"
+        class="period-select">
         <option value="week">هذا الأسبوع</option>
         <option value="month">هذا الشهر</option>
         <option value="quarter">هذا الربع</option>
@@ -12,31 +16,51 @@
     </div>
   </div>
 
-  <div class="overview-stats">
-    <div class="stat">
-      <h4>معدل الحضور</h4>
-      <div class="progress-circle">
-        <div class="progress-circle-inner" [style.--progress]="attendanceRate + '%'">
-          <div class="progress-value">{{ attendanceRate | number:'1.0-0' }}%</div>
+  <div class="dashboard-content">
+    <div class="overview-stats">
+      <div class="stat">
+        <h4>معدل الحضور</h4>
+        <div class="progress-circle">
+          <div class="progress-circle-inner" [style.--progress]="sessionStats.attendanceRate + '%'">
+            <div class="progress-value">{{ sessionStats.attendanceRate | number:'1.0-0' }}%</div>
+          </div>
         </div>
+      </div>
+
+      <div class="stat">
+        <h4>إجمالي الجلسات</h4>
+        <h2>{{ sessionStats.totalSessions }}</h2>
+      </div>
+
+      <div class="stat">
+        <h4>الجلسات الملغاة</h4>
+        <h2>{{ sessionStats.cancelledSessions }}</h2>
       </div>
     </div>
 
-    <div class="stat">
-      <h4>إجمالي الجلسات</h4>
-      <h2>{{ totalSessions }}</h2>
-    </div>
-
-    <div class="stat">
-      <h4>الجلسات الملغاة</h4>
-      <h2>{{ cancelledSessions }}</h2>
+    <div class="overview-chart-wrapper">
+      <div class="overview-chart" #chartContainer>
+        <ngx-charts-bar-vertical
+          [view]="view"
+          [results]="chartData"
+          [xAxis]="showXAxis"
+          [yAxis]="showYAxis"
+          [showXAxisLabel]="showXAxisLabel"
+          [showYAxisLabel]="showYAxisLabel"
+          [xAxisLabel]="'نوع الجلسة'"
+          [yAxisLabel]="'عدد الجلسات'"
+          [scheme]="colorScheme"
+          [roundDomains]="true"
+          [maxXAxisTickLength]="16"
+          [barPadding]="20"
+          [roundEdges]="true"
+          [animations]="animations">
+        </ngx-charts-bar-vertical>
+      </div>
     </div>
   </div>
 
-  <div class="overview-chart" #chartContainer>
-    <ngx-charts-bar-vertical [view]="view" [results]="chartData" [xAxis]="true" [yAxis]="true" [showXAxisLabel]="true"
-      [showYAxisLabel]="true" [xAxisLabel]="'نوع الجلسة'" [yAxisLabel]="'عدد الجلسات'" [scheme]="colorScheme"
-      [animations]="true">
-    </ngx-charts-bar-vertical>
-  </div>  
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+  </div>
 </div>

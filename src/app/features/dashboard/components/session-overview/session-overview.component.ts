@@ -1,19 +1,14 @@
 // src/app/features/dashboard/components/session-overview/session-overview.component.ts
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
-import { DashboardService } from '../../services/dashboard.service';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { Color, ScaleType } from '@swimlane/ngx-charts';
-import { Subject, takeUntil } from 'rxjs';
 
-interface SessionStats {
+export type SessionRange = 'week' | 'month' | 'quarter' | 'year';
+
+export interface SessionStats {
   totalSessions: number;
   attendanceRate: number;
   cancelledSessions: number;
   byType: Record<string, number>;
-}
-
-interface ChartDataPoint {
-  name: string;
-  value: number;
 }
 
 @Component({
@@ -21,170 +16,93 @@ interface ChartDataPoint {
   templateUrl: './session-overview.component.html',
   styleUrls: ['./session-overview.component.scss']
 })
-export class SessionOverviewComponent implements OnInit, AfterViewInit, OnDestroy {
+export class SessionOverviewComponent implements AfterViewInit, OnDestroy, OnChanges {
+  @Input() sessionStats: SessionStats = {
+    totalSessions: 0,
+    attendanceRate: 0,
+    cancelledSessions: 0,
+    byType: {}
+  };
+  @Input() selectedRange: SessionRange = 'week';
+  @Input() isLoading = false;
+  @Output() rangeChange = new EventEmitter<SessionRange>();
+  
   @ViewChild('chartContainer') chartContainer!: ElementRef;
 
+  // Chart configuration
   colorScheme: Color = {
     name: 'custom',
     selectable: true,
     group: ScaleType.Ordinal,
-    domain: ['#800080', '#ff4081'] // Purple for attended, Pink for cancelled
+    domain: ['#800080', '#FF69B4']
   };
-  // Form controls
-  selectedRange: 'week' | 'month' | 'quarter' | 'year' = 'week';
-
-  // Chart data and dimensions
-  chartData: ChartDataPoint[] = [];
+  
+  chartData: any[] = [];
   view: [number, number] = [700, 300];
-
-  // Statistics
-  attendanceRate: number = 0;
-  totalSessions: number = 0;
-  cancelledSessions: number = 0;
-  isLoading: boolean = false;
-
+  
   // Chart options
-  showXAxis: boolean = true;
-  showYAxis: boolean = true;
-  gradient: boolean = false;
-  showLegend: boolean = false;
-  showXAxisLabel: boolean = false;
-  showYAxisLabel: boolean = false;
-  animations: boolean = true;
+  showXAxis = true;
+  showYAxis = true;
+  gradient = false;
+  showLegend = false;
+  showXAxisLabel = false;
+  showYAxisLabel = false;
+  animations = true;
+  animationsDuration = 500;
 
-  private destroy$ = new Subject<void>();
   private resizeObserver: ResizeObserver;
 
-  constructor(private dashboardService: DashboardService) {
-    const styles = getComputedStyle(document.documentElement);
-  
-    this.colorScheme = {
-      name: 'custom',
-      selectable: true,
-      group: ScaleType.Ordinal,
-      domain: [
-        styles.getPropertyValue('--color-primary').trim() || '#800080',  // Primary color
-        styles.getPropertyValue('--color-secondary').trim() || '#ff4081' // Secondary color
-      ]
-    };
-
+  constructor() {
     this.resizeObserver = new ResizeObserver(() => this.updateChartDimensions());
   }
 
-  ngOnInit(): void {
-    this.updateOverview();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['sessionStats'] && !changes['sessionStats'].firstChange) {
+      this.updateChartData();
+    }
   }
 
   ngAfterViewInit(): void {
     this.updateChartDimensions();
-
     if (this.chartContainer?.nativeElement) {
       this.resizeObserver.observe(this.chartContainer.nativeElement);
     }
+    this.updateChartData();
   }
 
   updateChartDimensions(): void {
     if (this.chartContainer) {
       const containerWidth = this.chartContainer.nativeElement.offsetWidth;
-      this.view = [containerWidth, 300];
+      const containerHeight = Math.max(300, window.innerHeight * 0.4);
+      this.view = [containerWidth, containerHeight];
     }
   }
 
-  updateOverview(): void {
-    this.isLoading = true;
-    const { startDate, endDate } = this.calculateDateRange();
-
-    this.dashboardService.getSessionsOverview(startDate, endDate)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (data) => {
-          this.updateStats(data);
-          this.chartData = this.formatChartData(data);
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error loading session overview:', error);
-          this.isLoading = false;
-          this.resetData();
-        }
-      });
+  onRangeChange(range: SessionRange): void {
+    this.rangeChange.emit(range);
   }
 
-  private updateStats(data: SessionStats): void {
-    this.attendanceRate = data.attendanceRate || 0;
-    this.totalSessions = data.totalSessions || 0;
-    this.cancelledSessions = data.cancelledSessions || 0;
-  }
+  private updateChartData(): void {
+    if (!this.sessionStats) return;
 
-  private formatChartData(data: SessionStats): any[] {
-    return [
+    const attendedSessions = this.sessionStats.totalSessions - this.sessionStats.cancelledSessions;
+
+    this.chartData = [
       {
         name: 'حضور',
-        value: data.totalSessions - data.cancelledSessions
+        value: attendedSessions
       },
       {
         name: 'ملغاة',
-        value: data.cancelledSessions
+        value: this.sessionStats.cancelledSessions
       }
     ];
-  }
 
-  private getSessionTypeLabel(type: string): string {
-    const types: Record<string, string> = {
-      'INDIVIDUAL': 'فردي',
-      'GROUP': 'جماعي'
-    };
-    return types[type] || type;
-  }
-
-  private calculateDateRange(): { startDate: Date; endDate: Date } {
-    const endDate = new Date();
-    let startDate = new Date();
-
-    switch (this.selectedRange) {
-      case 'week':
-        startDate.setDate(endDate.getDate() - 7);
-        break;
-
-      case 'month':
-        startDate = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
-        break;
-
-      case 'quarter':
-        const quarterStartMonth = Math.floor(endDate.getMonth() / 3) * 3;
-        startDate = new Date(endDate.getFullYear(), quarterStartMonth, 1);
-        break;
-
-      case 'year':
-        startDate = new Date(endDate.getFullYear(), 0, 1);
-        break;
-    }
-
-    // Set time to start/end of day
-    startDate.setHours(0, 0, 0, 0);
-    endDate.setHours(23, 59, 59, 999);
-
-    return { startDate, endDate };
-  }
-
-  private resetData(): void {
-    this.attendanceRate = 0;
-    this.totalSessions = 0;
-    this.cancelledSessions = 0;
-    this.chartData = [];
-  }
-
-  // Chart event handlers
-  onSelect(event: any): void {
-    console.log('Bar clicked:', event);
+    // Force chart update by creating a new array reference
+    this.chartData = [...this.chartData];
   }
 
   ngOnDestroy(): void {
-    // Clean up subscriptions
-    this.destroy$.next();
-    this.destroy$.complete();
-
-    // Clean up resize observer
     if (this.chartContainer?.nativeElement) {
       this.resizeObserver.unobserve(this.chartContainer.nativeElement);
     }

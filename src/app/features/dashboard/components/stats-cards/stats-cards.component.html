@@ -1,53 +1,39 @@
-<!-- stats-cards.component.html -->
+<!-- src/app/features/dashboard/components/stats-cards/stats-cards.component.html -->
 <div class="stats-grid">
   <!-- Active Cases Card -->
-  <div class="stat-card">
-    <div class="stat-content">
-      <h2>{{ stats.activeCases?.length || 0 }}</h2>
-      <p>الحالات النشطة</p>
-    </div>
-    <div class="icon-wrapper pink">
-      <i class="fas fa-users"></i>
-    </div>
-  </div>
+  <app-stat-card
+    [value]="stats.activeCases.length"
+    label="الحالات النشطة"
+    icon="fas fa-users"
+    colorClass="pink"
+    [isLoading]="isLoading"
+  ></app-stat-card>
 
   <!-- Today's Sessions Card -->
-  <div class="stat-card">
-    <div class="stat-content">
-      <h2>{{ stats.todaysSessions?.totalSessions || 0 }}</h2>
-      <p>جلسات اليوم</p>
-    </div>
-    <div class="icon-wrapper purple">
-      <i class="fas fa-calendar-check"></i>
-    </div>
-  </div>
+  <app-stat-card
+    [value]="stats.todaysSessions.totalSessions"
+    label="جلسات اليوم"
+    icon="fas fa-calendar-check"
+    colorClass="purple"
+    [isLoading]="isLoading"
+  ></app-stat-card>
 
   <!-- Monthly Income Card -->
-  <div class="stat-card">
-    <div class="stat-content">
-      <h2>{{ stats.monthlyFinance?.totalIncome || 0 }} جنيه</h2>
-      <p>الدخل الشهري</p>
-    </div>
-    <div class="icon-wrapper accent">
-      <i class="fas fa-coins"></i>
-    </div>
-  </div>
+  <app-stat-card
+    [value]="stats.monthlyFinance.totalIncome"
+    label="الدخل الشهري"
+    icon="fas fa-coins"
+    colorClass="accent"
+    [isLoading]="isLoading"
+    suffix=" جنيه"
+  ></app-stat-card>
 
   <!-- Upcoming Assessments Card -->
-  <div class="stat-card">
-    <div class="stat-content">
-      <h2>{{ stats.upcomingAssessments?.length || 0 }}</h2>
-      <p>التقييمات القادمة</p>
-    </div>
-    <div class="icon-wrapper info">
-      <i class="fas fa-clipboard-list"></i>
-    </div>
-  </div>
-
-  <!-- Loading State -->
-  <ng-container *ngIf="isLoading">
-    <div class="stat-card shimmer" *ngFor="let i of [1,2,3,4]">
-      <div class="shimmer-content"></div>
-    </div>
-  </ng-container>
+  <app-stat-card
+    [value]="stats.upcomingAssessments.length"
+    label="التقييمات القادمة"
+    icon="fas fa-clipboard-list"
+    colorClass="info"
+    [isLoading]="isLoading"
+  ></app-stat-card>
 </div>

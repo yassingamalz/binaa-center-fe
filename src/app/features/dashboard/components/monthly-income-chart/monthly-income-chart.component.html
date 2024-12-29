@@ -4,8 +4,8 @@
     <h3>تحليل الدخل الشهري</h3>
     <div class="chart-actions">
       <select 
-        [(ngModel)]="selectedPeriod" 
-        (change)="updateChart()"
+        [ngModel]="selectedPeriod" 
+        (ngModelChange)="onPeriodChange($event)"
         class="period-select">
         <option *ngFor="let option of periodOptions" [value]="option.value">
           {{option.label}}

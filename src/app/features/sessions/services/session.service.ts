@@ -7,6 +7,9 @@ import { ApiService } from '../../../core/services/api.service';
   providedIn: 'root'
 })
 export class SessionService {
+  getSessionCountByCase(caseId: number) {
+    throw new Error('Method not implemented.');
+  }
   private endpoint = 'sessions';
 
   constructor(private apiService: ApiService) {}
