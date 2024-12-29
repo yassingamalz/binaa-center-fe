@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, from, map } from 'rxjs';
 import { ExpenseCategory, ExpenseDTO } from '../../../core/models/expense';
-import { PaymentDTO, PaymentStatus } from '../../../core/models/payment';
+import { PaymentDTO, PaymentResponseDTO, PaymentStatus } from '../../../core/models/payment';
 import { ApiService } from '../../../core/services/api.service';
 import { HttpResponse } from '@angular/common/http';
 
@@ -37,28 +37,37 @@ export class FinanceService {
   }
 
   // Payments
-  getPaymentsByDateRange(startDate: Date, endDate: Date): Observable<PaymentDTO[]> {
-    return this.apiService.get<PaymentDTO[]>(`${this.paymentsEndpoint}/by-date-range`, {
+  getAllPayments(): Observable<PaymentResponseDTO[]> {
+    return this.apiService.get<PaymentResponseDTO[]>(this.paymentsEndpoint);
+  }
+
+  getPaymentById(id: number): Observable<PaymentResponseDTO> {
+    return this.apiService.get<PaymentResponseDTO>(`${this.paymentsEndpoint}/${id}`);
+  }
+
+  createPayment(data: Omit<PaymentDTO, 'paymentId'>): Observable<PaymentResponseDTO> {
+    return this.apiService.post<PaymentResponseDTO>(this.paymentsEndpoint, data);
+  }
+
+  updatePayment(paymentId: number, data: Partial<PaymentDTO>): Observable<PaymentResponseDTO> {
+    return this.apiService.put<PaymentResponseDTO>(`${this.paymentsEndpoint}/${paymentId}`, data);
+  }
+
+  getPaymentsByStatus(status: PaymentStatus): Observable<PaymentResponseDTO[]> {
+    return this.apiService.get<PaymentResponseDTO[]>(`${this.paymentsEndpoint}/status/${status}`);
+  }
+
+  getPaymentsByCase(caseId: number): Observable<PaymentResponseDTO[]> {
+    return this.apiService.get<PaymentResponseDTO[]>(`${this.paymentsEndpoint}/case/${caseId}`);
+  }
+
+  getPaymentsByDateRange(startDate: Date, endDate: Date): Observable<PaymentResponseDTO[]> {
+    return this.apiService.get<PaymentResponseDTO[]>(`${this.paymentsEndpoint}/by-date-range`, {
       start: startDate.toISOString(),
       end: endDate.toISOString()
     });
   }
 
-  getPaymentsByCase(caseId: number): Observable<PaymentDTO[]> {
-    return this.apiService.get<PaymentDTO[]>(`${this.paymentsEndpoint}/case/${caseId}`);
-  }
-
-  getOverduePayments(): Observable<PaymentDTO[]> {
-    return this.apiService.get<PaymentDTO[]>(`${this.paymentsEndpoint}/status/${PaymentStatus.OVERDUE}`);
-  }
-
-  createPayment(data: Omit<PaymentDTO, 'paymentId'>): Observable<PaymentDTO> {
-    return this.apiService.post<PaymentDTO>(this.paymentsEndpoint, data);
-  }
-
-  updatePayment(paymentId: number, data: Partial<PaymentDTO>): Observable<PaymentDTO> {
-    return this.apiService.put<PaymentDTO>(`${this.paymentsEndpoint}/${paymentId}`, data);
-  }
 
   // Expenses
   getExpensesByCategory(category: ExpenseCategory): Observable<ExpenseDTO[]> {
@@ -85,9 +94,6 @@ export class FinanceService {
     );
   }
 
-  getPaymentsByStatus(status: PaymentStatus): Observable<PaymentDTO[]> {
-    return this.apiService.get<PaymentDTO[]>(`${this.paymentsEndpoint}/status/${status}`);
-  }
 
   generateReceipt(paymentId: number): Observable<HttpResponse<Blob>> {
     return this.apiService.getBlob(`${this.paymentsEndpoint}/${paymentId}/receipt`);
@@ -138,22 +144,6 @@ export class FinanceService {
     }
   }
 
-   // Get all payments
-   getAllPayments(): Observable<PaymentDTO[]> {
-    return this.apiService.get<PaymentDTO[]>(this.paymentsEndpoint)
-      .pipe(
-        map(payments => this.mapPaymentResponses(payments))
-      );
-  }
-
-  // Get single payment
-  getPaymentById(id: number): Observable<PaymentDTO> {
-    return this.apiService.get<PaymentDTO>(`${this.paymentsEndpoint}/${id}`)
-      .pipe(
-        map(payment => this.mapPaymentResponse(payment))
-      );
-  }
-
   // Delete payment
   deletePayment(id: number): Observable<void> {
     return this.apiService.delete<void>(`${this.paymentsEndpoint}/${id}`);
@@ -174,19 +164,6 @@ export class FinanceService {
     return this.apiService.getBlob(`${this.paymentsEndpoint}/${paymentId}/invoice`);
   }
 
-  // Private helper methods
-  private mapPaymentResponse(payment: PaymentDTO): PaymentDTO {
-    return {
-      ...payment,
-      paymentDate: new Date(payment.paymentDate),
-      createdAt: payment.createdAt ? new Date(payment.createdAt) : undefined,
-      updatedAt: payment.updatedAt ? new Date(payment.updatedAt) : undefined
-    };
-  }
-
-  private mapPaymentResponses(payments: PaymentDTO[]): PaymentDTO[] {
-    return payments.map(payment => this.mapPaymentResponse(payment));
-  }
 
   // Add expense
   createExpense(data: Omit<ExpenseDTO, 'expenseId'>): Observable<ExpenseDTO> {

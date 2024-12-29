@@ -6,7 +6,7 @@ import { FinanceService } from '../../services/finance.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { HttpResponse } from '@angular/common/http';
-import { PaymentStatus, PaymentMethod, PaymentDTO } from '../../../../core/models/payment';
+import { PaymentStatus, PaymentMethod, PaymentDTO, PaymentResponseDTO } from '../../../../core/models/payment';
 import { PaymentFormComponent } from '../../../../shared/payments/components/payment-form/payment-form.component';
 
 interface StatusOption {
@@ -25,8 +25,8 @@ interface MethodOption {
   styleUrls: ['./payment-list.component.scss']
 })
 export class PaymentListComponent implements OnInit, OnDestroy {
-  payments: PaymentDTO[] = [];
-  filteredPayments: PaymentDTO[] = [];
+  payments: PaymentResponseDTO[] = [];
+  filteredPayments: PaymentResponseDTO[] = [];
   isLoading = false;
   searchForm: FormGroup;
   
@@ -102,7 +102,7 @@ export class PaymentListComponent implements OnInit, OnDestroy {
     if (searchTerm) {
       filtered = filtered.filter(payment => 
         payment.invoiceNumber.toLowerCase().includes(searchTerm) ||
-        payment.caseName?.toLowerCase().includes(searchTerm)
+        payment.caseName.toLowerCase().includes(searchTerm)
       );
     }
 
@@ -144,13 +144,25 @@ export class PaymentListComponent implements OnInit, OnDestroy {
     );
   }
 
-  editPayment(payment: PaymentDTO): void {
+  editPayment(payment: PaymentResponseDTO): void {
     const modalRef = this.modalService.open(PaymentFormComponent, {
       size: 'lg',
       backdrop: 'static'
     });
 
-    modalRef.componentInstance.payment = payment;
+    // Convert PaymentResponseDTO to PaymentDTO for the form
+    const paymentDTO: PaymentDTO = {
+      paymentId: payment.paymentId,
+      caseId: payment.caseId,
+      sessionId: payment.sessionId,
+      amount: payment.amount,
+      paymentDate: payment.paymentDate,
+      paymentMethod: payment.paymentMethod,
+      invoiceNumber: payment.invoiceNumber,
+      paymentStatus: payment.paymentStatus
+    };
+
+    modalRef.componentInstance.payment = paymentDTO;
 
     modalRef.result.then(
       (result) => {
@@ -163,7 +175,7 @@ export class PaymentListComponent implements OnInit, OnDestroy {
     );
   }
 
-  printReceipt(payment: PaymentDTO): void {
+  printReceipt(payment: PaymentResponseDTO): void {
     this.financeService.generateReceipt(payment.paymentId)
       .subscribe({
         next: (response: HttpResponse<Blob>) => {
