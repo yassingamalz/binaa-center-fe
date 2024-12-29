@@ -5,6 +5,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { PaymentDTO, PaymentMethod, PaymentStatus } from '../../../../core/models/payment';
 import { FinanceService } from '../../../../features/finance/services/finance.service';
+import { CaseService } from '../../../../features/cases/services/case.service';
 
 @Component({
   selector: 'app-payment-form',
@@ -12,8 +13,10 @@ import { FinanceService } from '../../../../features/finance/services/finance.se
   styleUrls: ['./payment-form.component.scss']
 })
 export class PaymentFormComponent implements OnInit {
-  @Input() caseId!: number;
   @Input() payment?: PaymentDTO;
+  
+  cases: any[] = [];
+  isLoading = true;
 
   paymentForm: FormGroup;
   isSubmitting = false;
@@ -26,33 +29,70 @@ export class PaymentFormComponent implements OnInit {
 
   paymentStatuses = [
     { value: PaymentStatus.PAID, label: 'مدفوع' },
-    { value: PaymentStatus.PENDING, label: 'معلق' }
+    { value: PaymentStatus.PENDING, label: 'معلق' },
+    { value: PaymentStatus.OVERDUE, label: 'متأخر' }
   ];
 
   constructor(
     private fb: FormBuilder,
     private activeModal: NgbActiveModal,
     private financeService: FinanceService,
+    private caseService: CaseService,
     private toastr: ToastrService
   ) {
     this.paymentForm = this.createForm();
   }
 
   ngOnInit(): void {
-    if (this.payment) {
-      this.paymentForm.patchValue(this.payment);
-    }
+    this.loadCases();
+  }
+
+  private loadCases(): void {
+    this.isLoading = true;
+    this.caseService.getAllActiveCases().subscribe({
+      next: (cases) => {
+        this.cases = cases;
+        
+        if (this.payment) {
+          this.patchPaymentForm();
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading cases:', error);
+        this.toastr.error('حدث خطأ أثناء تحميل الحالات');
+        this.isLoading = false;
+      }
+    });
   }
 
   private createForm(): FormGroup {
     return this.fb.group({
+      caseId: [null, [Validators.required]],
       amount: ['', [Validators.required, Validators.min(0)]],
       paymentMethod: [PaymentMethod.CASH, Validators.required],
-      paymentDate: [new Date(), Validators.required],
+      paymentDate: [this.formatDateForInput(new Date()), Validators.required],
       description: [''],
       paymentStatus: [PaymentStatus.PAID, Validators.required],
-      invoiceNumber: ['', Validators.required]
     });
+  }
+
+  private formatDateForInput(date: Date): string {
+    const d = new Date(date);
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().slice(0, 16);
+  }
+
+  private patchPaymentForm(): void {
+    if (!this.payment) return;
+
+    const formData = {
+      ...this.payment,
+      paymentDate: this.formatDateForInput(new Date(this.payment.paymentDate)),
+      caseId: Number(this.payment.caseId)
+    };
+
+    this.paymentForm.patchValue(formData);
   }
 
   onSubmit(): void {
@@ -69,7 +109,7 @@ export class PaymentFormComponent implements OnInit {
     this.isSubmitting = true;
     const paymentData = {
       ...this.paymentForm.value,
-      caseId: this.caseId
+      paymentDate: new Date(this.paymentForm.value.paymentDate)
     };
 
     const operation = this.payment
@@ -95,7 +135,6 @@ export class PaymentFormComponent implements OnInit {
     this.activeModal.dismiss();
   }
 
-  // Helper methods for template
   isFieldInvalid(fieldName: string): boolean {
     const field = this.paymentForm.get(fieldName);
     return field ? (field.invalid && (field.dirty || field.touched)) : false;

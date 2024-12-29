@@ -2,6 +2,10 @@
 @import 'styles/main';
 @import 'styles/buttons';
 @import 'styles/empty-states';
+@import 'styles/headers';
+@import 'styles/badges';
+@import 'styles/filters';
+
 
 .payments-container {
   padding: $spacing-lg;
@@ -16,20 +20,10 @@
   margin-bottom: $spacing-lg;
 
   .header-title {
-    @include flex-center;
-    gap: $spacing-sm;
-
-    h1 {
-      margin: 0;
-      font-size: $font-size-2xl;
-    }
+    @include header-title-2;
 
     .payment-count {
-      font-size: $font-size-sm;
-      color: $color-gray-600;
-      background: $color-gray-100;
-      padding: $spacing-xs $spacing-sm;
-      border-radius: $border-radius-full;
+    @include count-badge-3d;
     }
   }
 
@@ -39,59 +33,49 @@
 }
 
 .filters-section {
-  margin-bottom: $spacing-lg;
+  @include filters-container;
+  margin-bottom: $spacing-xl;
 
   .search-form {
-    margin-bottom: $spacing-md;
-    
-    .search-input {
-      position: relative;
-      max-width: 400px;
-      
-      input {
-        @include input-base;
-        padding-right: $spacing-xl;
+      flex-grow: 1;
+
+      .search-input {
+          @include search-field;
+          margin-bottom: $spacing-md;
+
+          @media (min-width: $breakpoint-md) {
+              margin-bottom: 0;
+          }
       }
-      
-      i {
-        position: absolute;
-        right: $spacing-sm;
-        top: 50%;
-        transform: translateY(-50%);
-        color: $color-gray-500;
-      }
-    }
   }
 
-  .filters-group {
-    display: flex;
-    gap: $spacing-lg;
-    flex-wrap: wrap;
-    
-    @media (max-width: $breakpoint-md) {
-      flex-direction: column;
-      gap: $spacing-md;
-    }
+  .filter-controls {
+      @include filter-controls;
 
-    .status-filters,
-    .method-filters {
-      @include flex-center;
-      gap: $spacing-sm;
-      flex-wrap: wrap;
-    }
+      .filter-chips {
+          @include filter-chips-container;
 
-    .filter-btn {
-      @include button-base;
-      background: $color-gray-100;
-      color: $color-gray-700;
-      
-      &.active {
-        background: $color-primary;
-        color: $color-white;
+          .filter-chip {
+              @include filter-chip;
+
+              &.active {
+                  background: $color-primary;
+                  color: $color-white;
+              }
+
+              &:hover:not(.active):not(:disabled) {
+                  background: $color-gray-200;
+              }
+
+              &:disabled {
+                  opacity: 0.7;
+                  cursor: not-allowed;
+              }
+          }
       }
-    }
   }
 }
+
 
 .payments-list {
   display: grid;
