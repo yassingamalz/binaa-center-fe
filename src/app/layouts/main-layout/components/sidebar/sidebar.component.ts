@@ -32,7 +32,7 @@ interface MenuItem {
   ]
 })
 export class SidebarComponent {
-  @Input() isCollapsed = false;
+  @Input() isCollapsed = true;
 
   menuItems: MenuItem[] = [
     {

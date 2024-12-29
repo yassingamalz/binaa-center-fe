@@ -31,7 +31,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   isLoading$: Observable<boolean>;
   
   // UI State
-  isSidebarCollapsed = false;
+  isSidebarCollapsed = true;
   isSidebarVisible = false;
   isScrolled = false;
   isMobileView = false;
