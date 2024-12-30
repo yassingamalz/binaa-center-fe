@@ -1,170 +1,230 @@
-<!--src\app\features\cases\components\case-details\case-details.component.html-->
+<!-- src/app/features/cases/components/case-details/case-details.component.html -->
 <div class="page-container" [class.loading]="isLoading">
-  <!-- Breadcrumb -->
-  <nav class="breadcrumb">
-    <a [routerLink]="['/cases']">الحالات</a>
-    <i class="fas fa-chevron-left"></i>
-    <span *ngIf="case">{{case.name}}</span>
-  </nav>
-
-  <!-- Header Section -->
-  <div class="page-header">
-    <div class="header-content">
-      <div class="case-info" *ngIf="case">
-        <div class="case-title">
-          <h1>{{case.name}}</h1>
-          <span class="case-age">{{case.age}} سنة</span>
-        </div>
-        <div class="case-meta">
-          <span class="status-badge" [class]="case.status.toLowerCase()">
-            {{case.status === 'ACTIVE' ? 'نشط' : 'غير نشط'}}
-          </span>
-          <span class="meta-item">
-            <i class="far fa-calendar"></i>
-            تاريخ التسجيل: {{case.admissionDate | date:'mediumDate'}}
-          </span>
-          <span class="meta-item">
-            <i class="fas fa-user"></i>
-            ولي الأمر: {{case.guardianName}}
-          </span>
-          <span class="meta-item">
-            <i class="fas fa-phone"></i>
-            {{case.contactNumber}}
-          </span>
-        </div>
-      </div>
-      <div class="header-actions" *ngIf="case">
-        <button class="btn-secondary" (click)="toggleCaseStatus()">
-          <i class="fas" [class.fa-toggle-on]="case.status === 'ACTIVE'" [class.fa-toggle-off]="case.status === 'INACTIVE'"></i>
-          {{case.status === 'ACTIVE' ? 'إيقاف الحالة' : 'تنشيط الحالة'}}
+  <!-- Modern Header Section -->
+  <div class="page-header-wrapper">
+    <div class="breadcrumb-container">
+      <nav class="breadcrumb" aria-label="التنقل">
+        <a [routerLink]="['/cases']" class="breadcrumb-link">
+          <i class="fas fa-chevron-right"></i>
+          قائمة الحالات
+        </a>
+        <i class="fas fa-chevron-left separator"></i>
+        <span class="current-page">تفاصيل الحالة</span>
+      </nav>
+      
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <button class="btn-icon" title="طباعة" (click)="printCase()">
+          <i class="fas fa-print"></i>
         </button>
-        <button class="btn-primary" (click)="editCase()">
-          <i class="fas fa-edit"></i>
-          تعديل البيانات
+        <button class="btn-icon" title="مشاركة" (click)="shareCase()">
+          <i class="fas fa-share-alt"></i>
         </button>
       </div>
     </div>
 
-    <!-- Tabs Navigation -->
-    <div class="tabs-navigation">
-      <button 
-        class="tab-btn" 
-        [class.active]="activeTab === 'info'"
-        (click)="switchTab('info')">
-        <i class="fas fa-info-circle"></i>
-        <span>المعلومات الأساسية</span>
-      </button>
-      <button 
-        class="tab-btn" 
-        [class.active]="activeTab === 'sessions'"
-        (click)="switchTab('sessions')">
-        <i class="fas fa-calendar-check"></i>
-        <span>الجلسات</span>
-      </button>
-      <button 
-        class="tab-btn" 
-        [class.active]="activeTab === 'assessments'"
-        (click)="switchTab('assessments')">
-        <i class="fas fa-clipboard-list"></i>
-        <span>التقييمات</span>
-      </button>
-      <button 
-        class="tab-btn" 
-        [class.active]="activeTab === 'payments'"
-        (click)="switchTab('payments')">
-        <i class="fas fa-money-bill-wave"></i>
-        <span>المدفوعات</span>
+    <!-- Case Overview Card -->
+    <div class="case-overview-card" *ngIf="case">
+      <div class="overview-header">
+        <div class="case-identity">
+          <div class="avatar">{{case.name[0]}}</div>
+          <div class="main-info">
+            <h1>{{case.name}}</h1>
+            <div class="meta-tags">
+              <span class="meta-tag">
+                <i class="fas fa-hashtag"></i>
+                {{case.caseId}}
+              </span>
+              <span class="meta-tag">
+                <i class="fas fa-birthday-cake"></i>
+                {{case.age}} سنة
+              </span>
+              <span class="status-badge" [class]="case.status.toLowerCase()">
+                <i class="fas fa-circle"></i>
+                {{case.status === 'ACTIVE' ? 'نشط' : 'غير نشط'}}
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="actions-group">
+          <button 
+          class="btn-secondary" 
+          (click)="toggleCaseStatus()" 
+          [class.inactive]="case.status === 'INACTIVE'"
+          [class.active]="case.status === 'ACTIVE'"
+        >
+          <i class="fas" 
+            [class.fa-toggle-on]="case.status === 'ACTIVE'" 
+            [class.fa-toggle-off]="case.status === 'INACTIVE'"
+          ></i>
+          {{case.status === 'ACTIVE' ? 'إيقاف الحالة' : 'تنشيط الحالة'}}
+        </button>
+          <button class="btn-primary" (click)="editCase()">
+            <i class="fas fa-edit"></i>
+            تعديل البيانات
+          </button>
+        </div>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="contact-strip">
+        <div class="contact-item">
+          <i class="fas fa-user"></i>
+          <span class="label">ولي الأمر:</span>
+          <span class="value">{{case.guardianName}}</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-phone"></i>
+          <a [href]="'tel:' + case.contactNumber" class="value phone">
+            {{case.contactNumber}}
+          </a>
+        </div>
+        <div class="contact-item emergency">
+          <i class="fas fa-phone-volume"></i>
+          <a [href]="'tel:' + case.emergencyContact" class="value phone">
+            {{case.emergencyContact}}
+          </a>
+        </div>
+        <div class="contact-item">
+          <i class="far fa-calendar"></i>
+          <span class="label">تاريخ التسجيل:</span>
+          <span class="value">{{case.admissionDate | date:'mediumDate'}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modern Tab Navigation -->
+  <div class="tabs-container">
+    <div class="tabs-wrapper">
+      <button *ngFor="let tab of tabs" 
+              class="tab-button" 
+              [class.active]="activeTab === tab.id"
+              (click)="switchTab(tab.id)">
+        <div class="tab-content">
+          <i [class]="tab.icon"></i>
+          <span>{{tab.label}}</span>
+          <span class="tab-counter" *ngIf="tab.count">{{tab.count}}</span>
+        </div>
+        <div class="tab-indicator" *ngIf="activeTab === tab.id"></div>
       </button>
     </div>
   </div>
 
-  <!-- Main Content Area -->
-  <div class="page-content" *ngIf="case">
+  <!-- Tab Content Area -->
+  <div class="tab-content-area" [@fadeAnimation] *ngIf="case">
     <div [ngSwitch]="activeTab">
       <!-- Basic Information Tab -->
       <div *ngSwitchCase="'info'" class="info-tab">
-        <div class="grid-layout">
+        <div class="cards-grid">
           <!-- Medical Information -->
-          <div class="info-card">
+          <div class="info-card medical">
             <div class="card-header">
-              <h3>
+              <div class="header-title">
                 <i class="fas fa-notes-medical"></i>
-                المعلومات الطبية
-              </h3>
+                <h2>المعلومات الطبية</h2>
+              </div>
+              <button class="btn-icon" (click)="editMedicalInfo()">
+                <i class="fas fa-pen"></i>
+              </button>
             </div>
+            
             <div class="card-body">
-              <div class="info-grid">
-                <div class="info-item full-width">
-                  <label>الاحتياجات الخاصة</label>
-                  <p>{{case.specialNeeds || 'لا يوجد'}}</p>
-                </div>
-                <div class="info-item">
+              <div class="diagnosis-section">
+                <div class="diagnosis-item primary">
                   <label>التشخيص الأولي</label>
-                  <p>{{case.primaryDiagnosis || 'لا يوجد'}}</p>
+                  <div class="diagnosis-value" [class.empty]="!case.primaryDiagnosis">
+                    <i class="fas fa-file-medical"></i>
+                    <span>{{case.primaryDiagnosis || 'لا يوجد'}}</span>
+                  </div>
                 </div>
-                <div class="info-item">
+                <div class="diagnosis-item secondary">
                   <label>التشخيص الثانوي</label>
-                  <p>{{case.secondaryDiagnosis || 'لا يوجد'}}</p>
+                  <div class="diagnosis-value" [class.empty]="!case.secondaryDiagnosis">
+                    <i class="fas fa-file-medical-alt"></i>
+                    <span>{{case.secondaryDiagnosis || 'لا يوجد'}}</span>
+                  </div>
                 </div>
-                <div class="info-item full-width">
-                  <label>التاريخ الطبي</label>
-                  <p>{{case.medicalHistory || 'لا يوجد'}}</p>
+              </div>
+
+              <div class="info-section">
+                <label>الاحتياجات الخاصة</label>
+                <div class="info-value needs" [class.empty]="!case.specialNeeds">
+                  <i class="fas fa-hand-holding-heart"></i>
+                  <span>{{case.specialNeeds || 'لا يوجد'}}</span>
                 </div>
-                <div class="info-item">
+              </div>
+
+              <div class="medical-grid">
+                <div class="info-section">
                   <label>الأدوية الحالية</label>
-                  <p>{{case.currentMedications || 'لا يوجد'}}</p>
+                  <div class="info-value medications" [class.empty]="!case.currentMedications">
+                    <i class="fas fa-pills"></i>
+                    <span>{{case.currentMedications || 'لا يوجد'}}</span>
+                  </div>
                 </div>
-                <div class="info-item">
+                <div class="info-section">
                   <label>الحساسية</label>
-                  <p>{{case.allergies || 'لا يوجد'}}</p>
+                  <div class="info-value allergies" [class.empty]="!case.allergies">
+                    <i class="fas fa-allergy"></i>
+                    <span>{{case.allergies || 'لا يوجد'}}</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Educational Information -->
-          <div class="info-card">
+          <div class="info-card educational">
             <div class="card-header">
-              <h3>
+              <div class="header-title">
                 <i class="fas fa-school"></i>
-                المعلومات التعليمية
-              </h3>
+                <h2>المعلومات التعليمية</h2>
+              </div>
+              <button class="btn-icon" (click)="editEducationalInfo()">
+                <i class="fas fa-pen"></i>
+              </button>
             </div>
+            
             <div class="card-body">
-              <div class="info-grid">
-                <div class="info-item">
+              <div class="education-grid">
+                <div class="info-section">
                   <label>المدرسة</label>
-                  <p>{{case.schoolName || 'لا يوجد'}}</p>
+                  <div class="info-value school" [class.empty]="!case.schoolName">
+                    <i class="fas fa-building"></i>
+                    <span>{{case.schoolName || 'لا يوجد'}}</span>
+                  </div>
                 </div>
-                <div class="info-item">
+                <div class="info-section">
                   <label>المرحلة الدراسية</label>
-                  <p>{{case.gradeLevel || 'لا يوجد'}}</p>
+                  <div class="info-value grade" [class.empty]="!case.gradeLevel">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>{{case.gradeLevel || 'لا يوجد'}}</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Guardian Information -->
-          <div class="info-card">
+          <!-- Insurance Information -->
+          <div class="info-card insurance">
             <div class="card-header">
-              <h3>
-                <i class="fas fa-user"></i>
-                معلومات الاتصال
-              </h3>
+              <div class="header-title">
+                <i class="fas fa-shield-alt"></i>
+                <h2>معلومات التأمين</h2>
+              </div>
+              <button class="btn-icon" (click)="editInsuranceInfo()">
+                <i class="fas fa-pen"></i>
+              </button>
             </div>
+            
             <div class="card-body">
-              <div class="info-grid">
-                <div class="info-item">
-                  <label>ولي الأمر</label>
-                  <p>{{case.guardianName}}</p>
-                </div>
-                <div class="info-item">
-                  <label>رقم الهاتف</label>
-                  <p>{{case.contactNumber}}</p>
-                </div>
-                <div class="info-item">
-                  <label>رقم الطوارئ</label>
-                  <p>{{case.emergencyContact}}</p>
+              <div class="info-section">
+                <label>تفاصيل التأمين</label>
+                <div class="info-value insurance" [class.empty]="!case.insuranceInfo">
+                  <i class="fas fa-file-medical-alt"></i>
+                  <span>{{case.insuranceInfo || 'لا يوجد'}}</span>
                 </div>
               </div>
             </div>
@@ -172,23 +232,26 @@
         </div>
       </div>
 
-      <!-- Other Tabs -->
-      <div *ngSwitchCase="'sessions'">
+      <!-- Other Tab Contents -->
+      <div *ngSwitchCase="'sessions'" class="sessions-tab">
         <app-case-sessions [caseId]="case.caseId"></app-case-sessions>
       </div>
 
-      <div *ngSwitchCase="'assessments'">
+      <div *ngSwitchCase="'assessments'" class="assessments-tab">
         <app-case-assessments [caseId]="case.caseId"></app-case-assessments>
       </div>
 
-      <div *ngSwitchCase="'payments'">
+      <div *ngSwitchCase="'payments'" class="payments-tab">
         <app-case-payments [caseId]="case.caseId"></app-case-payments>
       </div>
     </div>
   </div>
 
-  <!-- Loading Overlay -->
+  <!-- Enhanced Loading State -->
   <div class="loading-overlay" *ngIf="isLoading">
-    <div class="loading-spinner"></div>
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <span>جاري التحميل...</span>
+    </div>
   </div>
 </div>
