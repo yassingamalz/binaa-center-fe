@@ -1,66 +1,66 @@
 // src/app/features/sessions/components/session-list/session-list.component.scss
 @import 'styles/main';
-@import 'styles/badges';
 @import 'styles/buttons';
-@import 'styles/filters';
-@import 'styles/shimmer';
-@import 'styles/headers';
 @import 'styles/empty-states';
-
+@import 'styles/headers';
+@import 'styles/badges';
+@import 'styles/filters';
 
 // Container
 .sessions-container {
   padding: $spacing-lg;
-  min-height: calc(100vh - #{$layout-header-height});
-  background: linear-gradient(
-    135deg,
-    $color-gray-100 0%,
-    rgba($color-gray-100, 0.5) 100%
-  );
 
   @media (max-width: $breakpoint-md) {
     padding: $spacing-md;
   }
 }
 
-// Header Section
+// Header
 .page-header {
   @include flex-between;
-  margin-bottom: $spacing-xl;
+  margin-bottom: $spacing-lg;
 
   .header-title {
-    @include header-title_2
+    @include header-title-2;
+
+    .session-count {
+      @include count-badge-3d;
+    }
   }
 
   .btn-primary {
-    @include btn-primary-3d
-  }
-
-  .session-count{
-    @include count-badge-3d
+    @include btn-primary-3d;
   }
 }
 
-// Filters Section
+// Filters
 .filters-section {
   @include filters-container;
+  margin-bottom: $spacing-xl;
 
   .search-form {
+    flex-grow: 1;
+
     .search-input {
       @include search-field;
+      margin-bottom: $spacing-md;
+
+      @media (min-width: $breakpoint-md) {
+        margin-bottom: 0;
       }
     }
-  
+  }
+
   .filters-group {
     @include filter-controls;
 
     .type-filters,
     .status-filters {
       @include filter-chips-container;
-    }
 
-    .filter-btn {
-      @include filter-chip;
+      .filter-btn {
+        @include filter-chip;
+      }
     }
   }
 }
@@ -69,239 +69,223 @@
 .sessions-list {
   display: grid;
   gap: $spacing-lg;
-  
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 500px), 1fr));
+
   &.loading {
-    .session-card {
-      @extend .shimmer-effect;
-    }
+    opacity: 0.7;
+    pointer-events: none;
   }
 }
 
-// Session Card - Main Styles
+// Session Card
 .session-card {
   @include card;
-  padding: $spacing-lg;
-  cursor: pointer;
+  background: linear-gradient(135deg, $color-white, rgba($color-gray-100, 0.3));
+  padding: $spacing-md;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid $color-gray-200;
+  border: 1px solid rgba($color-gray-200, 0.5);
   position: relative;
   overflow: hidden;
-  
-  background: linear-gradient(
-    135deg,
-    $color-white 0%,
-    rgba($color-gray-100, 0.5) 100%
-  );
-  
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: $shadow-lg;
-    border-color: rgba($color-primary, 0.2);
-    
-    &::after {
-      opacity: 1;
-    }
-  }
-  
-  // Gradient border effect
-  &::after {
+  cursor: pointer;
+
+  &::before {
     content: '';
     position: absolute;
     inset: 0;
-    border-radius: inherit;
-    border: 2px solid transparent;
-    background: linear-gradient(135deg, $color-primary, $color-secondary) border-box;
-    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-    mask:linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: destination-out;
-    mask-composite: exclude;
+    background: linear-gradient(135deg, transparent, rgba($color-primary, 0.03));
     opacity: 0;
     transition: opacity 0.3s ease;
   }
 
-  // Header Section
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: $shadow-rtl-lg;
+    border-color: rgba($color-primary, 0.1);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  // Card Header
   .session-header {
     @include flex-between;
-    margin-bottom: $spacing-lg;
     padding-bottom: $spacing-md;
     border-bottom: 1px solid rgba($color-gray-200, 0.5);
+    margin-bottom: $spacing-md;
 
     .session-type {
       @include flex-center;
       gap: $spacing-sm;
-      padding: $spacing-sm $spacing-md;
+      padding: $spacing-sm $spacing-lg;
       border-radius: $border-radius-full;
       font-weight: 500;
-      
+      transition: all 0.3s ease;
+
       i {
         font-size: $font-size-lg;
       }
 
       &.individual {
-        background: rgba($color-primary, 0.1);
+        background: linear-gradient(45deg, rgba($color-primary, 0.1), rgba($color-primary, 0.2));
         color: $color-primary;
-        
-        i {
-          color: $color-primary;
-        }
+        border: 1px solid rgba($color-primary, 0.2);
       }
-      
+
       &.group {
-        background: rgba($color-secondary, 0.1);
+        background: linear-gradient(45deg, rgba($color-secondary, 0.1), rgba($color-secondary, 0.2));
         color: $color-secondary;
-        
-        i {
-          color: $color-secondary;
-        }
+        border: 1px solid rgba($color-secondary, 0.2);
       }
     }
 
     .session-datetime {
       @include flex-center;
       gap: $spacing-md;
-      
+
       .date,
       .time {
         @include flex-center;
-        gap: $spacing-sm;
-        padding: $spacing-xs $spacing-sm;
-        background: $color-gray-100;
-        border-radius: $border-radius-lg;
+        gap: $spacing-xs;
+        padding: $spacing-xs $spacing-md;
+        background: $color-white;
+        border-radius: $border-radius-full;
         color: $color-gray-700;
-        
+        border: 1px solid rgba($color-gray-200, 0.5);
+        box-shadow: 0 2px 8px rgba($color-gray-400, 0.1);
+
         i {
           font-size: $font-size-base;
-          background: $color-white;
-          padding: $spacing-xs;
-          border-radius: $border-radius-md;
+
+          &.fa-calendar {
+            color: $color-primary;
+          }
+
+          &.fa-clock {
+            color: $color-secondary;
+          }
         }
-      }
-      
-      .date i {
-        color: $color-warning;
-      }
-      
-      .time i {
-        color: $color-info;
       }
     }
   }
 
-  // Content Section
+  // Card Content
   .session-content {
-    margin: $spacing-lg 0;
+    margin: $spacing-md 0;
 
     .session-purpose {
-      font-size: $font-size-xl;
+      font-size: $font-size-lg;
       font-weight: 600;
       color: $color-gray-900;
       margin-bottom: $spacing-md;
-      line-height: 1.4;
-      
-      @media (hover: hover) {
-        .session-card:hover & {
-          background: linear-gradient(90deg, $color-primary, $color-secondary);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-      }
+      transition: color 0.3s ease;
     }
 
     .session-info {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: $spacing-lg;
-      margin: $spacing-lg 0;
+      grid-template-columns: repeat(3, 1fr);
+      gap: $spacing-sm;
+      margin: $spacing-md 0;
 
       .info-item {
         @include flex-center;
-        gap: $spacing-sm;
-        padding: $spacing-sm $spacing-md;
-        background: $color-gray-100;
+        padding: $spacing-sm;
+        background: $color-white;
         border-radius: $border-radius-lg;
-        transition: transform 0.2s ease;
-        
+        border: 1px solid rgba($color-gray-200, 0.5);
+        transition: all 0.3s ease;
+        gap: $spacing-sm;
+
         &:hover {
           transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba($color-primary, 0.05);
         }
 
         .icon-wrapper {
           @include flex-center;
-          width: 40px;
-          height: 40px;
-          border-radius: $border-radius-full;
+          width: 38px;
+          height: 38px;
+          border-radius: $border-radius-lg;
           background: $color-white;
-          flex-shrink: 0;
-          
-          i {
-            font-size: $font-size-lg;
+          box-shadow: 0 2px 8px rgba($color-gray-400, 0.1);
+          transition: all 0.3s ease;
+
+          &:hover {
+            transform: scale(1.05);
           }
+
+          i {
+            font-size: $font-size-base;
+            background: linear-gradient(45deg, $color-primary, $color-secondary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+          }
+        }
+
+        &.case-info .icon-wrapper i {
+          background: linear-gradient(45deg, #4CAF50, #8BC34A);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        &.staff-info .icon-wrapper i {
+          background: linear-gradient(45deg, #2196F3, #03A9F4);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        &.duration .icon-wrapper i {
+          background: linear-gradient(45deg, #FF9800, #FFC107);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
         }
 
         .info-text {
-          font-weight: 500;
-          color: $color-gray-700;
-          
+          flex: 1;
+
           .label {
             display: block;
             font-size: $font-size-sm;
-            color: $color-gray-900;
-            margin-bottom: 2px;
+            color: $color-gray-600;
+            margin-bottom: $spacing-xs;
           }
-        }
 
-        &.case-info {
-          .icon-wrapper {
-            box-shadow: 0 0 0 2px rgba($color-primary, 0.1);
-            i { color: $color-primary; }
-          }
-        }
-        
-        &.staff-info {
-          .icon-wrapper {
-            box-shadow: 0 0 0 2px rgba($color-secondary, 0.1);
-            i { color: $color-secondary; }
-          }
-        }
-        
-        &.duration {
-          .icon-wrapper {
-            box-shadow: 0 0 0 2px rgba($color-warning, 0.1);
-            i { color: $color-warning; }
+          span {
+            font-weight: 500;
+            color: $color-gray-900;
           }
         }
       }
     }
 
     .session-notes {
-      position: relative;
-      color: $color-gray-600;
-      font-size: $font-size-base;
-      line-height: 1.6;
-      margin: $spacing-md 0;
-      padding: $spacing-lg;
-      background: linear-gradient(
-        45deg,
-        rgba($color-gray-100, 0.5) 0%,
-        rgba($color-gray-100, 0.5) 100%
-      );
+      margin-top: $spacing-md;
+      padding: $spacing-md;
       border-radius: $border-radius-lg;
-      border: 1px solid $color-gray-200;
-      
+      background: linear-gradient(45deg, rgba($color-gray-100, 0.5), rgba($color-white, 0.5));
+      border: 1px solid rgba($color-gray-200, 0.5);
+      color: $color-gray-700;
+      line-height: 1.6;
+      position: relative;
+      border-right: 3px solid $color-primary;
+
       &::before {
         content: '"';
         position: absolute;
         top: $spacing-sm;
         right: $spacing-sm;
         font-size: $font-size-3xl;
-        color: $color-gray-300;
+        color: rgba($color-primary, 0.2);
         font-family: serif;
       }
     }
   }
 
-  // Footer Section
+  // Card Footer
   .session-footer {
     @include flex-between;
     padding-top: $spacing-md;
@@ -309,31 +293,26 @@
 
     .status-badge {
       @include flex-center;
-      gap: $spacing-sm;
-      padding: $spacing-sm $spacing-lg;
+      gap: $spacing-xs;
+      padding: $spacing-xs $spacing-md;
       border-radius: $border-radius-full;
       font-weight: 500;
-      
+      transition: all 0.3s ease;
+
       i {
         font-size: $font-size-base;
       }
-      
+
       &.present {
         background: linear-gradient(45deg, rgba($color-success, 0.1), rgba($color-success, 0.2));
         color: $color-success;
-        
-        i {
-          color: $color-success;
-        }
+        border: 1px solid rgba($color-success, 0.2);
       }
-      
+
       &.absent {
         background: linear-gradient(45deg, rgba($color-error, 0.1), rgba($color-error, 0.2));
         color: $color-error;
-        
-        i {
-          color: $color-error;
-        }
+        border: 1px solid rgba($color-error, 0.2);
       }
     }
 
@@ -342,37 +321,65 @@
       gap: $spacing-sm;
 
       .btn-icon {
-        @include flex-center;
-        width: 40px;
-        height: 40px;
+        @include button-base;
+        width: 38px;
+        height: 38px;
+        padding: 0;
         border-radius: $border-radius-full;
         background: $color-white;
+        color: $color-gray-600;
         border: 1px solid $color-gray-200;
-        transition: all 0.2s ease;
-        
-        i {
-          font-size: $font-size-lg;
-          transition: transform 0.2s ease;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: currentColor;
+          opacity: 0;
+          transition: opacity 0.2s ease;
         }
-        
+
         &:hover {
-          border-color: $color-primary;
-          background: rgba($color-primary, 0.1);
+          background: $color-white;
+          color: $color-primary;
+          border-color: currentColor;
           transform: translateY(-2px);
-          
-          i {
-            color: $color-primary;
-            transform: scale(1.1);
+
+          &::before {
+            opacity: 0.1;
           }
         }
 
-        &.danger:hover {
-          border-color: $color-error;
-          background: rgba($color-error, 0.1);
-          
-          i {
+        &:active {
+          transform: scale(0.95);
+        }
+
+        &.danger {
+          &:hover {
             color: $color-error;
           }
+
+          &:active {
+            background: rgba($color-error, 0.15);
+          }
+        }
+
+        i {
+          font-size: $font-size-base;
+          position: relative;
+          z-index: 1;
+          transition: transform 0.2s ease;
+        }
+
+        &:hover i {
+          transform: scale(1.1);
+        }
+
+        &:active i {
+          transform: scale(0.9);
         }
       }
     }
@@ -382,34 +389,85 @@
 // Empty State
 .empty-state {
   @include empty-state;
-}
+  padding: $spacing-2xl;
+  text-align: center;
+  background: $color-white;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-sm;
 
-// RTL Support
-[dir="rtl"] {
-  .session-card {
-    border-right: none;
-    border-left: 4px solid transparent;
+  i {
+    font-size: $font-size-4xl;
+    color: $color-gray-300;
+    margin-bottom: $spacing-lg;
   }
 
-  .info-item {
-    .icon-wrapper {
-      margin-left: $spacing-sm;
-      margin-right: 0;
+  p {
+    color: $color-gray-600;
+    margin-bottom: $spacing-lg;
+  }
+
+  .btn-secondary {
+    @include button-base;
+    background: $color-gray-100;
+    color: $color-gray-700;
+    padding: $spacing-sm $spacing-xl;
+
+    &:hover {
+      background: $color-gray-200;
     }
   }
+}
 
-  .session-notes::before {
-    right: auto;
-    left: $spacing-sm;
+// Responsive Design
+@media (max-width: $breakpoint-md) {
+  .sessions-list {
+    grid-template-columns: 1fr;
+  }
+
+  .session-card {
+    .session-header {
+      flex-direction: column;
+      gap: $spacing-md;
+
+      .session-datetime {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
+    .session-info {
+      grid-template-columns: 1fr !important;
+      gap: $spacing-md;
+    }
+
+    .info-item {
+      padding: $spacing-md !important;
+    }
+
+    .session-footer {
+      flex-wrap: wrap;
+      gap: $spacing-md;
+
+      .status-badge {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .actions {
+        width: 100%;
+        justify-content: center;
+
+        .btn-icon {
+          flex: 1;
+          max-width: 120px;
+        }
+      }
+    }
   }
 }
 
 // Print Styles
 @media print {
-  .sessions-container {
-    background: none;
-    padding: 0;
-  }
 
   .filters-section,
   .actions,
@@ -421,31 +479,10 @@
     break-inside: avoid;
     page-break-inside: avoid;
     box-shadow: none;
-    background: none;
-    
-    &::after {
-      display: none;
-    }
-  }
-}
+    border: 1px solid $color-gray-200;
 
-// Reduced Motion
-@media (prefers-reduced-motion: reduce) {
-  .session-card,
-  .btn-icon,
-  .info-item {
-    transition: none;
-    
-    &:hover {
-      transform: none;
-    }
-    
-    i {
-      transition: none;
-      
-      &:hover {
-        transform: none;
-      }
+    &::before {
+      display: none;
     }
   }
 }
@@ -453,16 +490,36 @@
 // High Contrast Mode
 @media (forced-colors: active) {
   .session-card {
-    border: 2px solid currentColor;
-    
-    &::after {
+    border: 1px solid currentColor;
+
+    &::before {
       display: none;
     }
-    
+
+    .session-type,
+    .status-badge,
     .info-item,
-    .btn-icon,
-    .status-badge {
+    .btn-icon {
       border: 1px solid currentColor;
+    }
+  }
+}
+
+// Reduced Motion
+@media (prefers-reduced-motion: reduce) {
+
+  .session-card,
+  .info-item,
+  .btn-icon,
+  .icon-wrapper {
+    transition: none !important;
+
+    &:hover {
+      transform: none !important;
+    }
+
+    i {
+      transition: none !important;
     }
   }
 }
