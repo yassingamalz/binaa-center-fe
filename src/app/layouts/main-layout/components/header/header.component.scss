@@ -116,7 +116,7 @@
 
 // Notification Styles
 .notifications {
-  position: relative;
+  position: static;
 }
 
 .icon-button {
@@ -157,19 +157,49 @@
 }
 
 // Dropdown Menus
-.dropdown-menu {
+::ng-deep .dropdown-menu {
   margin-top: $spacing-sm;
   padding: 0;
   border: none;
   box-shadow: $shadow-lg;
   border-radius: $border-radius-lg;
   overflow: hidden;
+  inset: -5px auto auto 0px !important;
 
   &.notification-menu {
-    width: 360px;
-    
     @media (max-width: $breakpoint-md) {
-      width: 320px;
+      position: fixed !important;
+      top: $layout-header-height !important;
+      left: 16px !important;
+      right: 16px !important;
+      width: calc(100% - 32px) !important; // Fixed value instead of variable
+      margin: 0 !important;
+      padding: 0 !important;
+      border: none !important;
+      border-radius: $border-radius-lg !important;
+      max-height: 70vh !important;
+      transform: none !important;
+      box-shadow: $shadow-lg !important;
+      z-index: $z-index-modal !important;
+      
+      .notification-list {
+        max-height: calc(70vh - 120px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+
+    @media (min-width: $breakpoint-md) {
+      position: absolute !important;
+      width: 360px !important;
+      margin-top: $spacing-sm !important;
+      max-height: 480px !important;
+      border-radius: $border-radius-lg !important;
+      box-shadow: $shadow-lg !important;
+      
+      .notification-list {
+        max-height: 360px;
+      }
     }
   }
 }
@@ -181,13 +211,13 @@
   justify-content: space-between;
   border-bottom: 1px solid $color-gray-200;
   background-color: $color-white;
-  
+
   h6 {
     margin: 0;
     font-weight: 600;
     color: $color-gray-900;
   }
-  
+
   .clear-all {
     background: none;
     border: none;
@@ -196,7 +226,7 @@
     padding: $spacing-xs $spacing-sm;
     border-radius: $border-radius-sm;
     cursor: pointer;
-    
+
     &:hover {
       background-color: rgba($color-primary, 0.05);
     }
@@ -216,7 +246,7 @@
   transition: $transition-base;
   border-bottom: 1px solid $color-gray-100;
   cursor: pointer;
-  
+
   &:hover {
     background-color: $color-gray-100;
   }
@@ -230,20 +260,28 @@
     justify-content: center;
     flex-shrink: 0;
     background-color: $color-gray-100;
-    
+
     i {
       font-size: $font-size-lg;
-      
-      &.text-success { color: $color-success; }
-      &.text-warning { color: $color-warning; }
-      &.text-info { color: $color-info; }
+
+      &.text-success {
+        color: $color-success;
+      }
+
+      &.text-warning {
+        color: $color-warning;
+      }
+
+      &.text-info {
+        color: $color-info;
+      }
     }
   }
 
   .notification-content {
     flex: 1;
     min-width: 0;
-    
+
     p {
       margin: 0;
       color: $color-gray-900;
@@ -264,7 +302,7 @@
   padding: $spacing-sm;
   background-color: $color-white;
   border-top: 1px solid $color-gray-200;
-  
+
   .view-all {
     width: 100%;
     padding: $spacing-sm;
@@ -279,11 +317,11 @@
     gap: $spacing-sm;
     cursor: pointer;
     transition: $transition-base;
-    
+
     &:hover {
       background-color: rgba($color-primary, 0.05);
     }
-    
+
     i {
       font-size: $font-size-sm;
     }
@@ -325,7 +363,7 @@
   .username {
     color: $color-gray-700;
     font-weight: 500;
-    
+
     @media (max-width: $breakpoint-md) {
       display: none;
     }
@@ -342,7 +380,7 @@
   display: flex;
   align-items: center;
   gap: $spacing-md;
-  
+
   .avatar {
     width: 48px;
     height: 48px;
@@ -354,13 +392,13 @@
     justify-content: center;
     font-size: $font-size-lg;
   }
-  
+
   .user-details {
     strong {
       display: block;
       color: $color-gray-900;
     }
-    
+
     small {
       color: $color-gray-600;
       font-size: $font-size-xs;
@@ -376,21 +414,21 @@
   color: $color-gray-700;
   cursor: pointer;
   transition: $transition-base;
-  
+
   i {
     width: 20px;
     text-align: center;
     font-size: $font-size-lg;
   }
-  
+
   &:hover {
     background-color: rgba($color-primary, 0.05);
     color: $color-primary;
   }
-  
+
   &.logout {
     color: $color-error;
-    
+
     &:hover {
       background-color: rgba($color-error, 0.05);
     }
@@ -403,7 +441,7 @@
   padding: $spacing-sm;
   background-color: $color-white;
   border-bottom: 1px solid $color-gray-200;
-  
+
   @media (max-width: $breakpoint-md) {
     display: block;
   }
@@ -434,5 +472,14 @@
       margin-right: 0;
       margin-left: $spacing-sm;
     }
+  }
+
+  .badge {
+    right: auto;
+    left: 4px;
+  }
+
+  ::ng-deep .notification-menu.dropdown-menu {
+    transform: none !important;
   }
 }
