@@ -1,11 +1,16 @@
 // src/app/features/sessions/components/session-details/session-details.component.scss
 @import 'styles/main';
+@import 'styles/buttons';
+@import 'styles/empty-states';
+@import 'styles/headers';
+@import 'styles/badges';
+@import 'styles/filters';
 
 .page-container {
     position: relative;
     min-height: calc(100vh - #{$layout-header-height});
     padding: $spacing-lg;
-    background-color: $color-gray-100;
+    background: linear-gradient(135deg, $color-gray-100 0%, rgba($color-gray-100, 0.5) 100%);
 
     @media (max-width: $breakpoint-md) {
         padding: $spacing-md;
@@ -18,11 +23,14 @@
     gap: $spacing-sm;
     margin-bottom: $spacing-lg;
     font-size: $font-size-sm;
-    color: $color-gray-600;
+    padding: $spacing-sm $spacing-md;
+    background: $color-white;
+    border-radius: $border-radius-lg;
+    box-shadow: $shadow-sm;
 
     a {
         color: $color-primary;
-        text-decoration: none;
+        transition: color 0.3s ease;
 
         &:hover {
             color: darken($color-primary, 10%);
@@ -42,12 +50,19 @@
     box-shadow: $shadow-sm;
     margin-bottom: $spacing-lg;
     overflow: hidden;
+    border: 1px solid rgba($color-gray-200, 0.5);
+    transition: box-shadow 0.3s ease;
+
+    &:hover {
+        box-shadow: $shadow-md;
+    }
 }
 
 .header-content {
     padding: $spacing-lg;
     @include flex-between;
-    border-bottom: 1px solid $color-gray-200;
+    border-bottom: 1px solid rgba($color-gray-200, 0.5);
+    background: linear-gradient(135deg, $color-white, rgba($color-gray-100, 0.3));
 
     @media (max-width: $breakpoint-md) {
         flex-direction: column;
@@ -64,22 +79,34 @@
         h1 {
             margin: 0;
             font-size: $font-size-2xl;
-            color: $color-gray-900;
+            background: linear-gradient(45deg, $color-primary, $color-secondary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .session-type {
-            padding: $spacing-xs $spacing-sm;
+            @include flex-center;
+            gap: $spacing-xs;
+            padding: $spacing-xs $spacing-md;
             border-radius: $border-radius-full;
-            font-size: $font-size-sm;
+            font-weight: 500;
+            transition: all 0.3s ease;
+
+            i {
+                font-size: $font-size-base;
+            }
 
             &.individual {
-                background: rgba($color-primary, 0.1);
+                background: linear-gradient(45deg, rgba($color-primary, 0.1), rgba($color-primary, 0.2));
                 color: $color-primary;
+                border: 1px solid rgba($color-primary, 0.2);
             }
 
             &.group {
-                background: rgba($color-secondary, 0.1);
+                background: linear-gradient(45deg, rgba($color-secondary, 0.1), rgba($color-secondary, 0.2));
                 color: $color-secondary;
+                border: 1px solid rgba($color-secondary, 0.2);
             }
         }
     }
@@ -88,31 +115,53 @@
         @include flex-center;
         flex-wrap: wrap;
         gap: $spacing-md;
-        color: $color-gray-600;
 
         .meta-item {
             @include flex-center;
             gap: $spacing-xs;
-            font-size: $font-size-sm;
+            padding: $spacing-xs $spacing-md;
+            background: rgba($color-gray-100, 0.5);
+            border-radius: $border-radius-full;
+            border: 1px solid rgba($color-gray-200, 0.5);
+            transition: all 0.3s ease;
+
+            &:hover {
+                background: $color-white;
+                transform: translateY(-1px);
+                box-shadow: $shadow-sm;
+            }
 
             i {
-                color: $color-gray-400;
+                font-size: $font-size-base;
+                background: linear-gradient(45deg, $color-primary, $color-secondary);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
             }
         }
 
         .status-badge {
-            padding: $spacing-xs $spacing-sm;
+            @include flex-center;
+            gap: $spacing-xs;
+            padding: $spacing-xs $spacing-lg;
             border-radius: $border-radius-full;
-            font-size: $font-size-sm;
+            font-weight: 500;
+            transition: all 0.3s ease;
+
+            i {
+                font-size: $font-size-base;
+            }
 
             &.present {
-                background: rgba($color-success, 0.1);
+                background: linear-gradient(45deg, rgba($color-success, 0.1), rgba($color-success, 0.2));
                 color: $color-success;
+                border: 1px solid rgba($color-success, 0.2);
             }
 
             &.absent {
-                background: rgba($color-error, 0.1);
+                background: linear-gradient(45deg, rgba($color-error, 0.1), rgba($color-error, 0.2));
                 color: $color-error;
+                border: 1px solid rgba($color-error, 0.2);
             }
         }
     }
@@ -127,73 +176,86 @@
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: $spacing-sm;
-
-        .btn-attendance {
-            grid-column: 1 / -1;
-            order: -1;
-        }
-
-        button {
-            height: 44px;
-            padding: $spacing-sm;
-            justify-content: center;
-        }
     }
 
-    .btn-secondary {
+    button {
         @include button-base;
-        background: $color-gray-100;
-        color: $color-gray-700;
         gap: $spacing-sm;
+        padding: $spacing-sm $spacing-lg;
+        border-radius: $border-radius-full;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
 
-        &:hover {
-            background: $color-gray-200;
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: currentColor;
+            opacity: 0;
+            transition: opacity 0.2s ease;
         }
-    }
-
-    .btn-primary {
-        @include button-base;
-        background: $color-primary;
-        color: $color-white;
-        gap: $spacing-sm;
 
         &:hover {
-            background: darken($color-primary, 5%);
+            transform: translateY(-2px);
+
+            &::before {
+                opacity: 0.1;
+            }
         }
-    }
 
-    .btn-danger {
-        @include button-base;
-        background: $color-error;
-        color: $color-white;
-        gap: $spacing-sm;
+        &:active {
+            transform: scale(0.98);
+        }
 
-        &:hover {
-            background: darken($color-error, 5%);
+        i {
+            font-size: $font-size-base;
+            position: relative;
+            z-index: 1;
         }
     }
 
     .btn-attendance {
-        @include button-base;
-        gap: $spacing-sm;
+        grid-column: 1 / -1;
 
         &-present {
-            background: rgba($color-accent, 0.7);
+            background: linear-gradient(45deg, $color-warning, lighten($color-warning, 10%));
             color: $color-gray-900;
+            border: 1px solid rgba($color-warning, 0.3);
 
             &:hover {
-                background: $color-warning;
-                color: $color-black;
+                border-color: $color-warning;
             }
         }
 
         &-absent {
-            background: $color-success;
+            background: linear-gradient(45deg, $color-success, lighten($color-success, 10%));
             color: $color-white;
+            border: 1px solid rgba($color-success, 0.3);
 
             &:hover {
-                background: darken($color-success, 10%);
+                border-color: $color-success;
             }
+        }
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, $color-primary, lighten($color-primary, 10%));
+        color: $color-white;
+        border: 1px solid rgba($color-primary, 0.3);
+
+        &:hover {
+            border-color: $color-primary;
+        }
+    }
+
+    .btn-danger {
+        background: linear-gradient(45deg, $color-error, lighten($color-error, 10%));
+        color: $color-white;
+        border: 1px solid rgba($color-error, 0.3);
+
+        &:hover {
+            border-color: $color-error;
         }
     }
 }
@@ -203,108 +265,118 @@
     @include flex-center;
     gap: $spacing-sm;
     padding: $spacing-md $spacing-lg;
-    background: $color-white;
-    border-top: 1px solid $color-gray-100;
+    background: linear-gradient(135deg, $color-white, rgba($color-gray-100, 0.3));
+    border-top: 1px solid rgba($color-gray-200, 0.5);
     overflow-x: auto;
     @include scrollable;
 
-    // Improved mobile responsiveness
-    @media (max-width: $breakpoint-md) {
-        padding: $spacing-sm;
-        justify-content: center;
-        
-        // Ensure tabs are evenly distributed
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        width: 100%;
-    }
-
     .tab-btn {
-        @include button-base;
-        background: transparent;
-        color: $color-gray-600;
+        @include flex-center;
         gap: $spacing-sm;
         padding: $spacing-sm $spacing-lg;
-        min-width: auto;
-        height: auto;
-        white-space: nowrap;
-        transition: all 0.3s ease; // Smooth transition for hover and active states
+        background: transparent;
+        color: $color-gray-600;
+        border: none;
+        border-radius: $border-radius-full;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 80%;
+            height: 2px;
+            background: $color-primary;
+            transition: transform 0.3s ease;
+        }
 
         &:hover {
             color: $color-primary;
-            background: $color-gray-100;
+            background: rgba($color-primary, 0.05);
         }
 
         &.active {
             color: $color-primary;
             background: rgba($color-primary, 0.1);
-            font-weight: bold; // Emphasize active tab
+
+            &::after {
+                transform: translateX(-50%) scaleX(1);
+            }
         }
 
-        @media (max-width: $breakpoint-sm) {
-            // Compact mobile view
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: $spacing-sm;
-            
-            i {
-                margin-bottom: $spacing-xs;
-                font-size: $font-size-lg; // Larger icon for mobile
-            }
+        i {
+            font-size: $font-size-base;
+            transition: transform 0.3s ease;
+        }
 
-            span {
-                font-size: $font-size-xs; // Smaller text
-                text-align: center;
-            }
+        &:hover i {
+            transform: scale(1.1);
         }
     }
 }
+
 // Content Area
 .page-content {
     margin-top: $spacing-lg;
 }
 
-// Grid Layout for Info Cards
-.grid-layout {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
-    gap: $spacing-lg;
-}
-
 // Info Cards
 .info-card {
     @include card;
-    height: fit-content;
+    background: linear-gradient(135deg, $color-white, rgba($color-gray-100, 0.3));
+    border: 1px solid rgba($color-gray-200, 0.5);
+    transition: all 0.3s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: $shadow-lg;
+    }
 
     .card-header {
+        padding: $spacing-md;
+        border-bottom: 1px solid rgba($color-gray-200, 0.5);
         margin-bottom: $spacing-lg;
 
         h3 {
             @include flex-center;
             gap: $spacing-sm;
             margin: 0;
-            font-size: $font-size-lg;
-            color: $color-primary;
 
             i {
-                color: $color-gray-400;
+                font-size: $font-size-lg;
+                background: linear-gradient(45deg, $color-primary, $color-secondary);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
             }
         }
     }
 
     .card-body {
+        padding: $spacing-md;
+
         .info-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: $spacing-md;
 
-            @media (max-width: $breakpoint-sm) {
-                grid-template-columns: 1fr;
-            }
-
             .info-item {
+                padding: $spacing-md;
+                background: rgba($color-gray-100, 0.5);
+                border-radius: $border-radius-lg;
+                border: 1px solid rgba($color-gray-200, 0.5);
+                transition: all 0.3s ease;
+
+                &:hover {
+                    background: $color-white;
+                    transform: translateY(-2px);
+                    box-shadow: $shadow-sm;
+                }
+
                 &.full-width {
                     grid-column: 1 / -1;
                 }
@@ -319,7 +391,7 @@
                 p {
                     margin: 0;
                     color: $color-gray-900;
-                    line-height: 1.5;
+                    line-height: 1.6;
                 }
             }
         }
@@ -329,11 +401,21 @@
 // Notes and Attachments Tabs
 .notes-tab,
 .attachments-tab {
-    .no-content {
-        color: $color-gray-900;
-        text-align: center;
-        font-style: italic;
-        margin: 0;
+    .info-card {
+        .card-body {
+            padding: $spacing-lg;
+
+            p {
+                line-height: 1.8;
+                color: $color-gray-700;
+
+                &.no-content {
+                    text-align: center;
+                    color: $color-gray-500;
+                    font-style: italic;
+                }
+            }
+        }
     }
 }
 
@@ -341,19 +423,55 @@
 .loading-overlay {
     position: absolute;
     inset: 0;
-    background: rgba($color-white, 0.7);
-    backdrop-filter: blur(4px);
+    background: rgba($color-white, 0.8);
+    backdrop-filter: blur(8px);
     @include flex-center;
     z-index: 10;
 }
 
 .loading-spinner {
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
     border: 3px solid rgba($color-primary, 0.1);
     border-radius: 50%;
     border-top-color: $color-primary;
     animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+// Responsive Design
+@media (max-width: $breakpoint-md) {
+    .info-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .session-meta {
+        .meta-item {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    .tabs-navigation {
+        .tab-btn {
+            flex: 1;
+            justify-content: center;
+            padding: $spacing-sm;
+
+            span {
+                display: none;
+            }
+
+            i {
+                font-size: $font-size-lg;
+            }
+        }
+    }
 }
 
 // Print Styles
@@ -363,13 +481,9 @@
         background: none;
     }
 
-    .page-header {
-        box-shadow: none;
-    }
-
     .header-actions,
     .tabs-navigation {
-        display: none;
+        display: none !important;
     }
 
     .info-card {
@@ -379,40 +493,23 @@
     }
 }
 
-// RTL Support
-[dir="rtl"] {
-    .breadcrumb {
-        i {
-            transform: scaleX(-1);
-        }
-    }
-}
-
-// Animations
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
 // High Contrast Mode
 @media (forced-colors: active) {
-    .status-badge {
-        border: 1px solid currentColor;
-    }
 
-    .tab-btn.active {
-        border: 2px solid currentColor;
+    .info-card,
+    .status-badge,
+    .meta-item {
+        border: 1px solid currentColor;
     }
 }
 
 // Reduced Motion
 @media (prefers-reduced-motion: reduce) {
-    .tab-btn {
-        transition: none;
+
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
+        animation: none !important;
     }
 }
